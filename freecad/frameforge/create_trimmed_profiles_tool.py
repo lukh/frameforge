@@ -30,6 +30,9 @@ class CreateTrimmedProfileTaskPanel():
         self.initialize_ui()
         self.update_view_and_model()
 
+    def getStandardButtons(self):
+        return QtGui.QDialogButtonBox.StandardButton.Cancel | QtGui.QDialogButtonBox.StandardButton.Ok | QtGui.QDialogButtonBox.StandardButton.Apply
+
 
     def initialize_ui(self):
         add_icon = QtGui.QIcon(os.path.join(ICONPATH, "list-add.svg"))
@@ -168,7 +171,13 @@ class CreateTrimmedProfileTaskPanel():
 
         return True
 
+    def clicked(self, button):
+        if button == QtGui.QDialogButtonBox.Apply:
+            self.accept()
 
+            Gui.Selection.clearSelection()
+            Gui.Control.closeDialog()
+            Gui.runCommand('FrameForge_TrimProfiles', 0)
 
 
 class TrimProfileCommand():
