@@ -55,6 +55,7 @@ set(Namespace_SRCS
         freecad/frameforge/version.py
         freecad/frameforge/translate_utils.py
         freecad/frameforge/create_trimmed_profiles_tool.py
+        freecad/frameforge/edit_profile_tool.py
         freecad/frameforge/profile.py
         freecad/frameforge/_utils.py
         freecad/frameforge/parametric_line.py

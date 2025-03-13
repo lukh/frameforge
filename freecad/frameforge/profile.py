@@ -1,7 +1,11 @@
 import math
 
+import FreeCADGui as Gui
 import FreeCAD as App
 import Part
+
+import freecad.frameforge
+
 
 # Global variable for a 3D float vector (used in Profile class)
 vec = App.Base.Vector
@@ -741,3 +745,123 @@ class Profile:
         obj.Placement = pl
         obj.positionBySupport()
         obj.recompute()
+
+
+
+
+
+class ViewProviderProfile:
+    def __init__(self, obj):
+        ''' Set this object to the proxy object of the actual view provider '''
+        obj.Proxy = self
+    
+    def attach(self, vobj):
+        ''' Setup the scene sub-graph of the view provider, this method is mandatory '''
+        self.ViewObject = vobj
+        self.Object = vobj.Object
+        return
+        
+    def updateData(self, fp, prop):
+        ''' If a property of the handled feature has changed we have the chance to handle this here '''
+        return
+    
+    def getDisplayModes(self, obj):
+        ''' Return a list of display modes. '''
+        modes=[]
+        return modes
+    
+    def getDefaultDisplayMode(self):
+        ''' Return the name of the default display mode. It must be defined in getDisplayModes. '''
+        return "FlatLines"
+    
+    def setDisplayMode(self, mode):
+        ''' Map the display mode defined in attach with those defined in getDisplayModes.
+        Since they have the same names nothing needs to be done. This method is optional.
+        '''
+        return mode
+    
+    def claimChildren(self):
+        return []
+    
+    def onChanged(self, vp, prop):
+        ''' Print the name of the property that has changed '''
+        #App.Console.PrintMessage("Change {} property: {}\n".format(str(vp), str(prop)))
+        pass
+
+    def onDelete(self, fp, sub):
+        return True
+    
+    def getIcon(self):
+        ''' Return the icon in XMP format which will appear in the tree view. This method is optional
+        and if not defined a default icon is shown.
+        '''
+        return """
+                /* XPM */
+                static char * profile_xpm[] = {
+                "16 16 15 1",
+                " 	c None",
+                ".	c #000000",
+                "+	c #170000",
+                "@	c #2E5DA2",
+                "#	c #E8A200",
+                "$	c #00172E",
+                "%	c #A27400",
+                "&	c #FFB900",
+                "*	c #8B7400",
+                "=	c #001717",
+                "-	c #D1A200",
+                ";	c #B98B00",
+                ">	c #17172E",
+                ",	c #2E1700",
+                "'	c #171700",
+                "                ",
+                "                ",
+                "                ",
+                "                ",
+                "  ....+.......  ",
+                " .@@@@@@@@@@.#. ",
+                " .@@@@@@@@@$%&* ",
+                " =@@@@@@@@@$-&;.",
+                " =@@@@@@@@@>-&;.",
+                " >@@@@@@@@@=-&;.",
+                " >@@@@@@@@@$%&* ",
+                " .@@@@@@@@@@.-, ",
+                "  '..'.+...'.'  ",
+                "                ",
+                "                ",
+                "                "};
+        	"""
+
+    def __getstate__(self):
+        ''' When saving the document this object gets stored using Python's cPickle module.
+        Since we have some un-pickable here -- the Coin stuff -- we must define this method
+        to return a tuple of all pickable objects or None.
+        '''
+        return None
+    
+    def __setstate__(self,state):
+        ''' When restoring the pickled object from document we have the chance to set some
+        internals here. Since no data were pickled nothing needs to be done here.
+        '''
+        return None
+
+    def setEdit(self, vobj, mode):
+        if mode != 0:
+            return None
+
+        # TODO: understand why this import is needed for here and not for TrimmedProfile ???
+        import freecad.frameforge.edit_profile_tool
+
+        taskd = freecad.frameforge.edit_profile_tool.EditProfileTaskPanel(self.Object)
+        Gui.Control.showDialog(taskd)
+        return True
+
+    def unsetEdit(self, vobj, mode):
+        if mode != 0:
+            return None
+
+        Gui.Control.closeDialog()
+        return True
+
+    def edit(self):
+        FreeCADGui.ActiveDocument.setEdit(self.Object, 0)

@@ -9,7 +9,7 @@ import FreeCAD as App
 from freecad.frameforge.translate_utils import translate
 from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPATH
 
-from freecad.frameforge.profile import Profile
+from freecad.frameforge.profile import Profile, ViewProviderProfile
 
 from freecad.frameforge._ui_utils import FormProxy
 
@@ -244,10 +244,7 @@ class CreateProfileTaskPanel():
             sk_parent.addObject(obj)
 
         # Create a ViewObject in current GUI
-        obj.ViewObject.Proxy = 0
-        view_obj = Gui.ActiveDocument.getObject(obj.Name)
-        view_obj.DisplayMode = "Flat Lines"
-
+        ViewProviderProfile(obj.ViewObject)
 
         if sketch is not None and edge is not None:
             # Tuple assignment for edge
