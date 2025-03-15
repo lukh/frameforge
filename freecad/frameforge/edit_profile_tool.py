@@ -22,6 +22,8 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
         self.init_ui()
 
     def init_ui(self):
+        self.form_proxy.groupBox_5.setEnabled(False)
+
         self.form_proxy.sb_width.setValue(self.profile.ProfileWidth)
         self.form_proxy.sb_height.setValue(self.profile.ProfileHeight)
         self.form_proxy.sb_main_thickness.setValue(self.profile.Thickness)
