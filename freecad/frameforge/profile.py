@@ -12,13 +12,17 @@ vec = App.Base.Vector
 
 class Profile:
     def __init__(self, obj, init_w, init_h, init_mt, init_ft, init_r1, init_r2, init_len, init_wg, init_mf,
-                 init_hc, init_wc, fam, bevels_combined, link_sub=None):
+                 init_hc, init_wc, material, fam, size_name, bevels_combined, link_sub=None):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
         with initialization value 'init_w' to 'init_wc' : ProfileHeight, ProfileWidth, [...] CenteredOnWidth. Depending
         on 'bevels_combined' parameters, there is 4 others properties for bevels : BevelStartCut1, etc. Depending on
         'fam' parameter, there is properties specific to profile family.
         """
+
+        obj.addProperty("App::PropertyString", "Material", "Profile", "", ).Material = material
+        obj.addProperty("App::PropertyString", "Family", "Profile", "", ).Family = fam
+        obj.addProperty("App::PropertyString", "SizeName", "Profile", "", ).SizeName = size_name
 
         obj.addProperty("App::PropertyFloat", "ProfileHeight", "Profile", "", ).ProfileHeight = init_h
         obj.addProperty("App::PropertyFloat", "ProfileWidth", "Profile", "").ProfileWidth = init_w
@@ -96,7 +100,7 @@ class Profile:
             obj.setExpression('.AttachmentOffset.Base.z', u'-OffsetA')
 
         self.WM = init_wg
-        self.fam = fam
+
         self.bevels_combined = bevels_combined
         obj.Proxy = self
 
@@ -174,7 +178,7 @@ class Profile:
         if obj.CenteredOnWidth == True:  w = -W / 2
         if obj.CenteredOnHeight == True: h = -H / 2
 
-        if self.fam == "Equal Leg Angles" or self.fam == "Unequal Leg Angles":
+        if obj.Family == "Equal Leg Angles" or obj.Family == "Unequal Leg Angles":
             if obj.MakeFillet == False:
                 p1 = vec(0 + w, 0 + h, 0)
                 p2 = vec(0 + w, H + h, 0)
@@ -220,10 +224,10 @@ class Profile:
 
             p = Part.Face(wire1)
 
-        if self.fam == "Flat Sections" or self.fam == "Square" or self.fam == "Square Hollow" or self.fam == "Rectangular Hollow":
+        if obj.Family == "Flat Sections" or obj.Family == "Square" or obj.Family == "Square Hollow" or obj.Family == "Rectangular Hollow":
             wire1 = wire2 = 0
 
-            if self.fam == "Square" or self.fam == "Flat Sections":
+            if obj.Family == "Square" or obj.Family == "Flat Sections":
                 p1 = vec(0 + w, 0 + h, 0)
                 p2 = vec(0 + w, H + h, 0)
                 p3 = vec(W + w, H + h, 0)
@@ -234,7 +238,7 @@ class Profile:
                 L4 = Part.makeLine(p4, p1)
                 wire1 = Part.Wire([L1, L2, L3, L4])
 
-            if obj.MakeFillet == False and (self.fam == "Square Hollow" or self.fam == "Rectangular Hollow"):
+            if obj.MakeFillet == False and (obj.Family == "Square Hollow" or obj.Family == "Rectangular Hollow"):
                 p1 = vec(0 + w, 0 + h, 0)
                 p2 = vec(0 + w, H + h, 0)
                 p3 = vec(W + w, H + h, 0)
@@ -256,7 +260,7 @@ class Profile:
                 wire1 = Part.Wire([L1, L2, L3, L4])
                 wire2 = Part.Wire([L5, L6, L7, L8])
 
-            if obj.MakeFillet == True and (self.fam == "Square Hollow" or self.fam == "Rectangular Hollow"):
+            if obj.MakeFillet == True and (obj.Family == "Square Hollow" or obj.Family == "Rectangular Hollow"):
                 p1 = vec(0 + w, 0 + R + h, 0)
                 p2 = vec(0 + w, H - R + h, 0)
                 p3 = vec(R + w, H + h, 0)
@@ -314,7 +318,7 @@ class Profile:
             else:
                 p = Part.Face(wire1)
 
-        if self.fam == "UPE" or self.fam == "UPN":
+        if obj.Family == "UPE" or obj.Family == "UPN":
             if obj.MakeFillet == False:  # UPE ou UPN sans arrondis
 
                 Yd = 0
@@ -456,7 +460,7 @@ class Profile:
 
             p = Part.Face(wire1)
 
-        if self.fam == "IPE" or self.fam == "IPN" or self.fam == "HEA" or self.fam == "HEB" or self.fam == "HEM":
+        if obj.Family == "IPE" or obj.Family == "IPN" or obj.Family == "HEA" or obj.Family == "HEB" or obj.Family == "HEM":
             XA1 = W / 2 - TW / 2  # face gauche du web
             XA2 = W / 2 + TW / 2  # face droite du web
             if obj.MakeFillet == False:  # IPE ou IPN sans arrondis
@@ -690,13 +694,13 @@ class Profile:
 
             p = Part.Face(wire1)
 
-        if self.fam == "Round Bar":
+        if obj.Family == "Round Bar":
             c = vec(H / 2 + w, H / 2 + h, 0)
             A1 = Part.makeCircle(H / 2, c, d, 0, 360)
             wire1 = Part.Wire([A1])
             p = Part.Face(wire1)
 
-        if self.fam == "Pipe":
+        if obj.Family == "Pipe":
             c = vec(H / 2 + w, H / 2 + h, 0)
             A1 = Part.makeCircle(H / 2, c, d, 0, 360)
             A2 = Part.makeCircle((H - TW) / 2, c, d, 0, 360)

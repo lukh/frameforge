@@ -282,7 +282,9 @@ class CreateProfileTaskPanel():
             self.form_proxy.cb_make_fillet.isChecked(), # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
             self.form_proxy.cb_height_centered.isChecked(),
             self.form_proxy.cb_width_centered.isChecked(),
+            self.form_proxy.combo_material.currentText(),
             self.form_proxy.combo_family.currentText(),
+            self.form_proxy.combo_size.currentText(),
             self.form_proxy.cb_combined_bevel.isChecked(),
             link_sub
         )
