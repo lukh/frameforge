@@ -104,6 +104,71 @@ class Profile:
         self.bevels_combined = bevels_combined
         obj.Proxy = self
 
+
+    def set_properties(self, obj, init_w, init_h, init_mt, init_ft, init_r1, init_r2, init_len, init_wg, init_mf,
+                 init_hc, init_wc, material, fam, size_name):
+
+        obj.Material = material
+        obj.Family = fam
+        obj.SizeName = size_name
+
+        obj.ProfileHeight = init_h
+        obj.ProfileWidth = init_w
+        obj.ProfileLength = init_len # should it be ?
+
+        obj.Thickness = init_mt
+        obj.ThicknessFlange = init_ft
+
+        obj.RadiusLarge = init_r1
+        obj.RadiusSmall = init_r2
+        obj.MakeFillet = init_mf
+
+        # if not bevels_combined:
+        #     obj.BevelStartCut1", "Profile",
+        #                     "Bevel on First axle at the start of the profile").BevelStartCut1 = 0
+        #     obj.BevelStartCut2", "Profile",
+        #                     "Rotate the cut on Second axle at the start of the profile").BevelStartCut2 = 0
+        #     obj.BevelEndCut1", "Profile",
+        #                     "Bevel on First axle at the end of the profile").BevelEndCut1 = 0
+        #     obj.BevelEndCut2", "Profile",
+        #                     "Rotate the cut on Second axle at the end of the profile").BevelEndCut2 = 0
+        # if bevels_combined:
+        #     obj.BevelStartCut", "Profile",
+        #                     "Bevel at the start of the profile").BevelStartCut = 0
+        #     obj.BevelStartRotate", "Profile",
+        #                     "Rotate the second cut on Profile axle").BevelStartRotate = 0
+        #     obj.BevelEndCut", "Profile",
+        #                     "Bevel on First axle at the end of the profile").BevelEndCut = 0
+        #     obj.BevelEndRotate", "Profile",
+        #                     "Rotate the second cut on Profile axle").BevelEndRotate = 0
+
+        obj.ApproxWeight = init_wg * init_len / 1000
+
+        obj.CenteredOnHeight = init_hc
+        obj.CenteredOnWidth = init_wc
+
+        if obj.Family == "UPE":
+            obj.UPN = False
+            obj.FlangeAngle = 4.57
+        if obj.Family == "UPN":
+            obj.UPN = True
+            obj.FlangeAngle = 4.57
+
+        if obj.Family == "IPE" or obj.Family == "HEA" or obj.Family == "HEB" or obj.Family == "HEM":
+            obj.IPN = False
+            obj.FlangeAngle = 8
+        if obj.Family == "IPN":
+            obj.IPN = True
+            obj.FlangeAngle = 8
+
+        obj.Width = obj.ProfileWidth  # Property for structure
+        obj.Height = obj.ProfileLength  # Property for structure
+        obj.Length = obj.ProfileHeight  # Property for structure
+
+        # obj.OffsetA = .0  # Property for structure
+        # obj.OffsetB = .0  # Property for structure
+
+
     def on_changed(self, obj, p):
 
         if p == "ProfileWidth" or p == "ProfileHeight" or p == "Thickness" \
