@@ -181,6 +181,8 @@ class Profile:
             self.execute(obj)
 
     def execute(self, obj):
+        if not hasattr(obj, "Family"):
+            obj.addProperty("App::PropertyString", "Family", "Profile", "", ).Family = self.fam
 
         try:
             L = obj.Target[0].getSubObject(obj.Target[1][0]).Length
@@ -901,17 +903,17 @@ class ViewProviderProfile:
                 "                "};
         	"""
 
-    def __getstate__(self):
-        ''' When saving the document this object gets stored using Python's cPickle module.
-        Since we have some un-pickable here -- the Coin stuff -- we must define this method
-        to return a tuple of all pickable objects or None.
-        '''
+
+    def dumps(self):
+        """
+        Called during document saving.
+        """
         return None
-    
-    def __setstate__(self,state):
-        ''' When restoring the pickled object from document we have the chance to set some
-        internals here. Since no data were pickled nothing needs to be done here.
-        '''
+
+    def loads(self,state):
+        """
+        Called during document restore.
+        """
         return None
 
     def setEdit(self, vobj, mode):
@@ -934,3 +936,5 @@ class ViewProviderProfile:
 
     def edit(self):
         FreeCADGui.ActiveDocument.setEdit(self.Object, 0)
+
+
