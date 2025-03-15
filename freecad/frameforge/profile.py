@@ -20,6 +20,8 @@ class Profile:
         'fam' parameter, there is properties specific to profile family.
         """
 
+        self.Type = 'Profile'
+
         obj.addProperty("App::PropertyString", "Material", "Profile", "", ).Material = material
         obj.addProperty("App::PropertyString", "Family", "Profile", "", ).Family = fam
         obj.addProperty("App::PropertyString", "SizeName", "Profile", "", ).SizeName = size_name
