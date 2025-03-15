@@ -181,7 +181,7 @@ class Profile:
             self.execute(obj)
 
     def execute(self, obj):
-        if not hasattr(obj, "Family"):
+        if not hasattr(obj, "Family"): # for compat
             obj.addProperty("App::PropertyString", "Family", "Profile", "", ).Family = self.fam
 
         try:
