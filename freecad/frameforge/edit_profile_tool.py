@@ -18,6 +18,9 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
         self.profile = profile
         self.dump = profile.dumpContent()
 
+        # check editability (ie, contains Material, Family and Sizename)
+        self.editable = hasattr(self.profile, "Material") and hasattr(self.profile, "Family") and hasattr(self.profile, "SizeName")
+
         # connect all the control to    slots that will update the profile...
         self.init_ui()
 
@@ -36,9 +39,11 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
         self.form_proxy.cb_height_centered.setChecked(self.profile.CenteredOnHeight)
         self.form_proxy.cb_width_centered.setChecked(self.profile.CenteredOnWidth)
 
-        self.form_proxy.combo_material.setCurrentText(self.profile.Material)
-        self.form_proxy.combo_family.setCurrentText(self.profile.Family)
-        self.form_proxy.combo_size.setCurrentText(self.profile.SizeName)
+        if self.editable:
+            self.form_proxy.combo_material.setCurrentText(self.profile.Material)
+            self.form_proxy.combo_family.setCurrentText(self.profile.Family)
+            self.form_proxy.combo_size.setCurrentText(self.profile.SizeName)
+
         # self.form_proxy.cb_combined_bevel.setChecked()
 
 
@@ -59,6 +64,13 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
 
 
     def accept(self):
+        if not self.editable:
+            diag = QtGui.QMessageBox(QtGui.QMessageBox.Warning, 'Edit Profile', 'This profile was created by an old version of Frameforge and cannot be edited')
+            diag.setWindowModality(QtCore.Qt.ApplicationModal)
+            diag.exec_()
+
+            return False
+
         self.profile.Proxy.set_properties(
             self.profile,
             self.form_proxy.sb_width.value(),
