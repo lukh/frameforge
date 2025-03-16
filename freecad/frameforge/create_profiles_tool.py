@@ -216,6 +216,8 @@ class CreateProfileTaskPanel():
         if self.form_proxy.cb_size_in_name.isChecked():
             p_name += "_" + self.form_proxy.combo_size.currentText()
 
+        p_name += "_000"
+
         if len(selection_list):
             # create part or group and 
             container = None
