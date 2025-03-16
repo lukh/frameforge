@@ -1,20 +1,30 @@
 import math
 
+import FreeCADGui as Gui
 import FreeCAD as App
 import Part
+
+import freecad.frameforge
+
 
 # Global variable for a 3D float vector (used in Profile class)
 vec = App.Base.Vector
 
 class Profile:
     def __init__(self, obj, init_w, init_h, init_mt, init_ft, init_r1, init_r2, init_len, init_wg, init_mf,
-                 init_hc, init_wc, fam, bevels_combined, link_sub=None):
+                 init_hc, init_wc, material, fam, size_name, bevels_combined, link_sub=None):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
         with initialization value 'init_w' to 'init_wc' : ProfileHeight, ProfileWidth, [...] CenteredOnWidth. Depending
         on 'bevels_combined' parameters, there is 4 others properties for bevels : BevelStartCut1, etc. Depending on
         'fam' parameter, there is properties specific to profile family.
         """
+
+        self.Type = 'Profile'
+
+        obj.addProperty("App::PropertyString", "Material", "Profile", "", ).Material = material
+        obj.addProperty("App::PropertyString", "Family", "Profile", "", ).Family = fam
+        obj.addProperty("App::PropertyString", "SizeName", "Profile", "", ).SizeName = size_name
 
         obj.addProperty("App::PropertyFloat", "ProfileHeight", "Profile", "", ).ProfileHeight = init_h
         obj.addProperty("App::PropertyFloat", "ProfileWidth", "Profile", "").ProfileWidth = init_w
@@ -92,9 +102,74 @@ class Profile:
             obj.setExpression('.AttachmentOffset.Base.z', u'-OffsetA')
 
         self.WM = init_wg
-        self.fam = fam
+
         self.bevels_combined = bevels_combined
         obj.Proxy = self
+
+
+    def set_properties(self, obj, init_w, init_h, init_mt, init_ft, init_r1, init_r2, init_len, init_wg, init_mf,
+                 init_hc, init_wc, material, fam, size_name):
+
+        obj.Material = material
+        obj.Family = fam
+        obj.SizeName = size_name
+
+        obj.ProfileHeight = init_h
+        obj.ProfileWidth = init_w
+        obj.ProfileLength = init_len # should it be ?
+
+        obj.Thickness = init_mt
+        obj.ThicknessFlange = init_ft
+
+        obj.RadiusLarge = init_r1
+        obj.RadiusSmall = init_r2
+        obj.MakeFillet = init_mf
+
+        # if not bevels_combined:
+        #     obj.BevelStartCut1", "Profile",
+        #                     "Bevel on First axle at the start of the profile").BevelStartCut1 = 0
+        #     obj.BevelStartCut2", "Profile",
+        #                     "Rotate the cut on Second axle at the start of the profile").BevelStartCut2 = 0
+        #     obj.BevelEndCut1", "Profile",
+        #                     "Bevel on First axle at the end of the profile").BevelEndCut1 = 0
+        #     obj.BevelEndCut2", "Profile",
+        #                     "Rotate the cut on Second axle at the end of the profile").BevelEndCut2 = 0
+        # if bevels_combined:
+        #     obj.BevelStartCut", "Profile",
+        #                     "Bevel at the start of the profile").BevelStartCut = 0
+        #     obj.BevelStartRotate", "Profile",
+        #                     "Rotate the second cut on Profile axle").BevelStartRotate = 0
+        #     obj.BevelEndCut", "Profile",
+        #                     "Bevel on First axle at the end of the profile").BevelEndCut = 0
+        #     obj.BevelEndRotate", "Profile",
+        #                     "Rotate the second cut on Profile axle").BevelEndRotate = 0
+
+        obj.ApproxWeight = init_wg * init_len / 1000
+
+        obj.CenteredOnHeight = init_hc
+        obj.CenteredOnWidth = init_wc
+
+        if obj.Family == "UPE":
+            obj.UPN = False
+            obj.FlangeAngle = 4.57
+        if obj.Family == "UPN":
+            obj.UPN = True
+            obj.FlangeAngle = 4.57
+
+        if obj.Family == "IPE" or obj.Family == "HEA" or obj.Family == "HEB" or obj.Family == "HEM":
+            obj.IPN = False
+            obj.FlangeAngle = 8
+        if obj.Family == "IPN":
+            obj.IPN = True
+            obj.FlangeAngle = 8
+
+        obj.Width = obj.ProfileWidth  # Property for structure
+        obj.Height = obj.ProfileLength  # Property for structure
+        obj.Length = obj.ProfileHeight  # Property for structure
+
+        # obj.OffsetA = .0  # Property for structure
+        # obj.OffsetB = .0  # Property for structure
+
 
     def on_changed(self, obj, p):
 
@@ -108,6 +183,8 @@ class Profile:
             self.execute(obj)
 
     def execute(self, obj):
+        if not hasattr(obj, "Family"): # for compat
+            obj.addProperty("App::PropertyString", "Family", "Profile", "", ).Family = self.fam
 
         try:
             L = obj.Target[0].getSubObject(obj.Target[1][0]).Length
@@ -169,7 +246,7 @@ class Profile:
         if obj.CenteredOnWidth == True:  w = -W / 2
         if obj.CenteredOnHeight == True: h = -H / 2
 
-        if self.fam == "Equal Leg Angles" or self.fam == "Unequal Leg Angles":
+        if obj.Family == "Equal Leg Angles" or obj.Family == "Unequal Leg Angles":
             if obj.MakeFillet == False:
                 p1 = vec(0 + w, 0 + h, 0)
                 p2 = vec(0 + w, H + h, 0)
@@ -215,10 +292,10 @@ class Profile:
 
             p = Part.Face(wire1)
 
-        if self.fam == "Flat Sections" or self.fam == "Square" or self.fam == "Square Hollow" or self.fam == "Rectangular Hollow":
+        if obj.Family == "Flat Sections" or obj.Family == "Square" or obj.Family == "Square Hollow" or obj.Family == "Rectangular Hollow":
             wire1 = wire2 = 0
 
-            if self.fam == "Square" or self.fam == "Flat Sections":
+            if obj.Family == "Square" or obj.Family == "Flat Sections":
                 p1 = vec(0 + w, 0 + h, 0)
                 p2 = vec(0 + w, H + h, 0)
                 p3 = vec(W + w, H + h, 0)
@@ -229,7 +306,7 @@ class Profile:
                 L4 = Part.makeLine(p4, p1)
                 wire1 = Part.Wire([L1, L2, L3, L4])
 
-            if obj.MakeFillet == False and (self.fam == "Square Hollow" or self.fam == "Rectangular Hollow"):
+            if obj.MakeFillet == False and (obj.Family == "Square Hollow" or obj.Family == "Rectangular Hollow"):
                 p1 = vec(0 + w, 0 + h, 0)
                 p2 = vec(0 + w, H + h, 0)
                 p3 = vec(W + w, H + h, 0)
@@ -251,7 +328,7 @@ class Profile:
                 wire1 = Part.Wire([L1, L2, L3, L4])
                 wire2 = Part.Wire([L5, L6, L7, L8])
 
-            if obj.MakeFillet == True and (self.fam == "Square Hollow" or self.fam == "Rectangular Hollow"):
+            if obj.MakeFillet == True and (obj.Family == "Square Hollow" or obj.Family == "Rectangular Hollow"):
                 p1 = vec(0 + w, 0 + R + h, 0)
                 p2 = vec(0 + w, H - R + h, 0)
                 p3 = vec(R + w, H + h, 0)
@@ -309,7 +386,7 @@ class Profile:
             else:
                 p = Part.Face(wire1)
 
-        if self.fam == "UPE" or self.fam == "UPN":
+        if obj.Family == "UPE" or obj.Family == "UPN":
             if obj.MakeFillet == False:  # UPE ou UPN sans arrondis
 
                 Yd = 0
@@ -451,7 +528,7 @@ class Profile:
 
             p = Part.Face(wire1)
 
-        if self.fam == "IPE" or self.fam == "IPN" or self.fam == "HEA" or self.fam == "HEB" or self.fam == "HEM":
+        if obj.Family == "IPE" or obj.Family == "IPN" or obj.Family == "HEA" or obj.Family == "HEB" or obj.Family == "HEM":
             XA1 = W / 2 - TW / 2  # face gauche du web
             XA2 = W / 2 + TW / 2  # face droite du web
             if obj.MakeFillet == False:  # IPE ou IPN sans arrondis
@@ -685,13 +762,13 @@ class Profile:
 
             p = Part.Face(wire1)
 
-        if self.fam == "Round Bar":
+        if obj.Family == "Round Bar":
             c = vec(H / 2 + h, H / 2 + h, 0)
             A1 = Part.makeCircle(H / 2, c, d, 0, 360)
             wire1 = Part.Wire([A1])
             p = Part.Face(wire1)
 
-        if self.fam == "Pipe":
+        if obj.Family == "Pipe":
             c = vec(H / 2 + h, H / 2 + h, 0)
             A1 = Part.makeCircle(H / 2, c, d, 0, 360)
             A2 = Part.makeCircle((H - TW) / 2, c, d, 0, 360)
@@ -740,3 +817,125 @@ class Profile:
         obj.Placement = pl
         obj.positionBySupport()
         obj.recompute()
+
+
+
+
+
+class ViewProviderProfile:
+    def __init__(self, obj):
+        ''' Set this object to the proxy object of the actual view provider '''
+        obj.Proxy = self
+    
+    def attach(self, vobj):
+        ''' Setup the scene sub-graph of the view provider, this method is mandatory '''
+        self.ViewObject = vobj
+        self.Object = vobj.Object
+        return
+        
+    def updateData(self, fp, prop):
+        ''' If a property of the handled feature has changed we have the chance to handle this here '''
+        return
+    
+    def getDisplayModes(self, obj):
+        ''' Return a list of display modes. '''
+        modes=[]
+        return modes
+    
+    def getDefaultDisplayMode(self):
+        ''' Return the name of the default display mode. It must be defined in getDisplayModes. '''
+        return "FlatLines"
+    
+    def setDisplayMode(self, mode):
+        ''' Map the display mode defined in attach with those defined in getDisplayModes.
+        Since they have the same names nothing needs to be done. This method is optional.
+        '''
+        return mode
+    
+    def claimChildren(self):
+        return []
+    
+    def onChanged(self, vp, prop):
+        ''' Print the name of the property that has changed '''
+        #App.Console.PrintMessage("Change {} property: {}\n".format(str(vp), str(prop)))
+        pass
+
+    def onDelete(self, fp, sub):
+        return True
+    
+    def getIcon(self):
+        ''' Return the icon in XMP format which will appear in the tree view. This method is optional
+        and if not defined a default icon is shown.
+        '''
+        return """
+                /* XPM */
+                static char * profile_xpm[] = {
+                "16 16 15 1",
+                " 	c None",
+                ".	c #000000",
+                "+	c #170000",
+                "@	c #2E5DA2",
+                "#	c #E8A200",
+                "$	c #00172E",
+                "%	c #A27400",
+                "&	c #FFB900",
+                "*	c #8B7400",
+                "=	c #001717",
+                "-	c #D1A200",
+                ";	c #B98B00",
+                ">	c #17172E",
+                ",	c #2E1700",
+                "'	c #171700",
+                "                ",
+                "                ",
+                "                ",
+                "                ",
+                "  ....+.......  ",
+                " .@@@@@@@@@@.#. ",
+                " .@@@@@@@@@$%&* ",
+                " =@@@@@@@@@$-&;.",
+                " =@@@@@@@@@>-&;.",
+                " >@@@@@@@@@=-&;.",
+                " >@@@@@@@@@$%&* ",
+                " .@@@@@@@@@@.-, ",
+                "  '..'.+...'.'  ",
+                "                ",
+                "                ",
+                "                "};
+        	"""
+
+
+    def dumps(self):
+        """
+        Called during document saving.
+        """
+        return None
+
+    def loads(self,state):
+        """
+        Called during document restore.
+        """
+        return None
+
+    def setEdit(self, vobj, mode):
+        if mode != 0:
+            return None
+
+        # TODO: understand why this import is needed for here and not for TrimmedProfile ???
+        import freecad.frameforge.edit_profile_tool
+
+        taskd = freecad.frameforge.edit_profile_tool.EditProfileTaskPanel(self.Object)
+        Gui.Control.showDialog(taskd)
+        return True
+
+    def unsetEdit(self, vobj, mode):
+        if mode != 0:
+            return None
+
+        Gui.Control.closeDialog()
+        return True
+
+    def edit(self):
+        FreeCADGui.ActiveDocument.setEdit(self.Object, 0)
+
+
