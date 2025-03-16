@@ -67,7 +67,10 @@ class CreateProfileTaskPanel():
     def on_material_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
 
+        self.form_proxy.combo_family.blockSignals(True)
         self.form_proxy.combo_family.clear()
+        self.form_proxy.combo_family.blockSignals(False)
+
         self.form_proxy.combo_family.addItems([f for f in self.profiles[material]])
 
     def on_family_changed(self, index):
