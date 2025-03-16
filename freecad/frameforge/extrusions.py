@@ -29,13 +29,8 @@ from DraftGeomUtils import fillet as draft_fillet
 
 
 # ************************************************************************************************
-def vslot20x20(
-    params,
-    document
-):
-    name = params["name"]
-    le = params["l"]
-
+# ************************************************************************************************
+def vslot20x20():
     # due to symmetry this can be nicely decomposed
     # x offset, y offset, reverse, switch, mir_x, mir_y
     symmetry = [
@@ -56,24 +51,10 @@ def vslot20x20(
 
     face = vslot(symmetry, vertices, fillets, corner_offset, circle_offsets)
 
-    part = document.addObject("Part::Feature", "BOLTS_part")
-    part.Label = name
-
-    part.Shape = face.extrude(Vector(0, 0, le)).removeSplitter()
-
-    # color
-    if params["finish"] == "Black":
-        part.ViewObject.DiffuseColor = (0.1, 0.1, 0.1)
-
+    return face
 
 # ************************************************************************************************
-def vslot20x40(
-    params,
-    document
-):
-    name = params["name"]
-    le = params["l"]
-
+def vslot20x40():
     # due to symmetry this can be nicely decomposed
     # x offset, y offset, reverse, switch, mir_x, mir_y
     symmetry = [
@@ -98,22 +79,11 @@ def vslot20x40(
     circle_offsets = [0, -w]
 
     face = vslot(symmetry, vertices, fillets, corner_offset, circle_offsets)
-
-    part = document.addObject("Part::Feature", "BOLTS_part")
-    part.Label = name
-
-    part.Shape = face.extrude(Vector(0, 0, le)).removeSplitter()
-
-    # color
-    if params["finish"] == "Black":
-        part.ViewObject.DiffuseColor = (0.1, 0.1, 0.1)
+    return face
 
 
 # ************************************************************************************************
-def vslot20x60(params, document):
-    name = params["name"]
-    le = params["l"]
-
+def vslot20x60():
     # due to symmetry this can be nicely decomposed
     # x offset, y offset, reverse, switch, mir_x, mir_y
     symmetry = [
@@ -143,22 +113,11 @@ def vslot20x60(params, document):
     circle_offsets = [0, -w, -2 * w]
 
     face = vslot(symmetry, vertices, fillets, corner_offset, circle_offsets)
-
-    part = document.addObject("Part::Feature", "BOLTS_part")
-    part.Label = name
-
-    part.Shape = face.extrude(Vector(0, 0, le)).removeSplitter()
-
-    # color
-    if params["finish"] == "Black":
-        part.ViewObject.DiffuseColor = (0.1, 0.1, 0.1)
+    return face
 
 
 # ************************************************************************************************
-def vslot20x80(params, document):
-    name = params["name"]
-    le = params["l"]
-
+def vslot20x80():
     # due to symmetry this can be nicely decomposed
     # x offset, y offset, reverse, switch, mir_x, mir_y
     symmetry = [
@@ -192,25 +151,10 @@ def vslot20x80(params, document):
     circle_offsets = [0, -w, -2 * w, -3 * w]
 
     face = vslot(symmetry, vertices, fillets, corner_offset, circle_offsets)
-
-    part = document.addObject("Part::Feature", "BOLTS_part")
-    part.Label = name
-
-    part.Shape = face.extrude(Vector(0, 0, le)).removeSplitter()
-
-    # color
-    if params["finish"] == "Black":
-        part.ViewObject.DiffuseColor = (0.1, 0.1, 0.1)
-
+    return face
 
 # ************************************************************************************************
-def tslot20x20(
-    params,
-    document
-):
-    name = params["name"]
-    le = params["l"]
-
+def tslot20x20():
     # due to symmetry this can be nicely decomposed
     # x offset, y offset, reverse, switch, mir_x, mir_y
     symmetry = [
@@ -230,21 +174,11 @@ def tslot20x20(
     circle_offsets = [0]
 
     face = tslot(symmetry, vertices, fillets, [], [], corner_offset, circle_offsets)
-
-    part = document.addObject("Part::Feature", "BOLTS_part")
-    part.Label = name
-
-    part.Shape = face.extrude(Vector(0, 0, le)).removeSplitter()
+    return face
 
 
 # ************************************************************************************************
-def tslot20x20_three_slot(
-    params,
-    document
-):
-    name = params["name"]
-    le = params["l"]
-
+def tslot20x20_three_slot():
     # due to symmetry this can be nicely decomposed
     # x offset, y offset, reverse, switch, mir_x, mir_y
     symmetry = [
@@ -278,21 +212,11 @@ def tslot20x20_three_slot(
         corner_offset,
         circle_offsets,
     )
-
-    part = document.addObject("Part::Feature", "BOLTS_part")
-    part.Label = name
-
-    part.Shape = face.extrude(Vector(0, 0, le)).removeSplitter()
+    return face
 
 
 # ************************************************************************************************
-def tslot20x20_two_slot(
-    params,
-    document
-):
-    name = params["name"]
-    le = params["l"]
-
+def tslot20x20_two_slot():
     # due to symmetry this can be nicely decomposed
     # x offset, y offset, reverse, switch, mir_x, mir_y
     symmetry = [
@@ -327,21 +251,11 @@ def tslot20x20_two_slot(
         corner_offset,
         circle_offsets,
     )
-
-    part = document.addObject("Part::Feature", "BOLTS_part")
-    part.Label = name
-
-    part.Shape = face.extrude(Vector(0, 0, le)).removeSplitter()
+    return face
 
 
 # ************************************************************************************************
-def tslot20x20_two_slot_opp(
-    params,
-    document
-):
-    name = params["name"]
-    le = params["l"]
-
+def tslot20x20_two_slot_opp():
     # due to symmetry this can be nicely decomposed
     # x offset, y offset, reverse, switch, mir_x, mir_y
     symmetry = [
@@ -382,21 +296,11 @@ def tslot20x20_two_slot_opp(
         corner_offset,
         circle_offsets,
     )
-
-    part = document.addObject("Part::Feature", "BOLTS_part")
-    part.Label = name
-
-    part.Shape = face.extrude(Vector(0, 0, le)).removeSplitter()
+    return face
 
 
 # ************************************************************************************************
-def tslot20x20_one_slot(
-    params,
-    document
-):
-    name = params["name"]
-    le = params["l"]
-
+def tslot20x20_one_slot():
     # due to symmetry this can be nicely decomposed
     # x offset, y offset, reverse, switch, mir_x, mir_y
     symmetry = [
@@ -432,11 +336,7 @@ def tslot20x20_one_slot(
         corner_offset,
         circle_offsets
     )
-
-    part = document.addObject("Part::Feature", "BOLTS_part")
-    part.Label = name
-
-    part.Shape = face.extrude(Vector(0, 0, le)).removeSplitter()
+    return face
 
 
 # ************************************************************************************************

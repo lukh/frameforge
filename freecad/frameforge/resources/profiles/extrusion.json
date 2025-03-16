@@ -1,0 +1,53 @@
+{
+    "V-Slot": {
+        "norm": "V-Slot Standard",
+        "unit": "Metric Units",
+        "fillet": false,
+        "sizes": {
+            "20x20": {"Height": "20", "Width": "20"},
+            "20x40": {"Height": "20", "Width": "40"},
+            "20x60": {"Height": "20", "Width": "60"},
+            "20x80": {"Height": "20", "Width": "80"}
+        }
+    },
+    "T-Slot": {
+        "norm": "V-Slot Standard",
+        "unit": "Metric Units",
+        "fillet": false,
+        "sizes": {
+            "20x20": {"Height": "20", "Width": "20"}
+        }
+    },
+    "T-Slot 3-Slots": {
+        "norm": "V-Slot Standard",
+        "unit": "Metric Units",
+        "fillet": false,
+        "sizes": {
+            "20x20": {"Height": "20", "Width": "20"}
+        }
+    },
+    "T-Slot 2-Slots": {
+        "norm": "V-Slot Standard",
+        "unit": "Metric Units",
+        "fillet": false,
+        "sizes": {
+            "20x20": {"Height": "20", "Width": "20"}
+        }
+    },
+    "T-Slot 2-Slots Opp": {
+        "norm": "V-Slot Standard",
+        "unit": "Metric Units",
+        "fillet": false,
+        "sizes": {
+            "20x20": {"Height": "20", "Width": "20"}
+        }
+    },
+    "T-Slot 1-Slot": {
+        "norm": "V-Slot Standard",
+        "unit": "Metric Units",
+        "fillet": false,
+        "sizes": {
+            "20x20": {"Height": "20", "Width": "20"}
+        }
+    }
+}
