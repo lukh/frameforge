@@ -128,7 +128,6 @@ class Profile:
         r = obj.RadiusSmall
         d = vec(0, 0, 1)
 
-        if W == 0: W = H
         w = h = 0
 
         if self.bevels_combined == False:
@@ -687,13 +686,13 @@ class Profile:
             p = Part.Face(wire1)
 
         if self.fam == "Round Bar":
-            c = vec(H / 2 + w, H / 2 + h, 0)
+            c = vec(H / 2 + h, H / 2 + h, 0)
             A1 = Part.makeCircle(H / 2, c, d, 0, 360)
             wire1 = Part.Wire([A1])
             p = Part.Face(wire1)
 
         if self.fam == "Pipe":
-            c = vec(H / 2 + w, H / 2 + h, 0)
+            c = vec(H / 2 + h, H / 2 + h, 0)
             A1 = Part.makeCircle(H / 2, c, d, 0, 360)
             A2 = Part.makeCircle((H - TW) / 2, c, d, 0, 360)
             wire1 = Part.Wire([A1])

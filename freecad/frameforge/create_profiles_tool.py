@@ -105,12 +105,19 @@ class CreateProfileTaskPanel():
             }
 
             self.form_proxy.sb_height.setEnabled(False)
+            self.form_proxy.sb_height.setValue(0.0)
             self.form_proxy.sb_width.setEnabled(False)
+            self.form_proxy.sb_width.setValue(0.0)
             self.form_proxy.sb_main_thickness.setEnabled(False)
+            self.form_proxy.sb_main_thickness.setValue(0.0)
             self.form_proxy.sb_flange_thickness.setEnabled(False)
+            self.form_proxy.sb_flange_thickness.setValue(0.0)
             self.form_proxy.sb_radius1.setEnabled(False)
+            self.form_proxy.sb_radius1.setValue(0.0)
             self.form_proxy.sb_radius2.setEnabled(False)
+            self.form_proxy.sb_radius2.setValue(0.0)
             self.form_proxy.sb_weight.setEnabled(False)
+            self.form_proxy.sb_weight.setValue(0.0)
 
             for s in profile:
                 if s == "Size":
