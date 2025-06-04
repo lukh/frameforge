@@ -1,0 +1,17 @@
+{
+    "Rectangular Hollow": {
+        "norm": "ASTM A513",
+        "unit": "inch",
+        "fillet": false,
+        "sizes": {
+            "1x2x.120": {
+                "Height": "2",
+                "Width": "1",
+                "Thickness": ".120",
+                "Radius1": ".36",
+                "Radius2": "0.36",
+                "Weight": "2.252"
+            }
+        }
+    }
+}
