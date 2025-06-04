@@ -16,9 +16,9 @@ class Profile:
         'fam' parameter, there is properties specific to profile family.
         """
 
-        obj.addProperty("App::PropertyFloat", "ProfileHeight", "Profile", "", ).ProfileHeight = init_h
-        obj.addProperty("App::PropertyFloat", "ProfileWidth", "Profile", "").ProfileWidth = init_w
-        obj.addProperty("App::PropertyFloat", "ProfileLength", "Profile", "").ProfileLength = init_len # should it be ?
+        obj.addProperty("App::PropertyLength", "ProfileHeight", "Profile", "", ).ProfileHeight = init_h
+        obj.addProperty("App::PropertyLength", "ProfileWidth", "Profile", "").ProfileWidth = init_w
+        obj.addProperty("App::PropertyLength", "ProfileLength", "Profile", "").ProfileLength = init_len # should it be ?
 
         obj.addProperty("App::PropertyFloat", "Thickness", "Profile",
                         "Thickness of all the profile or the web").Thickness = init_mt
