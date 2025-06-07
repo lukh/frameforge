@@ -235,8 +235,16 @@ class CreateProfileTaskPanel():
         # move it to the sketch's parent if possible
         if sketch is not None and len(sketch.Parents) > 0:
             sk_parent = sketch.Parents[-1][0]
-            sk_parent.addObject(obj)
-
+            # Check if parent is a Body container (not allowed to add arbitrary objects)
+            if sk_parent.TypeId != "PartDesign::Body":
+                try:
+                    sk_parent.addObject(obj)
+                except Exception as e:
+                    App.Console.PrintError(f"Could not add object to parent: {str(e)}\n")
+            else:
+                # For Body containers, we don't try to add the object
+                App.Console.PrintMessage("Parent is a Body container, profile added to document root\n")
+    
         # Create a ViewObject in current GUI
         obj.ViewObject.Proxy = 0
         view_obj = Gui.ActiveDocument.getObject(obj.Name)

@@ -108,7 +108,6 @@ class Profile:
             self.execute(obj)
 
     def execute(self, obj):
-
         try:
             L = obj.Target[0].getSubObject(obj.Target[1][0]).Length
             L += obj.OffsetA + obj.OffsetB
@@ -130,6 +129,48 @@ class Profile:
 
         if W == 0: W = H
         w = h = 0
+        
+        # IMPROVED UNIT HANDLING
+        try:
+            # Get unit information from Width
+            unit_suffix = str(App.Units.parseQuantity(str(W)).getUserPreferred()[2])
+            
+            # Convert all dimension variables to explicit quantities
+            W_q = App.Units.Quantity(str(W) + unit_suffix)
+            H_q = App.Units.Quantity(str(H) + unit_suffix) 
+            TW_q = App.Units.Quantity(str(TW) + unit_suffix)
+            TF_q = App.Units.Quantity(str(TF) + unit_suffix)
+            R_q = App.Units.Quantity(str(R) + unit_suffix)
+            r_q = App.Units.Quantity(str(r) + unit_suffix)
+            
+            # Create zero quantities with matching units
+            zero_w = App.Units.Quantity('0' + unit_suffix)
+            zero_h = App.Units.Quantity('0' + unit_suffix)
+            
+            # Handle w and h offset calculations with proper units
+            if obj.CenteredOnWidth == True:
+                w = -W_q/2
+            else:
+                w = zero_w
+            
+            if obj.CenteredOnHeight == True:
+                h = -H_q/2
+            else:
+                h = zero_h
+            
+        except Exception as e:
+            App.Console.PrintError(f"Unit conversion error: {str(e)}\n")
+            # Fallback to mm if unit parsing fails
+            zero_w = App.Units.Quantity('0mm')
+            zero_h = App.Units.Quantity('0mm')
+            w = zero_w
+            h = zero_h
+            
+        # Always use mm for the z-coordinate
+        zero_unit = App.Units.Quantity('0mm')
+    
+    # NOW USE W_q, H_q, TW_q, TF_q, R_q, r_q INSTEAD OF W, H, TW, TF, R, r
+    # IN ALL VECTOR CALCULATIONS
 
         if self.bevels_combined == False:
             if obj.BevelStartCut1 > 60: obj.BevelStartCut1 = 60
@@ -172,12 +213,12 @@ class Profile:
 
         if self.fam == "Equal Leg Angles" or self.fam == "Unequal Leg Angles":
             if obj.MakeFillet == False:
-                p1 = vec(0 + w, 0 + h, 0)
-                p2 = vec(0 + w, H + h, 0)
-                p3 = vec(TW + w, H + h, 0)
-                p4 = vec(TW + w, TW + h, 0)
-                p5 = vec(W + w, TW + h, 0)
-                p6 = vec(W + w, 0 + h, 0)
+                p1 = vec(self.zero_w + w, self.zero_h + h, self.zero_unit)
+                p2 = vec(self.zero_w + w, H_q + h, self.zero_unit)
+                p3 = vec(TW + w, H_q + h, self.zero_unit)
+                p4 = vec(TW + w, TW + h, self.zero_unit)
+                p5 = vec(W_q + w, TW + h, self.zero_unit)
+                p6 = vec(W_q + w, self.zero_h + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p2, p3)
@@ -189,18 +230,18 @@ class Profile:
                 wire1 = Part.Wire([L1, L2, L3, L4, L5, L6])
 
             if obj.MakeFillet == True:
-                p1 = vec(0 + w, 0 + h, 0)
-                p2 = vec(0 + w, H + h, 0)
-                p3 = vec(TW - r + w, H + h, 0)
-                p4 = vec(TW + w, H - r + h, 0)
-                p5 = vec(TW + w, TW + R + h, 0)
-                p6 = vec(TW + R + w, TW + h, 0)
-                p7 = vec(W - r + w, TW + h, 0)
-                p8 = vec(W + w, TW - r + h, 0)
-                p9 = vec(W + w, 0 + h, 0)
-                c1 = vec(TW - r + w, H - r + h, 0)
-                c2 = vec(TW + R + w, TW + R + h, 0)
-                c3 = vec(W - r + w, TW - r + h, 0)
+                p1 = vec(self.zero_w + w, self.zero_h + h, self.zero_unit)
+                p2 = vec(self.zero_w + w, H_q + h, self.zero_unit)
+                p3 = vec(TW_q - r_q + w, H_q + h, self.zero_unit)
+                p4 = vec(TW_q + w, H_q - r_q + h, self.zero_unit)
+                p5 = vec(TW_q + w, TW_q + R_q + h, self.zero_unit)
+                p6 = vec(TW_q + R_q + w, TW_q + h, self.zero_unit)
+                p7 = vec(W_q - r_q + w, TW_q + h, self.zero_unit)
+                p8 = vec(W_q + w, TW_q - r_q + h, self.zero_unit)
+                p9 = vec(W_q + w, self.zero_h + h, self.zero_unit)
+                c1 = vec(TW_q - r_q + w, H_q - r_q + h, self.zero_unit)
+                c2 = vec(TW_q + R_q + w, TW_q + R_q + h, self.zero_unit)
+                c3 = vec(W_q - r_q + w, TW_q - r_q + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p2, p3)
@@ -220,10 +261,10 @@ class Profile:
             wire1 = wire2 = 0
 
             if self.fam == "Square" or self.fam == "Flat Sections":
-                p1 = vec(0 + w, 0 + h, 0)
-                p2 = vec(0 + w, H + h, 0)
-                p3 = vec(W + w, H + h, 0)
-                p4 = vec(W + w, 0 + h, 0)
+                p1 = vec(self.zero_w + w, self.zero_h + h, self.zero_unit)
+                p2 = vec(self.zero_w + w, H_q + h, self.zero_unit)
+                p3 = vec(W_q + w, H_q + h, self.zero_unit)
+                p4 = vec(W_q + w, self.zero_h + h, self.zero_unit)
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p2, p3)
                 L3 = Part.makeLine(p3, p4)
@@ -231,14 +272,14 @@ class Profile:
                 wire1 = Part.Wire([L1, L2, L3, L4])
 
             if obj.MakeFillet == False and (self.fam == "Square Hollow" or self.fam == "Rectangular Hollow"):
-                p1 = vec(0 + w, 0 + h, 0)
-                p2 = vec(0 + w, H + h, 0)
-                p3 = vec(W + w, H + h, 0)
-                p4 = vec(W + w, 0 + h, 0)
-                p5 = vec(TW + w, TW + h, 0)
-                p6 = vec(TW + w, H + h - TW, 0)
-                p7 = vec(W + w - TW, H + h - TW, 0)
-                p8 = vec(W + w - TW, TW + h, 0)
+                p1 = vec(self.zero_w + w, self.zero_h + h, self.zero_unit)
+                p2 = vec(self.zero_w + w, H_q + h, self.zero_unit)
+                p3 = vec(W_q + w, H_q + h, self.zero_unit)
+                p4 = vec(W_q + w, self.zero_h + h, self.zero_unit)
+                p5 = vec(TW_q + w, TW_q + h, self.zero_unit)
+                p6 = vec(TW_q + w, H + h - TW_q, self.zero_unit)
+                p7 = vec(W_q + w - TW_q, H_q + h - TW_q, self.zero_unit)
+                p8 = vec(W_q + w - TW_q, TW_q + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p2, p3)
@@ -253,44 +294,44 @@ class Profile:
                 wire2 = Part.Wire([L5, L6, L7, L8])
 
             if obj.MakeFillet == True and (self.fam == "Square Hollow" or self.fam == "Rectangular Hollow"):
-                p1 = vec(0 + w, 0 + R + h, 0)
-                p2 = vec(0 + w, H - R + h, 0)
-                p3 = vec(R + w, H + h, 0)
-                p4 = vec(W - R + w, H + h, 0)
-                p5 = vec(W + w, H - R + h, 0)
-                p6 = vec(W + w, R + h, 0)
-                p7 = vec(W - R + w, 0 + h, 0)
-                p8 = vec(R + w, 0 + h, 0)
+                p1 = vec(self.zero_w + w, self.zero_h + h + R_q, self.zero_unit)
+                p2 = vec(self.zero_w + w, H - R_q + h, self.zero_unit)
+                p3 = vec(R_q + w, H_q + h, self.zero_unit)
+                p4 = vec(W_q - R_q + w, H_q + h, self.zero_unit)
+                p5 = vec(W_q + w, H - R_q + h, self.zero_unit)
+                p6 = vec(W_q + w, R_q + h, self.zero_unit)
+                p7 = vec(W_q - R_q + w, self.zero_h + h, self.zero_unit)
+                p8 = vec(R_q + w, self.zero_h + h, self.zero_unit)
 
-                c1 = vec(R + w, R + h, 0)
-                c2 = vec(R + w, H - R + h, 0)
-                c3 = vec(W - R + w, H - R + h, 0)
-                c4 = vec(W - R + w, R + h, 0)
+                c1 = vec(R_q + w, R_q + h, self.zero_unit)
+                c2 = vec(R_q + w, H - R_q + h, self.zero_unit)
+                c3 = vec(W_q - R_q + w, H_q - R_q + h, self.zero_unit)
+                c4 = vec(W_q - R_q + w, R_q + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p3, p4)
                 L3 = Part.makeLine(p5, p6)
                 L4 = Part.makeLine(p7, p8)
-                A1 = Part.makeCircle(R, c1, d, 180, 270)
-                A2 = Part.makeCircle(R, c2, d, 90, 180)
-                A3 = Part.makeCircle(R, c3, d, 0, 90)
-                A4 = Part.makeCircle(R, c4, d, 270, 0)
+                A1 = Part.makeCircle(R_q, c1, d, 180, 270)
+                A2 = Part.makeCircle(R_q, c2, d, 90, 180)
+                A3 = Part.makeCircle(R_q, c3, d, 0, 90)
+                A4 = Part.makeCircle(R_q, c4, d, 270, 0)
 
                 wire1 = Part.Wire([L1, A2, L2, A3, L3, A4, L4, A1])
 
-                p1 = vec(TW + w, TW + r + h, 0)
-                p2 = vec(TW + w, H - TW - r + h, 0)
-                p3 = vec(TW + r + w, H - TW + h, 0)
-                p4 = vec(W - TW - r + w, H - TW + h, 0)
-                p5 = vec(W - TW + w, H - TW - r + h, 0)
-                p6 = vec(W - TW + w, TW + r + h, 0)
-                p7 = vec(W - TW - r + w, TW + h, 0)
-                p8 = vec(TW + r + w, TW + h, 0)
+                p1 = vec(TW_q + w, TW_q + r_q + h, self.zero_unit)
+                p2 = vec(TW_q + w, H_q - TW_q - r_q + h, self.zero_unit)
+                p3 = vec(TW_q + r_q + w, H_q - TW_q + h, self.zero_unit)
+                p4 = vec(W_q - TW_q - r_q + w, H_q - TW_q + h, self.zero_unit)
+                p5 = vec(W_q - TW_q + w, H_q - TW_q - r_q + h, self.zero_unit)
+                p6 = vec(W_q - TW_q + w, TW_q + r_q + h, self.zero_unit)
+                p7 = vec(W_q - TW_q - r_q + w, TW_q + h, self.zero_unit)
+                p8 = vec(TW_q + r_q + w, TW_q + h, self.zero_unit)
 
-                c1 = vec(TW + r + w, TW + r + h, 0)
-                c2 = vec(TW + r + w, H - TW - r + h, 0)
-                c3 = vec(W - TW - r + w, H - TW - r + h, 0)
-                c4 = vec(W - TW - r + w, TW + r + h, 0)
+                c1 = vec(TW_q + r_q + w, TW_q + r_q + h, self.zero_unit)
+                c2 = vec(TW_q + r_q + w, H_q - TW_q - r_q + h, self.zero_unit)
+                c3 = vec(W_q - TW_q - r_q + w, H_q - TW_q - r_q + h, self.zero_unit)
+                c4 = vec(W_q - TW_q - r_q + w, TW_q + r_q + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p3, p4)
@@ -316,14 +357,14 @@ class Profile:
                 Yd = 0
                 if obj.UPN == True: Yd = (W / 4) * math.tan(math.pi * obj.FlangeAngle / 180)
 
-                p1 = vec(w, h, 0)
-                p2 = vec(w, H + h, 0)
-                p3 = vec(w + W, H + h, 0)
-                p4 = vec(W + w, h, 0)
-                p5 = vec(W + w + Yd - TW, h, 0)
-                p6 = vec(W + w - Yd - TW, H + h - TF, 0)
-                p7 = vec(w + TW + Yd, H + h - TF, 0)
-                p8 = vec(w + TW - Yd, h, 0)
+                p1 = vec(self.zero_w + w, self.zero_h + h, self.zero_unit)
+                p2 = vec(self.zero_w + w, H_q + h, self.zero_unit)
+                p3 = vec(self.zero_w + w + W_q, H_q + h, self.zero_unit)
+                p4 = vec(self.zero_w + W_q + w, h, self.zero_unit)
+                p5 = vec(self.zero_w + W_q + w + Yd - TW_q, h, self.zero_unit)
+                p6 = vec(self.zero_w + W_q + w - Yd - TW_q, H_q + h - TF_q, self.zero_unit)
+                p7 = vec(self.zero_w + w + TW_q + Yd, H_q + h - TF_q, self.zero_unit)
+                p8 = vec(self.zero_w + w + TW_q - Yd, h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p2, p3)
@@ -338,23 +379,23 @@ class Profile:
 
             if obj.MakeFillet == True and obj.UPN == False:  # UPE avec arrondis
 
-                p1 = vec(w, h, 0)
-                p2 = vec(w, H + h, 0)
-                p3 = vec(w + W, H + h, 0)
-                p4 = vec(W + w, h, 0)
-                p5 = vec(W + w - TW + r, h, 0)
-                p6 = vec(W + w - TW, h + r, 0)
-                p7 = vec(W + w - TW, H + h - TF - R, 0)
-                p8 = vec(W + w - TW - R, H + h - TF, 0)
-                p9 = vec(w + TW + R, H + h - TF, 0)
-                p10 = vec(w + TW, H + h - TF - R, 0)
-                p11 = vec(w + TW, h + r, 0)
-                p12 = vec(w + TW - r, h, 0)
+                p1 = vec(self.zero_w + w, self.zero_h + h, self.zero_unit)
+                p2 = vec(self.zero_w + w, H_q + h, self.zero_unit)
+                p3 = vec(self.zero_w + w + W_q, H_q + h, self.zero_unit)
+                p4 = vec(self.zero_w + W_q + w, h, self.zero_unit)
+                p5 = vec(self.zero_w + W_q + w - TW_q + r, h, self.zero_unit)
+                p6 = vec(self.zero_w + W_q + w - TW_q, h + r, self.zero_unit)
+                p7 = vec(self.zero_w + W_q + w - TW_q, H_q + h - TF_q - R_q, self.zero_unit)
+                p8 = vec(self.zero_w + W_q + w - TW_q - R_q, H_q + h - TF_q, self.zero_unit)
+                p9 = vec(self.zero_w + w + TW_q + R_q, H_q + h - TF_q, self.zero_unit)
+                p10 = vec(self.zero_w + w + TW_q, H_q + h - TF_q - R_q, self.zero_unit)
+                p11 = vec(self.zero_w + w + TW_q, h + r, self.zero_unit)
+                p12 = vec(self.zero_w + w + TW_q - r, h, self.zero_unit)
 
-                C1 = vec(w + TW - r, h + r, 0)
-                C2 = vec(w + TW + R, H + h - TF - R, 0)
-                C3 = vec(W + w - TW - R, H + h - TF - R, 0)
-                C4 = vec(W + w - TW + r, r + h, 0)
+                C1 = vec(self.zero_w + w + TW_q - r, h + r, self.zero_unit)
+                C2 = vec(self.zero_w + w + TW_q + R_q, H_q + h - TF_q - R_q, self.zero_unit)
+                C3 = vec(self.zero_w + w + W_q + r, H_q + h - TF_q - R_q, self.zero_unit)
+                C4 = vec(self.zero_w + w + W_q + r, r + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p2, p3)
@@ -366,11 +407,11 @@ class Profile:
                 L8 = Part.makeLine(p12, p1)
 
                 A1 = Part.makeCircle(r, C1, d, 270, 0)
-                A2 = Part.makeCircle(R, C2, d, 90, 180)
-                A3 = Part.makeCircle(R, C3, d, 0, 90)
+                A2 = Part.makeCircle(R_q, C2, d, 90, 180)
+                A3 = Part.makeCircle(R_q, C3, d, 0, 90)
                 A4 = Part.makeCircle(r, C4, d, 180, 270)
 
-                wire1 = Part.Wire([L1, L2, L3, L4, A4, L5, A3, L6, A2, L7, A1, L8])
+                wire1 = Part.Wire([L1, L2, A4, L5, A3, L6, A2, L7, A1, L8])
 
             if obj.MakeFillet == True and obj.UPN == True:  # UPN avec arrondis
                 angarc = obj.FlangeAngle
@@ -416,23 +457,23 @@ class Profile:
                 x8 = W - x9
                 y8 = y9
 
-                c1 = vec(xc1 + w, yc1 + h, 0)
-                c2 = vec(xc2 + w, yc2 + h, 0)
-                c3 = vec(xc3 + w, yc3 + h, 0)
-                c4 = vec(xc4 + w, yc4 + h, 0)
+                c1 = vec(xc1 + w, yc1 + h, self.zero_unit)
+                c2 = vec(xc2 + w, yc2 + h, self.zero_unit)
+                c3 = vec(xc3 + w, yc3 + h, self.zero_unit)
+                c4 = vec(xc4 + w, yc4 + h, self.zero_unit)
 
-                p1 = vec(x1 + w, y1 + h, 0)
-                p2 = vec(x2 + w, y2 + h, 0)
-                p3 = vec(x3 + w, y3 + h, 0)
-                p4 = vec(x4 + w, y4 + h, 0)
-                p5 = vec(x5 + w, y5 + h, 0)
-                p6 = vec(x6 + w, y6 + h, 0)
-                p7 = vec(x7 + w, y7 + h, 0)
-                p8 = vec(x8 + w, y8 + h, 0)
-                p9 = vec(x9 + w, y9 + h, 0)
-                p10 = vec(x10 + w, y10 + h, 0)
-                p11 = vec(x11 + w, y11 + h, 0)
-                p12 = vec(x12 + w, y12 + h, 0)
+                p1 = vec(x1 + w, y1 + h, self.zero_unit)
+                p2 = vec(x2 + w, y2 + h, self.zero_unit)
+                p3 = vec(x3 + w, y3 + h, self.zero_unit)
+                p4 = vec(x4 + w, y4 + h, self.zero_unit)
+                p5 = vec(x5 + w, y5 + h, self.zero_unit)
+                p6 = vec(x6 + w, y6 + h, self.zero_unit)
+                p7 = vec(x7 + w, y7 + h, self.zero_unit)
+                p8 = vec(x8 + w, y8 + h, self.zero_unit)
+                p9 = vec(x9 + w, y9 + h, self.zero_unit)
+                p10 = vec(x10 + w, y10 + h, self.zero_unit)
+                p11 = vec(x11 + w, y11 + h, self.zero_unit)
+                p12 = vec(x12 + w, y12 + h, self.zero_unit)
 
                 A1 = Part.makeCircle(r, c1, d, 270, 0 - angarc)
                 A2 = Part.makeCircle(R, c2, d, 90, 180 - angarc)
@@ -459,18 +500,18 @@ class Profile:
                 Yd = 0
                 if obj.IPN == True: Yd = (W / 4) * math.tan(math.pi * obj.FlangeAngle / 180)
 
-                p1 = vec(0 + w, 0 + h, 0)
-                p2 = vec(0 + w, TF + h - Yd, 0)
-                p3 = vec(XA1 + w, TF + h + Yd, 0)
-                p4 = vec(XA1 + w, H - TF + h - Yd, 0)
-                p5 = vec(0 + w, H - TF + h + Yd, 0)
-                p6 = vec(0 + w, H + h, 0)
-                p7 = vec(W + w, H + h, 0)
-                p8 = vec(W + w, H - TF + h + Yd, 0)
-                p9 = vec(XA2 + w, H - TF + h - Yd, 0)
-                p10 = vec(XA2 + w, TF + h + Yd, 0)
-                p11 = vec(W + w, TF + h - Yd, 0)
-                p12 = vec(W + w, 0 + h, 0)
+                p1 = vec(self.zero_w + w, self.zero_h + h, self.zero_unit)
+                p2 = vec(self.zero_w + w, TF_q + h - Yd, self.zero_unit)
+                p3 = vec(XA1 + w, TF_q + h + Yd, self.zero_unit)
+                p4 = vec(XA1 + w, H_q - TF_q + h - Yd, self.zero_unit)
+                p5 = vec(self.zero_w + w, H_q - TF_q + h + Yd, self.zero_unit)
+                p6 = vec(self.zero_w + w, H_q + h, self.zero_unit)
+                p7 = vec(W_q + w, H_q + h, self.zero_unit)
+                p8 = vec(W_q + w, H_q - TF_q + h + Yd, self.zero_unit)
+                p9 = vec(XA2 + w, H_q - TF_q + h - Yd, self.zero_unit)
+                p10 = vec(XA2 + w, TF_q + h + Yd, self.zero_unit)
+                p11 = vec(W_q + w, TF_q + h - Yd, self.zero_unit)
+                p12 = vec(W_q + w, self.zero_h + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p2, p3)
@@ -488,27 +529,27 @@ class Profile:
                 wire1 = Part.Wire([L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12])
 
             if obj.MakeFillet == True and obj.IPN == False:  # IPE avec arrondis
-                p1 = vec(0 + w, 0 + h, 0)
-                p2 = vec(0 + w, TF + h, 0)
-                p3 = vec(XA1 - R + w, TF + h, 0)
-                p4 = vec(XA1 + w, TF + R + h, 0)
-                p5 = vec(XA1 + w, H - TF - R + h, 0)
-                p6 = vec(XA1 - R + w, H - TF + h, 0)
-                p7 = vec(0 + w, H - TF + h, 0)
-                p8 = vec(0 + w, H + h, 0)
-                p9 = vec(W + w, H + h, 0)
-                p10 = vec(W + w, H - TF + h, 0)
-                p11 = vec(XA2 + R + w, H - TF + h, 0)
-                p12 = vec(XA2 + w, H - TF - R + h, 0)
-                p13 = vec(XA2 + w, TF + R + h, 0)
-                p14 = vec(XA2 + R + w, TF + h, 0)
-                p15 = vec(W + w, TF + h, 0)
-                p16 = vec(W + w, 0 + h, 0)
+                p1 = vec(self.zero_w + w, self.zero_h + h, self.zero_unit)
+                p2 = vec(self.zero_w + w, TF_q + h, self.zero_unit)
+                p3 = vec(XA1 - R_q + w, TF_q + h, self.zero_unit)
+                p4 = vec(XA1 + w, TF_q + R_q + h, self.zero_unit)
+                p5 = vec(XA1 + w, H_q - TF_q - R_q + h, self.zero_unit)
+                p6 = vec(XA1 - R_q + w, H_q - TF_q + h, self.zero_unit)
+                p7 = vec(self.zero_w + w, H_q - TF_q + h, self.zero_unit)
+                p8 = vec(self.zero_w + w, H_q + h, self.zero_unit)
+                p9 = vec(W_q + w, H_q + h, self.zero_unit)
+                p10 = vec(W_q + w, H_q - TF_q + h, self.zero_unit)
+                p11 = vec(XA2 + R_q + w, H_q - TF_q + h, self.zero_unit)
+                p12 = vec(XA2 + w, H_q - TF_q - R_q + h, self.zero_unit)
+                p13 = vec(XA2 + w, TF_q + R_q + h, self.zero_unit)
+                p14 = vec(XA2 + R_q + w, TF_q + h, self.zero_unit)
+                p15 = vec(W_q + w, TF_q + h, self.zero_unit)
+                p16 = vec(W_q + w, self.zero_h + h, self.zero_unit)
 
-                c1 = vec(XA1 - R + w, TF + R + h, 0)
-                c2 = vec(XA1 - R + w, H - TF - R + h, 0)
-                c3 = vec(XA2 + R + w, H - TF - R + h, 0)
-                c4 = vec(XA2 + R + w, TF + R + h, 0)
+                c1 = vec(XA1 - R_q + w, TF_q + R_q + h, self.zero_unit)
+                c2 = vec(XA1 - R_q + w, H_q - TF_q - R_q + h, self.zero_unit)
+                c3 = vec(XA2 + R_q + w, H_q - TF_q - R_q + h, self.zero_unit)
+                c4 = vec(XA2 + R_q + w, TF_q + R_q + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p2, p3)
@@ -550,35 +591,35 @@ class Profile:
 
                 xc1 = r
                 yc1 = cot5 - cot3
-                c1 = vec(xc1 + w, yc1 + h, 0)
+                c1 = vec(xc1 + w, yc1 + h, self.zero_unit)
 
                 xc2 = W / 2 - TW / 2 - R
-                yc2 = cot9 + TF + cot10
-                c2 = vec(xc2 + w, yc2 + h, 0)
+                yc2 = cot9 + TF_q + cot10
+                c2 = vec(xc2 + w, yc2 + h, self.zero_unit)
 
                 xc3 = xc2
                 yc3 = H - yc2
-                c3 = vec(xc3 + w, yc3 + h, 0)
+                c3 = vec(xc3 + w, yc3 + h, self.zero_unit)
 
                 xc4 = xc1
                 yc4 = H - yc1
-                c4 = vec(xc4 + w, yc4 + h, 0)
+                c4 = vec(xc4 + w, yc4 + h, self.zero_unit)
 
                 xc5 = W - xc1
                 yc5 = yc4
-                c5 = vec(xc5 + w, yc5 + h, 0)
+                c5 = vec(xc5 + w, yc5 + h, self.zero_unit)
 
                 xc6 = W - xc2
                 yc6 = yc3
-                c6 = vec(xc6 + w, yc6 + h, 0)
+                c6 = vec(xc6 + w, yc6 + h, self.zero_unit)
 
                 xc7 = xc6
                 yc7 = yc2
-                c7 = vec(xc7 + w, yc7 + h, 0)
+                c7 = vec(xc7 + w, yc7 + h, self.zero_unit)
 
                 xc8 = xc5
                 yc8 = yc1
-                c8 = vec(xc8 + w, yc8 + h, 0)
+                c8 = vec(xc8 + w, yc8 + h, self.zero_unit)
 
                 A1 = Part.makeCircle(r, c1, d, 90 + angarc, 180)
                 A2 = Part.makeCircle(R, c2, d, 270 + angarc, 0)
@@ -591,83 +632,83 @@ class Profile:
 
                 xp1 = 0
                 yp1 = 0
-                p1 = vec(xp1 + w, yp1 + h, 0)
+                p1 = vec(xp1 + w, yp1 + h, self.zero_unit)
 
                 xp2 = 0
                 yp2 = cot5 - cot3
-                p2 = vec(xp2 + w, yp2 + h, 0)
+                p2 = vec(xp2 + w, yp2 + h, self.zero_unit)
 
                 xp3 = cot4
                 yp3 = cot5
-                p3 = vec(xp3 + w, yp3 + h, 0)
+                p3 = vec(xp3 + w, yp3 + h, self.zero_unit)
 
                 xp4 = W / 4 + cot8
                 yp4 = TF + cot9
-                p4 = vec(xp4 + w, yp4 + h, 0)
+                p4 = vec(xp4 + w, yp4 + h, self.zero_unit)
 
                 xp5 = W / 2 - TW / 2
                 yp5 = yc2
-                p5 = vec(xp5 + w, yp5 + h, 0)
+                p5 = vec(xp5 + w, yp5 + h, self.zero_unit)
 
                 xp6 = xp5
                 yp6 = H - yp5
-                p6 = vec(xp6 + w, yp6 + h, 0)
+                p6 = vec(xp6 + w, yp6 + h, self.zero_unit)
 
                 xp7 = xp4
                 yp7 = H - yp4
-                p7 = vec(xp7 + w, yp7 + h, 0)
+                p7 = vec(xp7 + w, yp7 + h, self.zero_unit)
 
                 xp8 = xp3
                 yp8 = H - yp3
-                p8 = vec(xp8 + w, yp8 + h, 0)
+                p8 = vec(xp8 + w, yp8 + h, self.zero_unit)
 
                 xp9 = xp2
                 yp9 = H - yp2
-                p9 = vec(xp9 + w, yp9 + h, 0)
+                p9 = vec(xp9 + w, yp9 + h, self.zero_unit)
 
                 xp10 = xp1
                 yp10 = H
-                p10 = vec(xp10 + w, yp10 + h, 0)
+                p10 = vec(xp10 + w, yp10 + h, self.zero_unit)
 
                 xp11 = W
                 yp11 = H
-                p11 = vec(xp11 + w, yp11 + h, 0)
+                p11 = vec(xp11 + w, yp11 + h, self.zero_unit)
 
                 xp12 = xp11
                 yp12 = yp9
-                p12 = vec(xp12 + w, yp12 + h, 0)
+                p12 = vec(xp12 + w, yp12 + h, self.zero_unit)
 
                 xp13 = W - xp8
                 yp13 = yp8
-                p13 = vec(xp13 + w, yp13 + h, 0)
+                p13 = vec(xp13 + w, yp13 + h, self.zero_unit)
 
                 xp14 = W - xp7
                 yp14 = yp7
-                p14 = vec(xp14 + w, yp14 + h, 0)
+                p14 = vec(xp14 + w, yp14 + h, self.zero_unit)
 
                 xp15 = W - xp6
                 yp15 = yp6
-                p15 = vec(xp15 + w, yp15 + h, 0)
+                p15 = vec(xp15 + w, yp15 + h, self.zero_unit)
 
                 xp16 = W - xp5
                 yp16 = yp5
-                p16 = vec(xp16 + w, yp16 + h, 0)
+                p16 = vec(xp16 + w, yp16 + h, self.zero_unit)
 
                 xp17 = W - xp4
                 yp17 = yp4
-                p17 = vec(xp17 + w, yp17 + h, 0)
+                p17 = vec(xp17 + w, yp17 + h, self.zero_unit)
 
                 xp18 = W - xp3
                 yp18 = yp3
-                p18 = vec(xp18 + w, yp18 + h, 0)
+                p18 = vec(xp18 + w, yp18 + h, self.zero_unit)
 
                 xp19 = W - xp2
                 yp19 = yp2
-                p19 = vec(xp19 + w, yp19 + h, 0)
+                p19 = vec(xp19 + w, yp19 + h, self.zero_unit)
 
                 xp20 = W
                 yp20 = 0
-                p20 = vec(xp20 + w, yp20 + h, 0)
+                p20 = vec(xp20 + w, yp20 + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p3, p4)
@@ -687,13 +728,13 @@ class Profile:
             p = Part.Face(wire1)
 
         if self.fam == "Round Bar":
-            c = vec(H / 2 + w, H / 2 + h, 0)
+            c = vec(H_q / 2 + w, H_q / 2 + h, self.zero_unit)
             A1 = Part.makeCircle(H / 2, c, d, 0, 360)
             wire1 = Part.Wire([A1])
             p = Part.Face(wire1)
 
         if self.fam == "Pipe":
-            c = vec(H / 2 + w, H / 2 + h, 0)
+            c = vec(H_q / 2 + w, H_q / 2 + h, self.zero_unit)
             A1 = Part.makeCircle(H / 2, c, d, 0, 360)
             A2 = Part.makeCircle((H - TW) / 2, c, d, 0, 360)
             wire1 = Part.Wire([A1])
@@ -735,7 +776,6 @@ class Profile:
                 obj.Shape = ProfileCut.removeSplitter()
 
                 # if wire2: obj.Shape = Part.Compound([wire1,wire2])  # OCC Sweep doesn't be able hollow shape yet :-(
-
         else:
             obj.Shape = Part.Face(wire1)
         obj.Placement = pl
