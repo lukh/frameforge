@@ -6,9 +6,26 @@ import Part
 # Global variable for a 3D float vector (used in Profile class)
 vec = App.Base.Vector
 
+
 class Profile:
-    def __init__(self, obj, init_w, init_h, init_mt, init_ft, init_r1, init_r2, init_len, init_wg, init_mf,
-                 init_hc, init_wc, fam, bevels_combined, link_sub=None):
+    def __init__(
+        self,
+        obj,
+        init_w,
+        init_h,
+        init_mt,
+        init_ft,
+        init_r1,
+        init_r2,
+        init_len,
+        init_wg,
+        init_mf,
+        init_hc,
+        init_wc,
+        fam,
+        bevels_combined,
+        link_sub=None,
+    ):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
         with initialization value 'init_w' to 'init_wc' : ProfileHeight, ProfileWidth, [...] CenteredOnWidth. Depending
@@ -16,80 +33,153 @@ class Profile:
         'fam' parameter, there is properties specific to profile family.
         """
 
-        obj.addProperty("App::PropertyFloat", "ProfileHeight", "Profile", "", ).ProfileHeight = init_h
+        obj.addProperty(
+            "App::PropertyFloat",
+            "ProfileHeight",
+            "Profile",
+            "",
+        ).ProfileHeight = init_h
         obj.addProperty("App::PropertyFloat", "ProfileWidth", "Profile", "").ProfileWidth = init_w
-        obj.addProperty("App::PropertyFloat", "ProfileLength", "Profile", "").ProfileLength = init_len # should it be ?
+        obj.addProperty("App::PropertyFloat", "ProfileLength", "Profile", "").ProfileLength = (
+            init_len  # should it be ?
+        )
 
-        obj.addProperty("App::PropertyFloat", "Thickness", "Profile",
-                        "Thickness of all the profile or the web").Thickness = init_mt
-        obj.addProperty("App::PropertyFloat", "ThicknessFlange", "Profile",
-                        "Thickness of the flanges").ThicknessFlange = init_ft
+        obj.addProperty(
+            "App::PropertyFloat", "Thickness", "Profile", "Thickness of all the profile or the web"
+        ).Thickness = init_mt
+        obj.addProperty(
+            "App::PropertyFloat", "ThicknessFlange", "Profile", "Thickness of the flanges"
+        ).ThicknessFlange = init_ft
 
-        obj.addProperty("App::PropertyFloat", "RadiusLarge", "Profile", "Large radius").RadiusLarge = init_r1
-        obj.addProperty("App::PropertyFloat", "RadiusSmall", "Profile", "Small radius").RadiusSmall = init_r2
-        obj.addProperty("App::PropertyBool", "MakeFillet", "Profile",
-                        "Whether to draw the fillets or not").MakeFillet = init_mf
+        obj.addProperty(
+            "App::PropertyFloat", "RadiusLarge", "Profile", "Large radius"
+        ).RadiusLarge = init_r1
+        obj.addProperty(
+            "App::PropertyFloat", "RadiusSmall", "Profile", "Small radius"
+        ).RadiusSmall = init_r2
+        obj.addProperty(
+            "App::PropertyBool", "MakeFillet", "Profile", "Whether to draw the fillets or not"
+        ).MakeFillet = init_mf
 
         if not bevels_combined:
-            obj.addProperty("App::PropertyFloat", "BevelStartCut1", "Profile",
-                            "Bevel on First axle at the start of the profile").BevelStartCut1 = 0
-            obj.addProperty("App::PropertyFloat", "BevelStartCut2", "Profile",
-                            "Rotate the cut on Second axle at the start of the profile").BevelStartCut2 = 0
-            obj.addProperty("App::PropertyFloat", "BevelEndCut1", "Profile",
-                            "Bevel on First axle at the end of the profile").BevelEndCut1 = 0
-            obj.addProperty("App::PropertyFloat", "BevelEndCut2", "Profile",
-                            "Rotate the cut on Second axle at the end of the profile").BevelEndCut2 = 0
+            obj.addProperty(
+                "App::PropertyFloat",
+                "BevelStartCut1",
+                "Profile",
+                "Bevel on First axle at the start of the profile",
+            ).BevelStartCut1 = 0
+            obj.addProperty(
+                "App::PropertyFloat",
+                "BevelStartCut2",
+                "Profile",
+                "Rotate the cut on Second axle at the start of the profile",
+            ).BevelStartCut2 = 0
+            obj.addProperty(
+                "App::PropertyFloat",
+                "BevelEndCut1",
+                "Profile",
+                "Bevel on First axle at the end of the profile",
+            ).BevelEndCut1 = 0
+            obj.addProperty(
+                "App::PropertyFloat",
+                "BevelEndCut2",
+                "Profile",
+                "Rotate the cut on Second axle at the end of the profile",
+            ).BevelEndCut2 = 0
         if bevels_combined:
-            obj.addProperty("App::PropertyFloat", "BevelStartCut", "Profile",
-                            "Bevel at the start of the profile").BevelStartCut = 0
-            obj.addProperty("App::PropertyFloat", "BevelStartRotate", "Profile",
-                            "Rotate the second cut on Profile axle").BevelStartRotate = 0
-            obj.addProperty("App::PropertyFloat", "BevelEndCut", "Profile",
-                            "Bevel on First axle at the end of the profile").BevelEndCut = 0
-            obj.addProperty("App::PropertyFloat", "BevelEndRotate", "Profile",
-                            "Rotate the second cut on Profile axle").BevelEndRotate = 0
+            obj.addProperty(
+                "App::PropertyFloat",
+                "BevelStartCut",
+                "Profile",
+                "Bevel at the start of the profile",
+            ).BevelStartCut = 0
+            obj.addProperty(
+                "App::PropertyFloat",
+                "BevelStartRotate",
+                "Profile",
+                "Rotate the second cut on Profile axle",
+            ).BevelStartRotate = 0
+            obj.addProperty(
+                "App::PropertyFloat",
+                "BevelEndCut",
+                "Profile",
+                "Bevel on First axle at the end of the profile",
+            ).BevelEndCut = 0
+            obj.addProperty(
+                "App::PropertyFloat",
+                "BevelEndRotate",
+                "Profile",
+                "Rotate the second cut on Profile axle",
+            ).BevelEndRotate = 0
 
-        obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base",
-                        "Approximate weight in Kilogram").ApproxWeight = init_wg * init_len / 1000
+        obj.addProperty(
+            "App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram"
+        ).ApproxWeight = (init_wg * init_len / 1000)
 
-        obj.addProperty("App::PropertyBool", "CenteredOnHeight", "Profile",
-                        "Choose corner or profile centre as origin").CenteredOnHeight = init_hc
-        obj.addProperty("App::PropertyBool", "CenteredOnWidth", "Profile",
-                        "Choose corner or profile centre as origin").CenteredOnWidth = init_wc
+        obj.addProperty(
+            "App::PropertyBool",
+            "CenteredOnHeight",
+            "Profile",
+            "Choose corner or profile centre as origin",
+        ).CenteredOnHeight = init_hc
+        obj.addProperty(
+            "App::PropertyBool",
+            "CenteredOnWidth",
+            "Profile",
+            "Choose corner or profile centre as origin",
+        ).CenteredOnWidth = init_wc
 
         if fam == "UPE":
-            obj.addProperty("App::PropertyBool", "UPN", "Profile", "UPE style or UPN style").UPN = False
+            obj.addProperty("App::PropertyBool", "UPN", "Profile", "UPE style or UPN style").UPN = (
+                False
+            )
             obj.addProperty("App::PropertyFloat", "FlangeAngle", "Profile").FlangeAngle = 4.57
         if fam == "UPN":
-            obj.addProperty("App::PropertyBool", "UPN", "Profile", "UPE style or UPN style").UPN = True
+            obj.addProperty("App::PropertyBool", "UPN", "Profile", "UPE style or UPN style").UPN = (
+                True
+            )
             obj.addProperty("App::PropertyFloat", "FlangeAngle", "Profile").FlangeAngle = 4.57
 
         if fam == "IPE" or fam == "HEA" or fam == "HEB" or fam == "HEM":
-            obj.addProperty("App::PropertyBool", "IPN", "Profile", "IPE/HEA style or IPN style").IPN = False
+            obj.addProperty(
+                "App::PropertyBool", "IPN", "Profile", "IPE/HEA style or IPN style"
+            ).IPN = False
             obj.addProperty("App::PropertyFloat", "FlangeAngle", "Profile").FlangeAngle = 8
         if fam == "IPN":
-            obj.addProperty("App::PropertyBool", "IPN", "Profile", "IPE/HEA style or IPN style").IPN = True
+            obj.addProperty(
+                "App::PropertyBool", "IPN", "Profile", "IPE/HEA style or IPN style"
+            ).IPN = True
             obj.addProperty("App::PropertyFloat", "FlangeAngle", "Profile").FlangeAngle = 8
 
-        obj.addProperty("App::PropertyLength", "Width", "Structure",
-                        "Parameter for structure").Width = obj.ProfileWidth  # Property for structure
-        obj.addProperty("App::PropertyLength", "Height", "Structure",
-                        "Parameter for structure").Height = obj.ProfileLength  # Property for structure
-        obj.addProperty("App::PropertyLength", "Length", "Structure",
-                        "Parameter for structure", ).Length = obj.ProfileHeight  # Property for structure
+        obj.addProperty(
+            "App::PropertyLength", "Width", "Structure", "Parameter for structure"
+        ).Width = obj.ProfileWidth  # Property for structure
+        obj.addProperty(
+            "App::PropertyLength", "Height", "Structure", "Parameter for structure"
+        ).Height = obj.ProfileLength  # Property for structure
+        obj.addProperty(
+            "App::PropertyLength",
+            "Length",
+            "Structure",
+            "Parameter for structure",
+        ).Length = obj.ProfileHeight  # Property for structure
         obj.setEditorMode("Width", 1)  # user doesn't change !
         obj.setEditorMode("Height", 1)
         obj.setEditorMode("Length", 1)
 
-        obj.addProperty("App::PropertyFloat", "OffsetA", "Structure",
-                        "Parameter for structure").OffsetA = .0  # Property for structure
+        obj.addProperty(
+            "App::PropertyFloat", "OffsetA", "Structure", "Parameter for structure"
+        ).OffsetA = 0.0  # Property for structure
 
-        obj.addProperty("App::PropertyFloat", "OffsetB", "Structure",
-                        "Parameter for structure").OffsetB = .0  # Property for structure
+        obj.addProperty(
+            "App::PropertyFloat", "OffsetB", "Structure", "Parameter for structure"
+        ).OffsetB = 0.0  # Property for structure
 
         if link_sub:
-            obj.addProperty("App::PropertyLinkSub", "Target", "Base", "Target face").Target = link_sub
-            obj.setExpression('.AttachmentOffset.Base.z', u'-OffsetA')
+            obj.addProperty("App::PropertyLinkSub", "Target", "Base", "Target face").Target = (
+                link_sub
+            )
+            obj.setExpression(".AttachmentOffset.Base.z", "-OffsetA")
 
         self.WM = init_wg
         self.fam = fam
@@ -98,13 +188,24 @@ class Profile:
 
     def on_changed(self, obj, p):
 
-        if p == "ProfileWidth" or p == "ProfileHeight" or p == "Thickness" \
-                or p == "FilletRadius" or p == "Centered" or p == "Length" \
-                or p == "BevelStartCut1" or p == "BevelEndCut1" \
-                or p == "BevelStartCut2" or p == "BevelEndCut2" \
-                or p == "BevelStartCut" or p == "BevelEndCut" \
-                or p == "BevelStartRotate" or p == "BevelEndRotate" \
-                or p == "OffsetA" or p == "OffsetB" :
+        if (
+            p == "ProfileWidth"
+            or p == "ProfileHeight"
+            or p == "Thickness"
+            or p == "FilletRadius"
+            or p == "Centered"
+            or p == "Length"
+            or p == "BevelStartCut1"
+            or p == "BevelEndCut1"
+            or p == "BevelStartCut2"
+            or p == "BevelEndCut2"
+            or p == "BevelStartCut"
+            or p == "BevelEndCut"
+            or p == "BevelStartRotate"
+            or p == "BevelEndRotate"
+            or p == "OffsetA"
+            or p == "OffsetB"
+        ):
             self.execute(obj)
 
     def execute(self, obj):
@@ -128,19 +229,28 @@ class Profile:
         r = obj.RadiusSmall
         d = vec(0, 0, 1)
 
-        if W == 0: W = H
+        if W == 0:
+            W = H
         w = h = 0
 
         if self.bevels_combined == False:
-            if obj.BevelStartCut1 > 60: obj.BevelStartCut1 = 60
-            if obj.BevelStartCut1 < -60: obj.BevelStartCut1 = -60
-            if obj.BevelStartCut2 > 60: obj.BevelStartCut2 = 60
-            if obj.BevelStartCut2 < -60: obj.BevelStartCut2 = -60
+            if obj.BevelStartCut1 > 60:
+                obj.BevelStartCut1 = 60
+            if obj.BevelStartCut1 < -60:
+                obj.BevelStartCut1 = -60
+            if obj.BevelStartCut2 > 60:
+                obj.BevelStartCut2 = 60
+            if obj.BevelStartCut2 < -60:
+                obj.BevelStartCut2 = -60
 
-            if obj.BevelEndCut1 > 60: obj.BevelEndCut1 = 60
-            if obj.BevelEndCut1 < -60: obj.BevelEndCut1 = -60
-            if obj.BevelEndCut2 > 60: obj.BevelEndCut2 = 60
-            if obj.BevelEndCut2 < -60: obj.BevelEndCut2 = -60
+            if obj.BevelEndCut1 > 60:
+                obj.BevelEndCut1 = 60
+            if obj.BevelEndCut1 < -60:
+                obj.BevelEndCut1 = -60
+            if obj.BevelEndCut2 > 60:
+                obj.BevelEndCut2 = 60
+            if obj.BevelEndCut2 < -60:
+                obj.BevelEndCut2 = -60
 
             B1Y = obj.BevelStartCut1
             B2Y = -obj.BevelEndCut1
@@ -150,15 +260,23 @@ class Profile:
             B2Z = 0
 
         if self.bevels_combined == True:
-            if obj.BevelStartCut > 60: obj.BevelStartCut = 60
-            if obj.BevelStartCut < -60: obj.BevelStartCut = -60
-            if obj.BevelStartRotate > 60: obj.BevelStartRotate = 60
-            if obj.BevelStartRotate < -60: obj.BevelStartRotate = -60
+            if obj.BevelStartCut > 60:
+                obj.BevelStartCut = 60
+            if obj.BevelStartCut < -60:
+                obj.BevelStartCut = -60
+            if obj.BevelStartRotate > 60:
+                obj.BevelStartRotate = 60
+            if obj.BevelStartRotate < -60:
+                obj.BevelStartRotate = -60
 
-            if obj.BevelEndCut > 60: obj.BevelEndCut = 60
-            if obj.BevelEndCut < -60: obj.BevelEndCut = -60
-            if obj.BevelEndRotate > 60: obj.BevelEndRotate = 60
-            if obj.BevelEndRotate < -60: obj.BevelEndRotate = -60
+            if obj.BevelEndCut > 60:
+                obj.BevelEndCut = 60
+            if obj.BevelEndCut < -60:
+                obj.BevelEndCut = -60
+            if obj.BevelEndRotate > 60:
+                obj.BevelEndRotate = 60
+            if obj.BevelEndRotate < -60:
+                obj.BevelEndRotate = -60
 
             B1Y = obj.BevelStartCut
             B1Z = -obj.BevelStartRotate
@@ -167,8 +285,10 @@ class Profile:
             B1X = 0
             B2X = 0
 
-        if obj.CenteredOnWidth == True:  w = -W / 2
-        if obj.CenteredOnHeight == True: h = -H / 2
+        if obj.CenteredOnWidth == True:
+            w = -W / 2
+        if obj.CenteredOnHeight == True:
+            h = -H / 2
 
         if self.fam == "Equal Leg Angles" or self.fam == "Unequal Leg Angles":
             if obj.MakeFillet == False:
@@ -216,7 +336,12 @@ class Profile:
 
             p = Part.Face(wire1)
 
-        if self.fam == "Flat Sections" or self.fam == "Square" or self.fam == "Square Hollow" or self.fam == "Rectangular Hollow":
+        if (
+            self.fam == "Flat Sections"
+            or self.fam == "Square"
+            or self.fam == "Square Hollow"
+            or self.fam == "Rectangular Hollow"
+        ):
             wire1 = wire2 = 0
 
             if self.fam == "Square" or self.fam == "Flat Sections":
@@ -230,7 +355,9 @@ class Profile:
                 L4 = Part.makeLine(p4, p1)
                 wire1 = Part.Wire([L1, L2, L3, L4])
 
-            if obj.MakeFillet == False and (self.fam == "Square Hollow" or self.fam == "Rectangular Hollow"):
+            if obj.MakeFillet == False and (
+                self.fam == "Square Hollow" or self.fam == "Rectangular Hollow"
+            ):
                 p1 = vec(0 + w, 0 + h, 0)
                 p2 = vec(0 + w, H + h, 0)
                 p3 = vec(W + w, H + h, 0)
@@ -252,7 +379,9 @@ class Profile:
                 wire1 = Part.Wire([L1, L2, L3, L4])
                 wire2 = Part.Wire([L5, L6, L7, L8])
 
-            if obj.MakeFillet == True and (self.fam == "Square Hollow" or self.fam == "Rectangular Hollow"):
+            if obj.MakeFillet == True and (
+                self.fam == "Square Hollow" or self.fam == "Rectangular Hollow"
+            ):
                 p1 = vec(0 + w, 0 + R + h, 0)
                 p2 = vec(0 + w, H - R + h, 0)
                 p3 = vec(R + w, H + h, 0)
@@ -314,7 +443,8 @@ class Profile:
             if obj.MakeFillet == False:  # UPE ou UPN sans arrondis
 
                 Yd = 0
-                if obj.UPN == True: Yd = (W / 4) * math.tan(math.pi * obj.FlangeAngle / 180)
+                if obj.UPN == True:
+                    Yd = (W / 4) * math.tan(math.pi * obj.FlangeAngle / 180)
 
                 p1 = vec(w, h, 0)
                 p2 = vec(w, H + h, 0)
@@ -452,12 +582,19 @@ class Profile:
 
             p = Part.Face(wire1)
 
-        if self.fam == "IPE" or self.fam == "IPN" or self.fam == "HEA" or self.fam == "HEB" or self.fam == "HEM":
+        if (
+            self.fam == "IPE"
+            or self.fam == "IPN"
+            or self.fam == "HEA"
+            or self.fam == "HEB"
+            or self.fam == "HEM"
+        ):
             XA1 = W / 2 - TW / 2  # face gauche du web
             XA2 = W / 2 + TW / 2  # face droite du web
             if obj.MakeFillet == False:  # IPE ou IPN sans arrondis
                 Yd = 0
-                if obj.IPN == True: Yd = (W / 4) * math.tan(math.pi * obj.FlangeAngle / 180)
+                if obj.IPN == True:
+                    Yd = (W / 4) * math.tan(math.pi * obj.FlangeAngle / 180)
 
                 p1 = vec(0 + w, 0 + h, 0)
                 p2 = vec(0 + w, TF + h - Yd, 0)
@@ -528,7 +665,9 @@ class Profile:
                 A3 = Part.makeCircle(R, c3, d, 90, 180)
                 A4 = Part.makeCircle(R, c4, d, 180, 270)
 
-                wire1 = Part.Wire([L1, L2, A1, L3, A2, L4, L5, L6, L7, L8, A3, L9, A4, L10, L11, L12])
+                wire1 = Part.Wire(
+                    [L1, L2, A1, L3, A2, L4, L5, L6, L7, L8, A3, L9, A4, L10, L11, L12]
+                )
 
             if obj.MakeFillet == True and obj.IPN == True:  # IPN avec arrondis
                 angarc = obj.FlangeAngle
@@ -682,7 +821,30 @@ class Profile:
                 L11 = Part.makeLine(p19, p20)
                 L12 = Part.makeLine(p20, p1)
 
-                wire1 = Part.Wire([L1, A1, L2, A2, L3, A3, L4, A4, L5, L6, L7, A5, L8, A6, L9, A7, L10, A8, L11, L12])
+                wire1 = Part.Wire(
+                    [
+                        L1,
+                        A1,
+                        L2,
+                        A2,
+                        L3,
+                        A3,
+                        L4,
+                        A4,
+                        L5,
+                        L6,
+                        L7,
+                        A5,
+                        L8,
+                        A6,
+                        L9,
+                        A7,
+                        L10,
+                        A8,
+                        L11,
+                        L12,
+                    ]
+                )
 
             p = Part.Face(wire1)
 
