@@ -364,10 +364,10 @@ class Profile:
                 L2 = Part.makeLine(p3, p4)
                 L3 = Part.makeLine(p5, p6)
                 L4 = Part.makeLine(p7, p8)
-                A1 = Part.makeCircle(r, c1, d, 180, 270)
-                A2 = Part.makeCircle(r, c2, d, 90, 180)
-                A3 = Part.makeCircle(r, c3, d, 0, 90)
-                A4 = Part.makeCircle(r, c4, d, 270, 0)
+                A1 = Part.makeCircle(r_q, c1, d, 180, 270)
+                A2 = Part.makeCircle(r_q, c2, d, 90, 180)
+                A3 = Part.makeCircle(r_q, c3, d, 0, 90)
+                A4 = Part.makeCircle(r_q, c4, d, 270, 0)
 
                 wire2 = Part.Wire([L1, A2, L2, A3, L3, A4, L4, A1])
 
@@ -410,19 +410,19 @@ class Profile:
                 p2 = vec(self.zero_w + w, H_q + h, self.zero_unit)
                 p3 = vec(self.zero_w + w + W_q, H_q + h, self.zero_unit)
                 p4 = vec(self.zero_w + W_q + w, h, self.zero_unit)
-                p5 = vec(self.zero_w + W_q + w - TW_q + r, h, self.zero_unit)
-                p6 = vec(self.zero_w + W_q + w - TW_q, h + r, self.zero_unit)
+                p5 = vec(self.zero_w + W_q + w - TW_q + r_q, h, self.zero_unit)
+                p6 = vec(self.zero_w + W_q + w - TW_q, h + r_q, self.zero_unit)
                 p7 = vec(self.zero_w + W_q + w - TW_q, H_q + h - TF_q - R_q, self.zero_unit)
                 p8 = vec(self.zero_w + W_q + w - TW_q - R_q, H_q + h - TF_q, self.zero_unit)
                 p9 = vec(self.zero_w + w + TW_q + R_q, H_q + h - TF_q, self.zero_unit)
                 p10 = vec(self.zero_w + w + TW_q, H_q + h - TF_q - R_q, self.zero_unit)
-                p11 = vec(self.zero_w + w + TW_q, h + r, self.zero_unit)
-                p12 = vec(self.zero_w + w + TW_q - r, h, self.zero_unit)
+                p11 = vec(self.zero_w + w + TW_q, h + r_q, self.zero_unit)
+                p12 = vec(self.zero_w + w + TW_q - r_q, h, self.zero_unit)
 
-                C1 = vec(self.zero_w + w + TW_q - r, h + r, self.zero_unit)
+                C1 = vec(self.zero_w + w + TW_q - r_q, h + r_q, self.zero_unit)
                 C2 = vec(self.zero_w + w + TW_q + R_q, H_q + h - TF_q - R_q, self.zero_unit)
-                C3 = vec(self.zero_w + w + W_q + r, H_q + h - TF_q - R_q, self.zero_unit)
-                C4 = vec(self.zero_w + w + W_q + r, r + h, self.zero_unit)
+                C3 = vec(self.zero_w + w + W_q + r_q, H_q + h - TF_q - R_q, self.zero_unit)
+                C4 = vec(self.zero_w + w + W_q + r_q, r_q + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p2, p3)
@@ -431,10 +431,10 @@ class Profile:
                 L5 = Part.makeLine(p6, p7)
                 L6 = Part.makeLine(p8, p9)
                 L7 = Part.makeLine(p9, p1)
-                A1 = Part.makeCircle(r, C1, d, 270, 0)
+                A1 = Part.makeCircle(r_q, C1, d, 270, 0)
                 A2 = Part.makeCircle(R_q, C2, d, 90, 180)
                 A3 = Part.makeCircle(R_q, C3, d, 0, 90)
-                A4 = Part.makeCircle(r, C4, d, 180, 270)
+                A4 = Part.makeCircle(r_q, C4, d, 180, 270)
 
                 wire1 = Part.Wire([L1, L2, A4, L5, A3, L6, A2, L7, A1, L8])
 
@@ -445,19 +445,19 @@ class Profile:
                 cosa = math.cos(angrad)
                 tana = math.tan(angrad)
 
-                cot1 = r * sina
-                y11 = r - cot1
-                cot2 = (H / 2 - r) * tana
+                cot1 = r_q * sina
+                y11 = r_q - cot1
+                cot2 = (H_q / 2 - r) * tana
                 cot3 = cot1 * tana
-                x11 = TW - cot2 - cot3
-                xc1 = TW - cot2 - cot3 - r * cosa
-                yc1 = r
-                cot8 = (H / 2 - R - TF + R * sina) * tana
-                x10 = TW + cot8
-                y10 = H - TF - R + R * sina
-                xc2 = cot8 + R * cosa + TW
-                yc2 = H - TF - R
-                x12 = TW - cot2 - cot3 - r * cosa
+                x11 = TW_q - cot2 - cot3
+                xc1 = TW_q - cot2 - cot3 - r_q * cosa
+                yc1 = r_q
+                cot8 = (H_q / 2 - R_q - TF_q + R_q * sina) * tana
+                x10 = TW_q + cot8
+                y10 = H_q - TF_q - R_q + R_q * sina
+                xc2 = cot8 + R_q * cosa + TW_q
+                yc2 = H_q - TF_q - R_q
+                x12 = TW_q - cot2 - cot3 - r_q * cosa
                 y12 = 0
                 x9 = cot8 + R * cosa + TW
                 y9 = H - TF
@@ -500,10 +500,10 @@ class Profile:
                 p11 = vec(x11 + w, y11 + h, self.zero_unit)
                 p12 = vec(x12 + w, y12 + h, self.zero_unit)
 
-                A1 = Part.makeCircle(r, c1, d, 270, 0 - angarc)
-                A2 = Part.makeCircle(R, c2, d, 90, 180 - angarc)
-                A3 = Part.makeCircle(R, c3, d, 0 + angarc, 90)
-                A4 = Part.makeCircle(r, c4, d, 180 + angarc, 270)
+                A1 = Part.makeCircle(r_q, c1, d, 270, 0 - angarc)
+                A2 = Part.makeCircle(R_q, c2, d, 90, 180 - angarc)
+                A3 = Part.makeCircle(R_q, c3, d, 0 + angarc, 90)
+                A4 = Part.makeCircle(r_q, c4, d, 180 + angarc, 270)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p2, p3)
@@ -523,7 +523,7 @@ class Profile:
             XA2 = W_q / 2 + TW_q / 2  # face droite du web
             if obj.MakeFillet == False:  # IPE ou IPN sans arrondis
                 Yd = 0
-                if obj.IPN == True: Yd = (W / 4) * math.tan(math.pi * obj.FlangeAngle / 180)
+                if obj.IPN == True: Yd = (W_q / 4) * math.tan(math.pi * obj.FlangeAngle / 180)
 
                 p1 = vec(self.zero_w + w, self.zero_h + h, self.zero_unit)
                 p2 = vec(self.zero_w + w, TF_q + h - Yd, self.zero_unit)
@@ -589,10 +589,10 @@ class Profile:
                 L11 = Part.makeLine(p15, p16)
                 L12 = Part.makeLine(p16, p1)
 
-                A1 = Part.makeCircle(R, c1, d, 270, 0)
-                A2 = Part.makeCircle(R, c2, d, 0, 90)
-                A3 = Part.makeCircle(R, c3, d, 90, 180)
-                A4 = Part.makeCircle(R, c4, d, 180, 270)
+                A1 = Part.makeCircle(R_q, c1, d, 270, 0)
+                A2 = Part.makeCircle(R_q, c2, d, 0, 90)
+                A3 = Part.makeCircle(R_q, c3, d, 90, 180)
+                A4 = Part.makeCircle(R_q, c4, d, 180, 270)
 
                 wire1 = Part.Wire([L1, L2, A1, L3, A2, L4, L5, L6, L7, L8, A3, L9, A4, L10, L11, L12])
 
@@ -604,8 +604,8 @@ class Profile:
                 tana = math.tan(angrad)
                 cot1 = W_q / 4 * tana  # 1,47
                 cot2 = TF_q - cot1  # 4,42
-                cot3 = r * cosa  # 1,98
-                cot4 = r - cot3 * tana  # 1,72
+                cot3 = r_q * cosa  # 1,98
+                cot4 = r_q - cot3 * tana  # 1,72
                 cot5 = cot4 * tana  # 0,24
                 cot5 = cot2 + cot5  # 4,66
                 cot6 = R_q * sina  # 0,55
@@ -614,11 +614,11 @@ class Profile:
                 cot9 = cot7 * tana  # 0,72
                 cot10 = R_q * cosa  # 3,96
 
-                xc1 = r
+                xc1 = r_q
                 yc1 = cot5 - cot3
                 c1 = vec(xc1 + w, yc1 + h, self.zero_unit)
 
-                xc2 = W / 2 - TW / 2 - R
+                xc2 = W_q / 2 - TW_q / 2 - R_q
                 yc2 = cot9 + TF_q + cot10
                 c2 = vec(xc2 + w, yc2 + h, self.zero_unit)
 
@@ -646,14 +646,14 @@ class Profile:
                 yc8 = yc1
                 c8 = vec(xc8 + w, yc8 + h, self.zero_unit)
 
-                A1 = Part.makeCircle(r, c1, d, 90 + angarc, 180)
-                A2 = Part.makeCircle(R, c2, d, 270 + angarc, 0)
-                A3 = Part.makeCircle(R, c3, d, 0, 90 - angarc)
-                A4 = Part.makeCircle(r, c4, d, 180, 270 - angarc)
-                A5 = Part.makeCircle(r, c5, d, 270 + angarc, 0)
-                A6 = Part.makeCircle(R, c6, d, 90 + angarc, 180)
-                A7 = Part.makeCircle(R, c7, d, 180, 270 - angarc)
-                A8 = Part.makeCircle(r, c8, d, 0, 90 - angarc)
+                A1 = Part.makeCircle(r_q, c1, d, 90 + angarc, 180)
+                A2 = Part.makeCircle(R_q, c2, d, 270 + angarc, 0)
+                A3 = Part.makeCircle(R_q, c3, d, 0, 90 - angarc)
+                A4 = Part.makeCircle(r_q, c4, d, 180, 270 - angarc)
+                A5 = Part.makeCircle(r_q, c5, d, 270 + angarc, 0)
+                A6 = Part.makeCircle(R_q, c6, d, 90 + angarc, 180)
+                A7 = Part.makeCircle(R_q, c7, d, 180, 270 - angarc)
+                A8 = Part.makeCircle(r_q, c8, d, 0, 90 - angarc)
 
                 xp1 = 0
                 yp1 = 0
