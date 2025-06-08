@@ -39,10 +39,6 @@ class HollowTubeGenerator(ProfileGenerator):
 class SolidBarGenerator(ProfileGenerator):
     """Base generator for solid bar profiles (flat bar, square bar, round bar, etc.)"""
 
-    def generate_shape(self, obj):
-        """Generate a solid profile shape - to be implemented by subclasses"""
-        raise NotImplementedError("Subclasses must implement generate_shape()")
-
     def get_face(self, obj):
         """Get the 2D face for the solid profile - to be implemented by subclasses"""
         raise NotImplementedError("Subclasses must implement get_face()")
@@ -52,13 +48,21 @@ class SolidBarGenerator(ProfileGenerator):
         raise NotImplementedError("Subclasses must implement get_profile_type()")
 
     def generate_shape(self, obj):
-        """Generate the final 3D solid shape based on the 2D face"""
+        """Generate the final 3D solid shape with proper Z-axis centering"""
         face = self.get_face(obj)
         params = self.get_parameters(obj)
         L = params["length"]
 
         if L:
-            return face.extrude(vec(0, 0, L))
+            # Check if centering is requested
+            if params["centered_width"] or params["centered_height"]:
+                # Create full-length extrusion first
+                extrusion = face.extrude(vec(0, 0, L))
+                # Then translate to center it on Z-axis
+                return extrusion.translate(vec(0, 0, -L/2))
+            else:
+                # Standard extrusion from Z=0
+                return face.extrude(vec(0, 0, L))
         else:
             return face
 
@@ -208,16 +212,36 @@ class RoundBarGenerator(SolidBarGenerator):
 
     def get_profile_type(self):
         return "Round Bar"
+        
+    def get_parameters(self, obj):
+        """Override to correctly handle centering for circular profiles"""
+        params = super().get_parameters(obj)
+        
+        # For round bars, use height as diameter since that's how it's stored in metal.json
+        # Width is used as fallback for backward compatibility
+        diameter = params["height"] if "height" in params else params["width"]
+        
+        # Recalculate centering offsets for circular profile
+        if params["centered_width"] or params["centered_height"]:
+            # For circular profiles, center equally in both dimensions
+            params["w"] = -diameter / 2
+            params["h"] = -diameter / 2
+        else:
+            params["w"] = 0
+            params["h"] = 0
+            
+        return params
 
     def get_face(self, obj):
         """Get the 2D circular face for the profile"""
         params = self.get_parameters(obj)
-        W = params["width"]  # Use width as diameter
+        # Use height instead of width for diameter
+        diameter = params["height"] if "height" in params else params["width"]
         w = params["w"]
         h = params["h"]
 
         # Calculate center position
-        radius = W / 2
+        radius = diameter / 2
         center = vec(radius + w, radius + h, 0)
 
         # Create a circle
@@ -764,7 +788,7 @@ class BeamGenerator(ProfileGenerator):
         # Create centers for arcs
         c1 = vec(XA1 - R + w, TF + R + h, 0)
         c2 = vec(XA1 - R + w, H - TF - R + h, 0)
-        c3 = vec(XA2 + R + w, H - TF - R + h, 0)
+        c3 = vec(XA2 + R + w, H - TF - R + 0)
         c4 = vec(XA2 + R + w, TF + R + h, 0)
 
         # Create lines and arcs
