@@ -19,6 +19,7 @@ TOOL_ICON = os.path.join(ICONPATH, "line.svg")
 
 class ParametricLine:
     """Creates a parametric line between two vertexes"""
+
     def __init__(self, obj):
         """Add the properties"""
         obj.addProperty("App::PropertyLinkSub", "Vertex1", "ParametricLine", "First Vertex")
@@ -55,6 +56,7 @@ class ParametricLineViewProvider:
 
 class CreateParametricLineCommand:
     """Creates a parametric line between two vertexes"""
+
     def make_parametric_line(self, source):
         line_object = App.ActiveDocument.addObject("Part::FeaturePython", "ParametricLine")
 
@@ -90,10 +92,11 @@ class CreateParametricLineCommand:
             return False
 
     def GetResources(self):
-        return {'Pixmap': TOOL_ICON,
-                'MenuText': "Create a Parametric Line",
-                'ToolTip': "Create a Parametric Line from two Vertex<br><br>Select two vertex then run this command"
-            }
+        return {
+            "Pixmap": TOOL_ICON,
+            "MenuText": "Create a Parametric Line",
+            "ToolTip": "Create a Parametric Line from two Vertex<br><br>Select two vertex then run this command",
+        }
 
 
-Gui.addCommand('FrameForge_ParametricLine', CreateParametricLineCommand())
+Gui.addCommand("FrameForge_ParametricLine", CreateParametricLineCommand())
