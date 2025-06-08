@@ -8,7 +8,7 @@ vec = App.Base.Vector
 
 class Profile:
     def __init__(self, obj, init_w, init_h, init_mt, init_ft, init_r1, init_r2, init_len, init_wg, init_mf,
-                 init_hc, init_wc, fam, bevels_combined, link_sub=None, unit="mm"):
+             init_hc, init_wc, fam, bevels_combined, link_sub=None, unit="mm"):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
         with initialization value 'init_w' to 'init_wc' : ProfileHeight, ProfileWidth, [...] CenteredOnWidth. Depending
@@ -91,7 +91,11 @@ class Profile:
             obj.addProperty("App::PropertyLinkSub", "Target", "Base", "Target face").Target = link_sub
             obj.setExpression('.AttachmentOffset.Base.z', u'-OffsetA')
 
-        self.WM = init_wg
+        # Add a property to store family type
+        obj.addProperty("App::PropertyString", "ProfileFamily", "Profile", 
+                   "Profile family type (IPE, UPN, etc.)").ProfileFamily = fam
+
+        # Keep the proxy attribute for backward compatibility
         self.fam = fam
         self.bevels_combined = bevels_combined
         self.unit = unit  # Store the unit from JSON
@@ -115,6 +119,51 @@ class Profile:
             obj.ProfileLength = L
         except:
             L = obj.ProfileLength + obj.OffsetA + obj.OffsetB
+
+        # Add safety check for WM attribute
+        if not hasattr(self, 'WM'):
+            self.WM = getattr(obj, 'ApproxWeight', 0) * 1000 / max(L, 1)  # Recover from obj if possible
+            
+        # Add safety check for bevels_combined attribute
+        if not hasattr(self, 'bevels_combined'):
+            # Check if object has combined bevel properties
+            if hasattr(obj, 'BevelStartCut') and hasattr(obj, 'BevelStartRotate'):
+                self.bevels_combined = True
+            # Check if object has separate bevel properties
+            elif hasattr(obj, 'BevelStartCut1') and hasattr(obj, 'BevelStartCut2'):
+                self.bevels_combined = False
+            else:
+                # Default if we can't determine
+                self.bevels_combined = True
+    
+        # Add safety check for unit attribute
+        if not hasattr(self, 'unit'):
+            self.unit = 'mm'  # Default to mm
+            
+        # Add safety check for fam attribute
+        if not hasattr(self, 'fam'):
+            # First try to get family from object property if available
+            if hasattr(obj, 'ProfileFamily') and obj.ProfileFamily:
+                self.fam = obj.ProfileFamily
+            # Otherwise keep the fallback logic for backward compatibility
+            elif not hasattr(self, 'fam'):
+                # Try to determine family from object properties
+                if hasattr(obj, 'IPN') and obj.IPN:
+                    self.fam = "IPN"
+                    # Also set the property for future use
+                    if hasattr(obj, 'ProfileFamily'):
+                        obj.ProfileFamily = self.fam
+                elif hasattr(obj, 'UPN') and obj.UPN:
+                    self.fam = "UPN"
+                # Use aspect ratio to guess if we can't determine from properties
+                elif obj.ProfileHeight > 0 and obj.ProfileWidth > 0:
+                    ratio = obj.ProfileWidth / obj.ProfileHeight
+                    if 0.95 < ratio < 1.05:  # Nearly equal
+                        self.fam = "Square"
+                    else:
+                        self.fam = "Rectangular Hollow"
+                else:
+                    self.fam = "Square"  # Safe default
 
         obj.ApproxWeight = self.WM * L / 1000
         W = obj.ProfileWidth
@@ -594,7 +643,7 @@ class Profile:
                 A3 = Part.makeCircle(R_q, c3, d, 90, 180)
                 A4 = Part.makeCircle(R_q, c4, d, 180, 270)
 
-                wire1 = Part.Wire([L1, L2, A1, L3, A2, L4, L5, L6, L7, L8, A3, L9, A4, L10, L11, L12])
+                wire1 = Part.Wire([L1, L2, A1, L3, A2, L4, L5, L6, L7, A3, L9, A4, L10, L11, L12])
 
             if obj.MakeFillet == True and obj.IPN == True:  # IPN avec arrondis
                 angarc = obj.FlangeAngle
@@ -769,36 +818,46 @@ class Profile:
             p = p1.cut(p2)
 
         if L:
-            ProfileFull = p.extrude(vec(0, 0, L))
-            obj.Shape = ProfileFull
+                # Extract scalar value if L is a quantity
+                L_value = L.Value if hasattr(L, 'Value') else L
+                
+                ProfileFull = p.extrude(vec(0, 0, L_value))
+                obj.Shape = ProfileFull
 
-            if B1Y or B2Y or B1X or B2X or B1Z or B2Z:  # make the bevels:
+                if B1Y or B2Y or B1X or B2X or B1Z or B2Z:  # make the bevels:
+                    hc = 10 * max(H_q, W_q)
+                    
+                    # Extract scalar values from all quantities
+                    hc_value = hc.Value if hasattr(hc, 'Value') else hc
+                    w_value = w.Value if hasattr(w, 'Value') else w
+                    h_value = h.Value if hasattr(h, 'Value') else h
+                    
+                    # Now we can safely add numeric values
+                    extrude_length = L_value + hc_value / 4
+                    
+                    ProfileExt = ProfileFull.fuse(p.extrude(vec(0, 0, extrude_length)))
+                    box = Part.makeBox(hc_value, hc_value, hc_value)
+                    box.translate(vec(-hc_value / 2 + w_value, -hc_value / 2 + h_value, L_value))
+                    pr = vec(0, 0, L_value)
+                    box.rotate(pr, vec(0, 1, 0), B2Y)
+                    if self.bevels_combined == True:
+                        box.rotate(pr, vec(0, 0, 1), B2Z)
+                    else:
+                        box.rotate(pr, vec(1, 0, 0), B2X)
+                    ProfileCut = ProfileExt.cut(box)
 
-                hc = 10 * max(H_q, W_q)
+                    ProfileExt = ProfileCut.fuse(p.extrude(vec(0, 0, -hc_value / 4)))
+                    box = Part.makeBox(hc_value, hc_value, hc_value)
+                    box.translate(vec(-hc_value / 2 + w_value, -hc_value / 2 + h_value, -hc_value))
+                    pr = vec(0, 0, 0)
+                    box.rotate(pr, vec(0, 1, 0), B1Y)
+                    if self.bevels_combined == True:
+                        box.rotate(pr, vec(0, 0, 1), B1Z)
+                    else:
+                        box.rotate(pr, vec(1, 0, 0), B1X)
+                    ProfileCut = ProfileExt.cut(box)
 
-                ProfileExt = ProfileFull.fuse(p.extrude(vec(0, 0, L + hc / 4)))
-                box = Part.makeBox(hc, hc, hc)
-                box.translate(vec(-hc / 2 + w, -hc / 2 + h, L))
-                pr = vec(0, 0, L)
-                box.rotate(pr, vec(0, 1, 0), B2Y)
-                if self.bevels_combined == True:
-                    box.rotate(pr, vec(0, 0, 1), B2Z)
-                else:
-                    box.rotate(pr, vec(1, 0, 0), B2X)
-                ProfileCut = ProfileExt.cut(box)
-
-                ProfileExt = ProfileCut.fuse(p.extrude(vec(0, 0, -hc / 4)))
-                box = Part.makeBox(hc, hc, hc)
-                box.translate(vec(-hc / 2 + w, -hc / 2 + h, -hc))
-                pr = vec(0, 0, 0)
-                box.rotate(pr, vec(0, 1, 0), B1Y)
-                if self.bevels_combined == True:
-                    box.rotate(pr, vec(0, 0, 1), B1Z)
-                else:
-                    box.rotate(pr, vec(1, 0, 0), B1X)
-                ProfileCut = ProfileExt.cut(box)
-
-                obj.Shape = ProfileCut.removeSplitter()
+                    obj.Shape = ProfileCut.removeSplitter()
 
                 # if wire2: obj.Shape = Part.Compound([wire1,wire2])  # OCC Sweep doesn't be able hollow shape yet :-(
         else:
@@ -806,3 +865,21 @@ class Profile:
         obj.Placement = pl
         obj.positionBySupport()
         obj.recompute()
+
+    def __getstate__(self):
+        """Called when saving the document - return a serializable representation"""
+        state = {
+            "fam": self.fam if hasattr(self, 'fam') else None,
+            "bevels_combined": self.bevels_combined if hasattr(self, 'bevels_combined') else False,
+            "unit": self.unit if hasattr(self, 'unit') else "mm",
+            # Add any other custom attributes here that need saving
+        }
+        return state
+
+    def __setstate__(self, state):
+        """Called when restoring the document - restore from serialized representation"""
+        self.fam = state.get("fam")
+        self.bevels_combined = state.get("bevels_combined", False)
+        self.unit = state.get("unit", "mm")
+        # Restore other custom attributes here
+        return None
