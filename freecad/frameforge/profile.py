@@ -8,7 +8,7 @@ vec = App.Base.Vector
 
 class Profile:
     def __init__(self, obj, init_w, init_h, init_mt, init_ft, init_r1, init_r2, init_len, init_wg, init_mf,
-                 init_hc, init_wc, fam, bevels_combined, link_sub=None):
+                 init_hc, init_wc, fam, bevels_combined, link_sub=None, unit="mm"):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
         with initialization value 'init_w' to 'init_wc' : ProfileHeight, ProfileWidth, [...] CenteredOnWidth. Depending
@@ -16,9 +16,9 @@ class Profile:
         'fam' parameter, there is properties specific to profile family.
         """
 
-        obj.addProperty("App::PropertyLength", "ProfileHeight", "Profile", "", ).ProfileHeight = init_h
-        obj.addProperty("App::PropertyLength", "ProfileWidth", "Profile", "").ProfileWidth = init_w
-        obj.addProperty("App::PropertyLength", "ProfileLength", "Profile", "").ProfileLength = init_len # should it be ?
+        obj.addProperty("App::PropertyFloat", "ProfileHeight", "Profile", "", ).ProfileHeight = init_h
+        obj.addProperty("App::PropertyFloat", "ProfileWidth", "Profile", "").ProfileWidth = init_w
+        obj.addProperty("App::PropertyFloat", "ProfileLength", "Profile", "").ProfileLength = init_len # should it be ?
 
         obj.addProperty("App::PropertyFloat", "Thickness", "Profile",
                         "Thickness of all the profile or the web").Thickness = init_mt
@@ -94,6 +94,7 @@ class Profile:
         self.WM = init_wg
         self.fam = fam
         self.bevels_combined = bevels_combined
+        self.unit = unit  # Store the unit from JSON
         obj.Proxy = self
 
     def on_changed(self, obj, p):
@@ -130,44 +131,67 @@ class Profile:
         if W == 0: W = H
         w = h = 0
         
-        # IMPROVED UNIT HANDLING
         try:
-            # Get unit information from Width
-            unit_suffix = str(App.Units.parseQuantity(str(W)).getUserPreferred()[2])
-            
+        # Use the unit from JSON instead of deriving from Width
+            if hasattr(self, 'unit'):
+                # Convert unit name to FreeCAD unit suffix
+                unit_map = {
+                    'mm': 'mm', 
+                    'cm': 'cm',
+                    'in': 'in',
+                    'inch': 'in',
+                    'Metric Unit': 'mm',
+                    'Metric Units': 'mm',
+                    'Imperial': 'in'
+                }
+                
+                unit_suffix = unit_map.get(self.unit, 'mm')
+            else:
+                # Fallback to deriving from Width if unit is not available
+                unit_suffix = str(App.Units.parseQuantity(str(W)).getUserPreferred()[2])
+        
             # Convert all dimension variables to explicit quantities
-            W_q = App.Units.Quantity(str(W) + unit_suffix)
-            H_q = App.Units.Quantity(str(H) + unit_suffix) 
-            TW_q = App.Units.Quantity(str(TW) + unit_suffix)
-            TF_q = App.Units.Quantity(str(TF) + unit_suffix)
-            R_q = App.Units.Quantity(str(R) + unit_suffix)
-            r_q = App.Units.Quantity(str(r) + unit_suffix)
+            W_q = App.Units.Quantity(str(W) + ' ' + unit_suffix)
+            H_q = App.Units.Quantity(str(H) + ' ' + unit_suffix) 
+            TW_q = App.Units.Quantity(str(TW) + ' ' + unit_suffix)
+            TF_q = App.Units.Quantity(str(TF) + ' ' + unit_suffix)
+            R_q = App.Units.Quantity(str(R) + ' ' + unit_suffix)
+            r_q = App.Units.Quantity(str(r) + ' ' + unit_suffix)
             
             # Create zero quantities with matching units
-            zero_w = App.Units.Quantity('0' + unit_suffix)
-            zero_h = App.Units.Quantity('0' + unit_suffix)
+            self.zero_w = App.Units.Quantity('0' + unit_suffix)
+            self.zero_h = App.Units.Quantity('0' + unit_suffix)
             
             # Handle w and h offset calculations with proper units
             if obj.CenteredOnWidth == True:
                 w = -W_q/2
             else:
-                w = zero_w
+                w = self.zero_w
             
             if obj.CenteredOnHeight == True:
                 h = -H_q/2
             else:
-                h = zero_h
+                h = self.zero_h
             
         except Exception as e:
             App.Console.PrintError(f"Unit conversion error: {str(e)}\n")
+            App.Console.PrintError(f"W is: {W}, H is: {H}, TW is: {TW}, TF is: {TF}, R is: {R}, r is: {r}\n")
             # Fallback to mm if unit parsing fails
-            zero_w = App.Units.Quantity('0mm')
-            zero_h = App.Units.Quantity('0mm')
-            w = zero_w
-            h = zero_h
+            unit_suffix = 'mm'
             
-        # Always use mm for the z-coordinate
-        zero_unit = App.Units.Quantity('0mm')
+            # ADD SPACES BETWEEN NUMBERS AND UNITS
+            W_q = App.Units.Quantity(str(W) + ' mm')  # Add space here
+            H_q = App.Units.Quantity(str(H) + ' mm')  # Add space here
+            TW_q = App.Units.Quantity(str(TW) + ' mm')  # Add space here
+            TF_q = App.Units.Quantity(str(TF) + ' mm')  # Add space here
+            R_q = App.Units.Quantity(str(R) + ' mm')  # Add space here
+            r_q = App.Units.Quantity(str(r) + ' mm')  # Add space here
+            
+            self.zero_w = App.Units.Quantity('0 mm')  # Add space here
+            self.zero_h = App.Units.Quantity('0 mm')  # Add space here
+
+# Always use mm for the z-coordinate
+        self.zero_unit = App.Units.Quantity('0 mm')  # Add space here
     
     # NOW USE W_q, H_q, TW_q, TF_q, R_q, r_q INSTEAD OF W, H, TW, TF, R, r
     # IN ALL VECTOR CALCULATIONS
@@ -207,17 +231,20 @@ class Profile:
             B2Z = -obj.BevelEndRotate
             B1X = 0
             B2X = 0
-
-        if obj.CenteredOnWidth == True:  w = -W / 2
-        if obj.CenteredOnHeight == True: h = -H / 2
+        """
+        if obj.CenteredOnWidth == True:
+            w = -W / 2
+        if obj.CenteredOnHeight == True:
+            h = -H / 2
+        """
 
         if self.fam == "Equal Leg Angles" or self.fam == "Unequal Leg Angles":
             if obj.MakeFillet == False:
                 p1 = vec(self.zero_w + w, self.zero_h + h, self.zero_unit)
                 p2 = vec(self.zero_w + w, H_q + h, self.zero_unit)
-                p3 = vec(TW + w, H_q + h, self.zero_unit)
-                p4 = vec(TW + w, TW + h, self.zero_unit)
-                p5 = vec(W_q + w, TW + h, self.zero_unit)
+                p3 = vec(TW_q + w, H_q + h, self.zero_unit)  # Should use TW_q
+                p4 = vec(TW_q + w, TW_q + h, self.zero_unit)   # Should use TW_q twice
+                p5 = vec(W_q + w, TW_q + h, self.zero_unit)  # Should use TW_q
                 p6 = vec(W_q + w, self.zero_h + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
@@ -249,9 +276,9 @@ class Profile:
                 L4 = Part.makeLine(p6, p7)
                 L5 = Part.makeLine(p8, p9)
                 L6 = Part.makeLine(p9, p1)
-                A1 = Part.makeCircle(r, c1, d, 0, 90)
-                A2 = Part.makeCircle(R, c2, d, 180, 270)
-                A3 = Part.makeCircle(r, c3, d, 0, 90)
+                A1 = Part.makeCircle(r_q, c1, d, 0, 90)
+                A2 = Part.makeCircle(R_q, c2, d, 180, 270)
+                A3 = Part.makeCircle(r_q, c3, d, 0, 90)
 
                 wire1 = Part.Wire([L1, L2, A1, L3, A2, L4, A3, L5, L6])
 
@@ -277,7 +304,7 @@ class Profile:
                 p3 = vec(W_q + w, H_q + h, self.zero_unit)
                 p4 = vec(W_q + w, self.zero_h + h, self.zero_unit)
                 p5 = vec(TW_q + w, TW_q + h, self.zero_unit)
-                p6 = vec(TW_q + w, H + h - TW_q, self.zero_unit)
+                p6 = vec(TW_q + w, H_q + h - TW_q, self.zero_unit)  # Should use H_q
                 p7 = vec(W_q + w - TW_q, H_q + h - TW_q, self.zero_unit)
                 p8 = vec(W_q + w - TW_q, TW_q + h, self.zero_unit)
 
@@ -295,18 +322,18 @@ class Profile:
 
             if obj.MakeFillet == True and (self.fam == "Square Hollow" or self.fam == "Rectangular Hollow"):
                 p1 = vec(self.zero_w + w, self.zero_h + h + R_q, self.zero_unit)
-                p2 = vec(self.zero_w + w, H - R_q + h, self.zero_unit)
+                p2 = vec(self.zero_w + w, H_q - R_q + h, self.zero_unit)
                 p3 = vec(R_q + w, H_q + h, self.zero_unit)
                 p4 = vec(W_q - R_q + w, H_q + h, self.zero_unit)
-                p5 = vec(W_q + w, H - R_q + h, self.zero_unit)
+                p5 = vec(W_q + w, H_q - R_q + h, self.zero_unit)
                 p6 = vec(W_q + w, R_q + h, self.zero_unit)
                 p7 = vec(W_q - R_q + w, self.zero_h + h, self.zero_unit)
                 p8 = vec(R_q + w, self.zero_h + h, self.zero_unit)
 
                 c1 = vec(R_q + w, R_q + h, self.zero_unit)
-                c2 = vec(R_q + w, H - R_q + h, self.zero_unit)
-                c3 = vec(W_q - R_q + w, H_q - R_q + h, self.zero_unit)
-                c4 = vec(W_q - R_q + w, R_q + h, self.zero_unit)
+                c2 = vec(R_q + w, H_q - R_q + h, self.zero_unit)
+                c3 = vec(W_q - r_q + w, TW_q - r_q + h, self.zero_unit)
+                c4 = vec(W_q - r_q + w, R_q + h, self.zero_unit)
 
                 L1 = Part.makeLine(p1, p2)
                 L2 = Part.makeLine(p3, p4)
@@ -314,8 +341,8 @@ class Profile:
                 L4 = Part.makeLine(p7, p8)
                 A1 = Part.makeCircle(R_q, c1, d, 180, 270)
                 A2 = Part.makeCircle(R_q, c2, d, 90, 180)
-                A3 = Part.makeCircle(R_q, c3, d, 0, 90)
-                A4 = Part.makeCircle(R_q, c4, d, 270, 0)
+                A3 = Part.makeCircle(r, c3, d, 0, 90)
+                A4 = Part.makeCircle(r, c4, d, 270, 0)
 
                 wire1 = Part.Wire([L1, A2, L2, A3, L3, A4, L4, A1])
 
@@ -403,9 +430,7 @@ class Profile:
                 L4 = Part.makeLine(p4, p5)
                 L5 = Part.makeLine(p6, p7)
                 L6 = Part.makeLine(p8, p9)
-                L7 = Part.makeLine(p10, p11)
-                L8 = Part.makeLine(p12, p1)
-
+                L7 = Part.makeLine(p9, p1)
                 A1 = Part.makeCircle(r, C1, d, 270, 0)
                 A2 = Part.makeCircle(R_q, C2, d, 90, 180)
                 A3 = Part.makeCircle(R_q, C3, d, 0, 90)
@@ -494,8 +519,8 @@ class Profile:
             p = Part.Face(wire1)
 
         if self.fam == "IPE" or self.fam == "IPN" or self.fam == "HEA" or self.fam == "HEB" or self.fam == "HEM":
-            XA1 = W / 2 - TW / 2  # face gauche du web
-            XA2 = W / 2 + TW / 2  # face droite du web
+            XA1 = W_q / 2 - TW_q / 2  # face gauche du web
+            XA2 = W_q / 2 + TW_q / 2  # face droite du web
             if obj.MakeFillet == False:  # IPE ou IPN sans arrondis
                 Yd = 0
                 if obj.IPN == True: Yd = (W / 4) * math.tan(math.pi * obj.FlangeAngle / 180)
@@ -577,17 +602,17 @@ class Profile:
                 sina = math.sin(angrad)
                 cosa = math.cos(angrad)
                 tana = math.tan(angrad)
-                cot1 = W / 4 * tana  # 1,47
-                cot2 = TF - cot1  # 4,42
+                cot1 = W_q / 4 * tana  # 1,47
+                cot2 = TF_q - cot1  # 4,42
                 cot3 = r * cosa  # 1,98
                 cot4 = r - cot3 * tana  # 1,72
                 cot5 = cot4 * tana  # 0,24
                 cot5 = cot2 + cot5  # 4,66
-                cot6 = R * sina  # 0,55
-                cot7 = W / 4 - R - TW / 2  # 4,6
+                cot6 = R_q * sina  # 0,55
+                cot7 = W_q / 4 - R_q - TW_q / 2  # 4,6
                 cot8 = cot6 + cot7  # 5,15
                 cot9 = cot7 * tana  # 0,72
-                cot10 = R * cosa  # 3,96
+                cot10 = R_q * cosa  # 3,96
 
                 xc1 = r
                 yc1 = cot5 - cot3
@@ -642,71 +667,71 @@ class Profile:
                 yp3 = cot5
                 p3 = vec(xp3 + w, yp3 + h, self.zero_unit)
 
-                xp4 = W / 4 + cot8
-                yp4 = TF + cot9
+                xp4 = W_q / 4 + cot8
+                yp4 = TF_q + cot9
                 p4 = vec(xp4 + w, yp4 + h, self.zero_unit)
 
-                xp5 = W / 2 - TW / 2
+                xp5 = W_q / 2 - TW_q / 2
                 yp5 = yc2
                 p5 = vec(xp5 + w, yp5 + h, self.zero_unit)
 
                 xp6 = xp5
-                yp6 = H - yp5
+                yp6 = H_q - yp5
                 p6 = vec(xp6 + w, yp6 + h, self.zero_unit)
 
                 xp7 = xp4
-                yp7 = H - yp4
+                yp7 = H_q - yp4
                 p7 = vec(xp7 + w, yp7 + h, self.zero_unit)
 
                 xp8 = xp3
-                yp8 = H - yp3
+                yp8 = H_q - yp3
                 p8 = vec(xp8 + w, yp8 + h, self.zero_unit)
 
                 xp9 = xp2
-                yp9 = H - yp2
+                yp9 = H_q - yp2
                 p9 = vec(xp9 + w, yp9 + h, self.zero_unit)
 
                 xp10 = xp1
-                yp10 = H
+                yp10 = H_q
                 p10 = vec(xp10 + w, yp10 + h, self.zero_unit)
 
-                xp11 = W
-                yp11 = H
+                xp11 = W_q
+                yp11 = H_q
                 p11 = vec(xp11 + w, yp11 + h, self.zero_unit)
 
                 xp12 = xp11
                 yp12 = yp9
                 p12 = vec(xp12 + w, yp12 + h, self.zero_unit)
 
-                xp13 = W - xp8
+                xp13 = W_q - xp8
                 yp13 = yp8
                 p13 = vec(xp13 + w, yp13 + h, self.zero_unit)
 
-                xp14 = W - xp7
+                xp14 = W_q - xp7
                 yp14 = yp7
                 p14 = vec(xp14 + w, yp14 + h, self.zero_unit)
 
-                xp15 = W - xp6
+                xp15 = W_q - xp6
                 yp15 = yp6
                 p15 = vec(xp15 + w, yp15 + h, self.zero_unit)
 
-                xp16 = W - xp5
+                xp16 = W_q - xp5
                 yp16 = yp5
                 p16 = vec(xp16 + w, yp16 + h, self.zero_unit)
 
-                xp17 = W - xp4
+                xp17 = W_q - xp4
                 yp17 = yp4
                 p17 = vec(xp17 + w, yp17 + h, self.zero_unit)
 
-                xp18 = W - xp3
+                xp18 = W_q - xp3
                 yp18 = yp3
                 p18 = vec(xp18 + w, yp18 + h, self.zero_unit)
 
-                xp19 = W - xp2
+                xp19 = W_q - xp2
                 yp19 = yp2
                 p19 = vec(xp19 + w, yp19 + h, self.zero_unit)
 
-                xp20 = W
+                xp20 = W_q
                 yp20 = 0
                 p20 = vec(xp20 + w, yp20 + h, self.zero_unit)
 
@@ -729,14 +754,14 @@ class Profile:
 
         if self.fam == "Round Bar":
             c = vec(H_q / 2 + w, H_q / 2 + h, self.zero_unit)
-            A1 = Part.makeCircle(H / 2, c, d, 0, 360)
+            A1 = Part.makeCircle(H_q / 2, c, d, 0, 360)
             wire1 = Part.Wire([A1])
             p = Part.Face(wire1)
 
         if self.fam == "Pipe":
             c = vec(H_q / 2 + w, H_q / 2 + h, self.zero_unit)
-            A1 = Part.makeCircle(H / 2, c, d, 0, 360)
-            A2 = Part.makeCircle((H - TW) / 2, c, d, 0, 360)
+            A1 = Part.makeCircle(H_q / 2, c, d, 0, 360)
+            A2 = Part.makeCircle((H_q - TW_q) / 2, c, d, 0, 360)
             wire1 = Part.Wire([A1])
             wire2 = Part.Wire([A2])
             p1 = Part.Face(wire1)
@@ -749,7 +774,7 @@ class Profile:
 
             if B1Y or B2Y or B1X or B2X or B1Z or B2Z:  # make the bevels:
 
-                hc = 10 * max(H, W)
+                hc = 10 * max(H_q, W_q)
 
                 ProfileExt = ProfileFull.fuse(p.extrude(vec(0, 0, L + hc / 4)))
                 box = Part.makeBox(hc, hc, hc)

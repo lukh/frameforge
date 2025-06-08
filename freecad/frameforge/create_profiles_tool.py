@@ -274,6 +274,13 @@ class CreateProfileTaskPanel():
             obj.MapReversed = True
 
 
+        material = str(self.form.combo_material.currentText())
+        family = str(self.form.combo_family.currentText())
+
+        # Extract unit from profile data
+        family_data = self.profiles[material][family]
+        unit = family_data.get('unit', 'mm')  # Default to mm if not specified
+
         Profile(
             obj,
             self.form.sb_width.value(),
@@ -289,7 +296,8 @@ class CreateProfileTaskPanel():
             self.form.cb_width_centered.isChecked(),
             self.form.combo_family.currentText(),
             self.form.cb_combined_bevel.isChecked(),
-            link_sub
+            link_sub,
+            unit
         )
 
 
