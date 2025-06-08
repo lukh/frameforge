@@ -64,21 +64,43 @@ class CreateProfileTaskPanel():
         self.form.combo_family.clear()
         self.form.combo_family.addItems([f for f in self.profiles[material]])
 
-    def on_family_changed(self, index):
+    def on_family_changed(self):
         material = str(self.form.combo_material.currentText())
         family = str(self.form.combo_family.currentText())
-
-        self.form.cb_make_fillet.setChecked(self.profiles[material][family]['fillet'])
-        self.form.cb_make_fillet.setEnabled(self.profiles[material][family]['fillet'])
-
-        self.update_image()
-
-        self.form.label_norm.setText(self.profiles[material][family]['norm'])
-        self.form.label_unit.setText(self.profiles[material][family]['unit'])
-
-        self.form.combo_size.clear()
-        self.form.combo_size.addItems([s for s in self.profiles[material][family]['sizes']])
         
+        # Only proceed if we have valid selections
+        if material and family and material in self.profiles and family in self.profiles.get(material, {}):
+            self.form.cb_make_fillet.setChecked(self.profiles[material][family]['fillet'])
+            
+            # Update sizes
+            self.form.combo_size.blockSignals(True)
+            self.form.combo_size.clear()
+            sizes = sorted(self.profiles[material][family]['sizes'].keys())
+            self.form.combo_size.addItems(sizes)
+            self.form.combo_size.blockSignals(False)
+            
+            if sizes:
+                self.form.combo_size.setCurrentIndex(0)
+                self.on_size_changed(self.form.combo_size.currentIndex())
+                
+            self.update_image()
+            
+            self.form.label_norm.setText(self.profiles[material][family]['norm'])
+            self.form.label_unit.setText(self.profiles[material][family]['unit'])
+        else:
+            # Material changed but family isn't valid - update family options
+            if material and material in self.profiles:
+                # Just refresh the family dropdown
+                self.form.combo_family.blockSignals(True)
+                self.form.combo_family.clear()
+                self.form.combo_family.addItems([f for f in self.profiles[material]])
+                self.form.combo_family.blockSignals(False)
+                
+                # Select first family if available
+                if self.form.combo_family.count() > 0:
+                    self.form.combo_family.setCurrentIndex(0)
+                    # Call this method again with valid selection
+                    self.on_family_changed()
 
     def on_size_changed(self, index):
         material = str(self.form.combo_material.currentText())
