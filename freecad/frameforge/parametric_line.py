@@ -5,29 +5,24 @@
 # Select 2 vertexes in the 3D View and activate the tool.
 
 import os
-
 import FreeCAD as App
 import Part
 
 if App.GuiUp:
     import FreeCADGui as Gui
 
-from freecad.frameforge import ICONPATH, _utils
+from freecad.frameforge import _utils
+from freecad.frameforge import ICONPATH
 
 TOOL_ICON = os.path.join(ICONPATH, "line.svg")
 
 
 class ParametricLine:
     """Creates a parametric line between two vertexes"""
-
     def __init__(self, obj):
         """Add the properties"""
-        obj.addProperty(
-            "App::PropertyLinkSub", "Vertex1", "ParametricLine", "First Vertex"
-        )
-        obj.addProperty(
-            "App::PropertyLinkSub", "Vertex2", "ParametricLine", "Second Vertex"
-        )
+        obj.addProperty("App::PropertyLinkSub", "Vertex1", "ParametricLine", "First Vertex")
+        obj.addProperty("App::PropertyLinkSub", "Vertex2", "ParametricLine", "Second Vertex")
         obj.Proxy = self
 
     def execute(self, obj):
@@ -60,11 +55,8 @@ class ParametricLineViewProvider:
 
 class CreateParametricLineCommand:
     """Creates a parametric line between two vertexes"""
-
     def make_parametric_line(self, source):
-        line_object = App.ActiveDocument.addObject(
-            "Part::FeaturePython", "ParametricLine"
-        )
+        line_object = App.ActiveDocument.addObject("Part::FeaturePython", "ParametricLine")
 
         ParametricLine(line_object)
         ParametricLineViewProvider(line_object.ViewObject)
@@ -98,11 +90,10 @@ class CreateParametricLineCommand:
             return False
 
     def GetResources(self):
-        return {
-            "Pixmap": TOOL_ICON,
-            "MenuText": "Create a Parametric Line",
-            "ToolTip": "Create a Parametric Line from two Vertex<br><br>Select two vertex then run this command",
-        }
+        return {'Pixmap': TOOL_ICON,
+                'MenuText': "Create a Parametric Line",
+                'ToolTip': "Create a Parametric Line from two Vertex<br><br>Select two vertex then run this command"
+            }
 
 
-Gui.addCommand("FrameForge_ParametricLine", CreateParametricLineCommand())
+Gui.addCommand('FrameForge_ParametricLine', CreateParametricLineCommand())
