@@ -18,7 +18,7 @@ class CreateProfileTaskPanel:
     def __init__(self):
         self.form = [
             Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles1.ui")),
-            Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles2.ui"))
+            Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles2.ui")),
         ]
 
         self.form_proxy = FormProxy(self.form)
@@ -74,17 +74,16 @@ class CreateProfileTaskPanel:
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
 
-        self.form_proxy.cb_make_fillet.setChecked(self.profiles[material][family]['fillet'])
-        self.form_proxy.cb_make_fillet.setEnabled(self.profiles[material][family]['fillet'])
+        self.form_proxy.cb_make_fillet.setChecked(self.profiles[material][family]["fillet"])
+        self.form_proxy.cb_make_fillet.setEnabled(self.profiles[material][family]["fillet"])
 
         self.update_image()
 
-        self.form_proxy.label_norm.setText(self.profiles[material][family]['norm'])
-        self.form_proxy.label_unit.setText(self.profiles[material][family]['unit'])
+        self.form_proxy.label_norm.setText(self.profiles[material][family]["norm"])
+        self.form_proxy.label_unit.setText(self.profiles[material][family]["unit"])
 
         self.form_proxy.combo_size.clear()
-        self.form_proxy.combo_size.addItems([s for s in self.profiles[material][family]['sizes']])
-        
+        self.form_proxy.combo_size.addItems([s for s in self.profiles[material][family]["sizes"]])
 
     def on_size_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
@@ -101,7 +100,7 @@ class CreateProfileTaskPanel:
                 "Flange Thickness": self.form_proxy.sb_flange_thickness,
                 "Radius1": self.form_proxy.sb_radius1,
                 "Radius2": self.form_proxy.sb_radius2,
-                "Weight": self.form_proxy.sb_weight
+                "Weight": self.form_proxy.sb_weight,
             }
 
             self.form_proxy.sb_height.setEnabled(False)
@@ -138,8 +137,7 @@ class CreateProfileTaskPanel:
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
 
-
-        img_name = family.replace(' ', "_")
+        img_name = family.replace(" ", "_")
         if self.form_proxy.cb_make_fillet.isChecked():
             img_name += "_Fillet"
         img_name += ".png"
@@ -213,7 +211,7 @@ class CreateProfileTaskPanel:
             # create part or group and
             container = None
             if self.form_proxy.rb_profiles_in_part.isChecked():
-                container = App.activeDocument().addObject('App::Part','Part')
+                container = App.activeDocument().addObject("App::Part", "Part")
             # elif self.form_proxy.rb_profiles_in_group.isChecked(): # not working
             #     container = App.activeDocument().addObject('App::DocumentObjectGroup','Group')
 
@@ -262,7 +260,7 @@ class CreateProfileTaskPanel:
             link_sub = None
 
         if not self.form_proxy.cb_reverse_attachment.isChecked():
-            #print("Not reverse attachment")
+            # print("Not reverse attachment")
             obj.MapPathParameter = 1
         else:
             # print("Reverse attachment")
@@ -279,14 +277,14 @@ class CreateProfileTaskPanel:
             self.form_proxy.sb_radius2.value(),
             self.form_proxy.sb_length.value(),
             self.form_proxy.sb_weight.value(),
-            self.form_proxy.cb_make_fillet.isChecked(), # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
+            self.form_proxy.cb_make_fillet.isChecked(),  # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
             self.form_proxy.cb_height_centered.isChecked(),
             self.form_proxy.cb_width_centered.isChecked(),
             self.form_proxy.combo_material.currentText(),
             self.form_proxy.combo_family.currentText(),
             self.form_proxy.combo_size.currentText(),
             self.form_proxy.cb_combined_bevel.isChecked(),
-            link_sub
+            link_sub,
         )
 
     def addSelection(self, doc, obj, sub, other):
@@ -314,7 +312,7 @@ class CreateProfileTaskPanel:
 
         else:
             self.form_proxy.sb_length.setEnabled(True)
-            obj_name = 'Not Attached / Define length'
+            obj_name = "Not Attached / Define length"
 
         self.form_proxy.label_attach.setText(obj_name)
 

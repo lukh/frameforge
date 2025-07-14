@@ -18,11 +18,28 @@ from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPAT
 class TrimmedProfile:
     def __init__(self, obj):
 
-        obj.addProperty("App::PropertyLink","TrimmedBody","TrimmedProfile", translate("App::Property", "Body to be trimmed")).TrimmedBody = None
-        obj.addProperty("App::PropertyLinkSubList","TrimmingBoundary","TrimmedProfile", translate("App::Property", "Bodies that define boundaries")).TrimmingBoundary = None
-        
-        obj.addProperty("App::PropertyEnumeration","TrimmedProfileType","TrimmedProfile", translate("App::Property", "TrimmedProfile Type")).TrimmedProfileType = ["End Trim", "End Miter"]
-        obj.addProperty("App::PropertyEnumeration","CutType","TrimmedProfile", translate("App::Property", "Cut Type")).CutType = ["Perfect fit", "Simple fit",]
+        obj.addProperty(
+            "App::PropertyLink", "TrimmedBody", "TrimmedProfile", translate("App::Property", "Body to be trimmed")
+        ).TrimmedBody = None
+        obj.addProperty(
+            "App::PropertyLinkSubList",
+            "TrimmingBoundary",
+            "TrimmedProfile",
+            translate("App::Property", "Bodies that define boundaries"),
+        ).TrimmingBoundary = None
+
+        obj.addProperty(
+            "App::PropertyEnumeration",
+            "TrimmedProfileType",
+            "TrimmedProfile",
+            translate("App::Property", "TrimmedProfile Type"),
+        ).TrimmedProfileType = ["End Trim", "End Miter"]
+        obj.addProperty(
+            "App::PropertyEnumeration", "CutType", "TrimmedProfile", translate("App::Property", "Cut Type")
+        ).CutType = [
+            "Perfect fit",
+            "Simple fit",
+        ]
 
         obj.Proxy = self
 
@@ -41,7 +58,7 @@ class TrimmedProfile:
         cut_shapes = []
 
         if fp.TrimmedProfileType == "End Trim":
-            if fp.CutType in ["Perfect fit", "Coped cut"]: # Keeping Coped cut for retro-compatibility
+            if fp.CutType in ["Perfect fit", "Coped cut"]:  # Keeping Coped cut for retro-compatibility
                 shapes = [x[0].Shape for x in fp.TrimmingBoundary]
                 shps = BOPTools.SplitAPI.slice(fp.TrimmedBody.Shape, shapes, mode="Split")
                 for solid in shps.Solids:
@@ -50,8 +67,8 @@ class TrimmedProfile:
                     z = fp.TrimmedBody.Shape.CenterOfGravity.z
                     if not solid.BoundBox.isInside(x, y, z):
                         cut_shapes.append(Part.Shape(solid))
-                
-            elif fp.CutType in ["Simple fit", "Simple cut"]: # Keeping Simple cut for retro-compatibility
+
+            elif fp.CutType in ["Simple fit", "Simple cut"]:  # Keeping Simple cut for retro-compatibility
                 cut_shape = Part.Shape()
                 for link in fp.TrimmingBoundary:
                     part = link[0]

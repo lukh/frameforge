@@ -12,21 +12,59 @@ vec = App.Base.Vector
 
 
 class Profile:
-    def __init__(self, obj, init_w, init_h, init_mt, init_ft, init_r1, init_r2, init_len, init_wg, init_mf,
-                 init_hc, init_wc, material, fam, size_name, bevels_combined, link_sub=None):
+    def __init__(
+        self,
+        obj,
+        init_w,
+        init_h,
+        init_mt,
+        init_ft,
+        init_r1,
+        init_r2,
+        init_len,
+        init_wg,
+        init_mf,
+        init_hc,
+        init_wc,
+        material,
+        fam,
+        size_name,
+        bevels_combined,
+        link_sub=None,
+    ):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
         with initialization value 'init_w' to 'init_wc' : ProfileHeight, ProfileWidth, [...] CenteredOnWidth. Depending
         on 'bevels_combined' parameters, there is 4 others properties for bevels : BevelStartCut1, etc. Depending on
         'fam' parameter, there is properties specific to profile family.
         """
-        self.Type = 'Profile'
+        self.Type = "Profile"
 
-        obj.addProperty("App::PropertyString", "Material", "Profile", "", ).Material = material
-        obj.addProperty("App::PropertyString", "Family", "Profile", "", ).Family = fam
-        obj.addProperty("App::PropertyString", "SizeName", "Profile", "", ).SizeName = size_name
+        obj.addProperty(
+            "App::PropertyString",
+            "Material",
+            "Profile",
+            "",
+        ).Material = material
+        obj.addProperty(
+            "App::PropertyString",
+            "Family",
+            "Profile",
+            "",
+        ).Family = fam
+        obj.addProperty(
+            "App::PropertyString",
+            "SizeName",
+            "Profile",
+            "",
+        ).SizeName = size_name
 
-        obj.addProperty("App::PropertyFloat", "ProfileHeight", "Profile", "", ).ProfileHeight = init_h
+        obj.addProperty(
+            "App::PropertyFloat",
+            "ProfileHeight",
+            "Profile",
+            "",
+        ).ProfileHeight = init_h
         obj.addProperty("App::PropertyFloat", "ProfileWidth", "Profile", "").ProfileWidth = init_w
         obj.addProperty("App::PropertyFloat", "ProfileLength", "Profile", "").ProfileLength = init_len  # should it be ?
 
@@ -134,9 +172,24 @@ class Profile:
         self.bevels_combined = bevels_combined
         obj.Proxy = self
 
-
-    def set_properties(self, obj, init_w, init_h, init_mt, init_ft, init_r1, init_r2, init_len, init_wg, init_mf,
-                 init_hc, init_wc, material, fam, size_name):
+    def set_properties(
+        self,
+        obj,
+        init_w,
+        init_h,
+        init_mt,
+        init_ft,
+        init_r1,
+        init_r2,
+        init_len,
+        init_wg,
+        init_mf,
+        init_hc,
+        init_wc,
+        material,
+        fam,
+        size_name,
+    ):
 
         obj.Material = material
         obj.Family = fam
@@ -144,7 +197,7 @@ class Profile:
 
         obj.ProfileHeight = init_h
         obj.ProfileWidth = init_w
-        obj.ProfileLength = init_len # should it be ?
+        obj.ProfileLength = init_len  # should it be ?
 
         obj.Thickness = init_mt
         obj.ThicknessFlange = init_ft
@@ -198,7 +251,6 @@ class Profile:
         # obj.OffsetA = .0  # Property for structure
         # obj.OffsetB = .0  # Property for structure
 
-
     def on_changed(self, obj, p):
 
         if (
@@ -222,8 +274,13 @@ class Profile:
             self.execute(obj)
 
     def execute(self, obj):
-        if not hasattr(obj, "Family"): # for compat
-            obj.addProperty("App::PropertyString", "Family", "Profile", "", ).Family = self.fam
+        if not hasattr(obj, "Family"):  # for compat
+            obj.addProperty(
+                "App::PropertyString",
+                "Family",
+                "Profile",
+                "",
+            ).Family = self.fam
 
         try:
             L = obj.Target[0].getSubObject(obj.Target[1][0]).Length
@@ -349,8 +406,12 @@ class Profile:
 
             p = Part.Face(wire1)
 
-
-        if obj.Family == "Flat Sections" or obj.Family == "Square" or obj.Family == "Square Hollow" or obj.Family == "Rectangular Hollow":
+        if (
+            obj.Family == "Flat Sections"
+            or obj.Family == "Square"
+            or obj.Family == "Square Hollow"
+            or obj.Family == "Rectangular Hollow"
+        ):
             wire1 = wire2 = 0
 
             if obj.Family == "Square" or obj.Family == "Flat Sections":
@@ -587,7 +648,13 @@ class Profile:
 
             p = Part.Face(wire1)
 
-        if obj.Family == "IPE" or obj.Family == "IPN" or obj.Family == "HEA" or obj.Family == "HEB" or obj.Family == "HEM":
+        if (
+            obj.Family == "IPE"
+            or obj.Family == "IPN"
+            or obj.Family == "HEA"
+            or obj.Family == "HEB"
+            or obj.Family == "HEM"
+        ):
             XA1 = W / 2 - TW / 2  # face gauche du web
             XA2 = W / 2 + TW / 2  # face droite du web
             if obj.MakeFillet == False:  # IPE ou IPN sans arrondis
@@ -879,54 +946,51 @@ class Profile:
         obj.recompute()
 
 
-
-
-
 class ViewProviderProfile:
     def __init__(self, obj):
-        ''' Set this object to the proxy object of the actual view provider '''
+        """Set this object to the proxy object of the actual view provider"""
         obj.Proxy = self
-    
+
     def attach(self, vobj):
-        ''' Setup the scene sub-graph of the view provider, this method is mandatory '''
+        """Setup the scene sub-graph of the view provider, this method is mandatory"""
         self.ViewObject = vobj
         self.Object = vobj.Object
         return
-        
+
     def updateData(self, fp, prop):
-        ''' If a property of the handled feature has changed we have the chance to handle this here '''
+        """If a property of the handled feature has changed we have the chance to handle this here"""
         return
-    
+
     def getDisplayModes(self, obj):
-        ''' Return a list of display modes. '''
-        modes=[]
+        """Return a list of display modes."""
+        modes = []
         return modes
-    
+
     def getDefaultDisplayMode(self):
-        ''' Return the name of the default display mode. It must be defined in getDisplayModes. '''
+        """Return the name of the default display mode. It must be defined in getDisplayModes."""
         return "FlatLines"
-    
+
     def setDisplayMode(self, mode):
-        ''' Map the display mode defined in attach with those defined in getDisplayModes.
+        """Map the display mode defined in attach with those defined in getDisplayModes.
         Since they have the same names nothing needs to be done. This method is optional.
-        '''
+        """
         return mode
-    
+
     def claimChildren(self):
         return []
-    
+
     def onChanged(self, vp, prop):
-        ''' Print the name of the property that has changed '''
-        #App.Console.PrintMessage("Change {} property: {}\n".format(str(vp), str(prop)))
+        """Print the name of the property that has changed"""
+        # App.Console.PrintMessage("Change {} property: {}\n".format(str(vp), str(prop)))
         pass
 
     def onDelete(self, fp, sub):
         return True
-    
+
     def getIcon(self):
-        ''' Return the icon in XMP format which will appear in the tree view. This method is optional
+        """Return the icon in XMP format which will appear in the tree view. This method is optional
         and if not defined a default icon is shown.
-        '''
+        """
         return """
                 /* XPM */
                 static char * profile_xpm[] = {
@@ -964,14 +1028,13 @@ class ViewProviderProfile:
                 "                "};
         	"""
 
-
     def dumps(self):
         """
         Called during document saving.
         """
         return None
 
-    def loads(self,state):
+    def loads(self, state):
         """
         Called during document restore.
         """
@@ -997,5 +1060,3 @@ class ViewProviderProfile:
 
     def edit(self):
         FreeCADGui.ActiveDocument.setEdit(self.Object, 0)
-
-
