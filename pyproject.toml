@@ -1,3 +1,25 @@
+[project]
+name = "frameforge"
+version = "0.1.4"
+description = "FrameForge is dedicated for creating Frames and Beams, and apply operations (miter cuts, trim cuts) on these profiles."
+authors = [
+    {name = "Vivien HENRY", email = "vivien.henry@inductivebrain.fr"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+]
+
+[tool.poetry]
+packages = [
+    { include = "freecad" },
+    { include = "freecad.frameforge" },
+]
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+isort = "*"
+
 [build-system]
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
