@@ -39,19 +39,19 @@ class CreateTrimmedProfileTaskPanel():
 
         QSize = QtCore.QSize(32, 32)
 
-        self.form.rb_copedcut.setIcon(coped_type_icon)
-        self.form.rb_copedcut.setIconSize(QSize)
-        self.form.rb_copedcut.toggled.connect(lambda: self.update_cuttype("Coped cut"))
+        self.form.rb_perfectfit.setIcon(coped_type_icon)
+        self.form.rb_perfectfit.setIconSize(QSize)
+        self.form.rb_perfectfit.toggled.connect(lambda: self.update_cuttype("Perfect fit"))
 
-        self.form.rb_simplecut.setIcon(simple_type_icon)
-        self.form.rb_simplecut.setIconSize(QSize)
-        self.form.rb_simplecut.toggled.connect(lambda: self.update_cuttype("Simple cut"))
+        self.form.rb_simplefit.setIcon(simple_type_icon)
+        self.form.rb_simplefit.setIconSize(QSize)
+        self.form.rb_simplefit.toggled.connect(lambda: self.update_cuttype("Simple fit"))
 
         param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
-        if param.GetString("Default Cut Type") == "Coped cut":
-            self.form.rb_copedcut.toggle()
-        elif param.GetString("Default Cut Type") == "Simple cut":
-            self.form.rb_simplecut.toggle()
+        if param.GetString("Default Cut Type") == "Perfect fit":
+            self.form.rb_perfectfit.toggle()
+        elif param.GetString("Default Cut Type") == "Simple fit":
+            self.form.rb_simplefit.toggle()
 
         self.form.add_trimmed_object_button.setIcon(add_icon)
         self.form.add_boundary_button.setIcon(add_icon)
