@@ -1,7 +1,7 @@
-import os
 import json
-import re
+import os
 import pprint
+import re
 
 output_data = {}
 

@@ -1,17 +1,15 @@
-import os, glob
+import glob
 import json
+import os
 
+import FreeCAD as App
+import FreeCADGui as Gui
 from PySide import QtCore, QtGui
 
-import FreeCADGui as Gui
-import FreeCAD as App
-
-from freecad.frameforge.translate_utils import translate
-from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPATH
-
-from freecad.frameforge.profile import Profile, ViewProviderProfile
-
+from freecad.frameforge import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
 from freecad.frameforge._ui_utils import FormProxy
+from freecad.frameforge.profile import Profile, ViewProviderProfile
+from freecad.frameforge.translate_utils import translate
 
 
 class CreateProfileTaskPanel:

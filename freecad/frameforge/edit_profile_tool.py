@@ -1,14 +1,13 @@
-import os, glob
+import glob
 import json
+import os
 
+import FreeCAD as App
+import FreeCADGui as Gui
 from PySide import QtCore, QtGui
 
-import FreeCADGui as Gui
-import FreeCAD as App
-
-from freecad.frameforge.profile import Profile, ViewProviderProfile
-
 from freecad.frameforge.create_profiles_tool import CreateProfileTaskPanel
+from freecad.frameforge.profile import Profile, ViewProviderProfile
 
 
 class EditProfileTaskPanel(CreateProfileTaskPanel):

@@ -5,14 +5,14 @@
 # Select 2 vertexes in the 3D View and activate the tool.
 
 import os
+
 import FreeCAD as App
 import Part
 
 if App.GuiUp:
     import FreeCADGui as Gui
 
-from freecad.frameforge import _utils
-from freecad.frameforge import ICONPATH
+from freecad.frameforge import ICONPATH, _utils
 
 TOOL_ICON = os.path.join(ICONPATH, "line.svg")
 
