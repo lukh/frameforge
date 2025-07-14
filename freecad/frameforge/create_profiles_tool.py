@@ -73,21 +73,43 @@ class CreateProfileTaskPanel():
 
         self.form_proxy.combo_family.addItems([f for f in self.profiles[material]])
 
-    def on_family_changed(self, index):
+    def on_family_changed(self):
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
-
-        self.form_proxy.cb_make_fillet.setChecked(self.profiles[material][family]['fillet'])
-        self.form_proxy.cb_make_fillet.setEnabled(self.profiles[material][family]['fillet'])
-
-        self.update_image()
-
-        self.form_proxy.label_norm.setText(self.profiles[material][family]['norm'])
-        self.form_proxy.label_unit.setText(self.profiles[material][family]['unit'])
-
-        self.form_proxy.combo_size.clear()
-        self.form_proxy.combo_size.addItems([s for s in self.profiles[material][family]['sizes']])
         
+        # Only proceed if we have valid selections
+        if material and family and material in self.profiles and family in self.profiles.get(material, {}):
+            self.form.cb_make_fillet.setChecked(self.profiles[material][family]['fillet'])
+            
+            # Update sizes
+            self.form.combo_size.blockSignals(True)
+            self.form.combo_size.clear()
+            sizes = sorted(self.profiles[material][family]['sizes'].keys())
+            self.form.combo_size.addItems(sizes)
+            self.form.combo_size.blockSignals(False)
+            
+            if sizes:
+                self.form.combo_size.setCurrentIndex(0)
+                self.on_size_changed(self.form.combo_size.currentIndex())
+                
+            self.update_image()
+            
+            self.form.label_norm.setText(self.profiles[material][family]['norm'])
+            self.form.label_unit.setText(self.profiles[material][family]['unit'])
+        else:
+            # Material changed but family isn't valid - update family options
+            if material and material in self.profiles:
+                # Just refresh the family dropdown
+                self.form.combo_family.blockSignals(True)
+                self.form.combo_family.clear()
+                self.form.combo_family.addItems([f for f in self.profiles[material]])
+                self.form.combo_family.blockSignals(False)
+                
+                # Select first family if available
+                if self.form.combo_family.count() > 0:
+                    self.form.combo_family.setCurrentIndex(0)
+                    # Call this method again with valid selection
+                    self.on_family_changed()
 
     def on_size_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
@@ -253,8 +275,16 @@ class CreateProfileTaskPanel():
         # move it to the sketch's parent if possible
         if sketch is not None and len(sketch.Parents) > 0:
             sk_parent = sketch.Parents[-1][0]
-            sk_parent.addObject(obj)
-
+            # Check if parent is a Body container (not allowed to add arbitrary objects)
+            if sk_parent.TypeId != "PartDesign::Body":
+                try:
+                    sk_parent.addObject(obj)
+                except Exception as e:
+                    App.Console.PrintError(f"Could not add object to parent: {str(e)}\n")
+            else:
+                # For Body containers, we don't try to add the object
+                App.Console.PrintMessage("Parent is a Body container, profile added to document root\n")
+    
         # Create a ViewObject in current GUI
         ViewProviderProfile(obj.ViewObject)
 
@@ -281,24 +311,30 @@ class CreateProfileTaskPanel():
             obj.MapReversed = True
 
 
+        material = str(self.form.combo_material.currentText())
+        family = str(self.form.combo_family.currentText())
+
+        # Extract unit from profile data
+        family_data = self.profiles[material][family]
+        unit = family_data.get('unit', 'mm')  # Default to mm if not specified
+
         Profile(
             obj,
-            self.form_proxy.sb_width.value(),
-            self.form_proxy.sb_height.value(),
-            self.form_proxy.sb_main_thickness.value(),
-            self.form_proxy.sb_flange_thickness.value(),
-            self.form_proxy.sb_radius1.value(),
-            self.form_proxy.sb_radius2.value(),
-            self.form_proxy.sb_length.value(),
-            self.form_proxy.sb_weight.value(),
-            self.form_proxy.cb_make_fillet.isChecked(), # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
-            self.form_proxy.cb_height_centered.isChecked(),
-            self.form_proxy.cb_width_centered.isChecked(),
-            self.form_proxy.combo_material.currentText(),
-            self.form_proxy.combo_family.currentText(),
-            self.form_proxy.combo_size.currentText(),
-            self.form_proxy.cb_combined_bevel.isChecked(),
-            link_sub
+            self.form.sb_width.value(),
+            self.form.sb_height.value(),
+            self.form.sb_main_thickness.value(),
+            self.form.sb_flange_thickness.value(),
+            self.form.sb_radius1.value(),
+            self.form.sb_radius2.value(),
+            self.form.sb_length.value(),
+            self.form.sb_weight.value(),
+            self.form.cb_make_fillet.isChecked(), # and self.form.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
+            self.form.cb_height_centered.isChecked(),
+            self.form.cb_width_centered.isChecked(),
+            self.form.combo_family.currentText(),
+            self.form.cb_combined_bevel.isChecked(),
+            link_sub,
+            unit
         )
 
 

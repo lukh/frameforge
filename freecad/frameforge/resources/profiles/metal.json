@@ -1,7 +1,7 @@
 {
     "Equal Leg Angles": {
         "norm": "EN 10056-1",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "250x250x35": {
