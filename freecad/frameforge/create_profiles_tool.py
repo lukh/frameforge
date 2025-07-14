@@ -9,13 +9,19 @@ import FreeCAD as App
 from freecad.frameforge.translate_utils import translate
 from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPATH
 
-from freecad.frameforge.profile import Profile
+from freecad.frameforge.profile import Profile, ViewProviderProfile
+
+from freecad.frameforge._ui_utils import FormProxy
 
 
 class CreateProfileTaskPanel:
     def __init__(self):
-        ui_file = os.path.join(UIPATH, "create_profiles.ui")
-        self.form = Gui.PySideUic.loadUi(ui_file)
+        self.form = [
+            Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles1.ui")),
+            Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles2.ui"))
+        ]
+
+        self.form_proxy = FormProxy(self.form)
 
         self.load_data()
         self.initialize_ui()
@@ -32,75 +38,86 @@ class CreateProfileTaskPanel:
                 self.profiles[material_name] = json.load(fd)
 
     def initialize_ui(self):
-        self.form.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, "Warehouse.png")))
+        self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, "Warehouse.png")))
 
-        self.form.combo_material.currentIndexChanged.connect(self.on_material_changed)
-        self.form.combo_family.currentIndexChanged.connect(self.on_family_changed)
-        self.form.combo_size.currentIndexChanged.connect(self.on_size_changed)
+        self.form_proxy.combo_material.currentIndexChanged.connect(self.on_material_changed)
+        self.form_proxy.combo_family.currentIndexChanged.connect(self.on_family_changed)
+        self.form_proxy.combo_size.currentIndexChanged.connect(self.on_size_changed)
 
-        self.form.cb_make_fillet.stateChanged.connect(self.on_cb_make_fillet_changed)
+        self.form_proxy.cb_make_fillet.stateChanged.connect(self.on_cb_make_fillet_changed)
 
-        self.form.combo_material.addItems([k for k in self.profiles])
+        self.form_proxy.combo_material.addItems([k for k in self.profiles])
 
         param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
-        default_material_index = self.form.combo_material.findText(param.GetString("Default Profile Material"))
+        default_material_index = self.form_proxy.combo_material.findText(param.GetString("Default Profile Material"))
         if default_material_index > -1:
-            self.form.combo_material.setCurrentIndex(default_material_index)
+            self.form_proxy.combo_material.setCurrentIndex(default_material_index)
 
-            default_family_index = self.form.combo_family.findText(param.GetString("Default Profile Family"))
+            default_family_index = self.form_proxy.combo_family.findText(param.GetString("Default Profile Family"))
             if default_family_index > -1:
-                self.form.combo_family.setCurrentIndex(default_family_index)
+                self.form_proxy.combo_family.setCurrentIndex(default_family_index)
 
-                default_size_index = self.form.combo_size.findText(param.GetString("Default Profile Size"))
+                default_size_index = self.form_proxy.combo_size.findText(param.GetString("Default Profile Size"))
                 if default_size_index > -1:
-                    self.form.combo_size.setCurrentIndex(default_size_index)
+                    self.form_proxy.combo_size.setCurrentIndex(default_size_index)
 
     def on_material_changed(self, index):
-        material = str(self.form.combo_material.currentText())
+        material = str(self.form_proxy.combo_material.currentText())
 
-        self.form.combo_family.clear()
-        self.form.combo_family.addItems([f for f in self.profiles[material]])
+        self.form_proxy.combo_family.blockSignals(True)
+        self.form_proxy.combo_family.clear()
+        self.form_proxy.combo_family.blockSignals(False)
+
+        self.form_proxy.combo_family.addItems([f for f in self.profiles[material]])
 
     def on_family_changed(self, index):
-        material = str(self.form.combo_material.currentText())
-        family = str(self.form.combo_family.currentText())
+        material = str(self.form_proxy.combo_material.currentText())
+        family = str(self.form_proxy.combo_family.currentText())
 
-        self.form.cb_make_fillet.setChecked(self.profiles[material][family]["fillet"])
-        self.form.cb_make_fillet.setEnabled(self.profiles[material][family]["fillet"])
+        self.form_proxy.cb_make_fillet.setChecked(self.profiles[material][family]['fillet'])
+        self.form_proxy.cb_make_fillet.setEnabled(self.profiles[material][family]['fillet'])
 
         self.update_image()
 
-        self.form.label_norm.setText(self.profiles[material][family]["norm"])
-        self.form.label_unit.setText(self.profiles[material][family]["unit"])
+        self.form_proxy.label_norm.setText(self.profiles[material][family]['norm'])
+        self.form_proxy.label_unit.setText(self.profiles[material][family]['unit'])
 
-        self.form.combo_size.clear()
-        self.form.combo_size.addItems([s for s in self.profiles[material][family]["sizes"]])
+        self.form_proxy.combo_size.clear()
+        self.form_proxy.combo_size.addItems([s for s in self.profiles[material][family]['sizes']])
+        
 
     def on_size_changed(self, index):
-        material = str(self.form.combo_material.currentText())
-        family = str(self.form.combo_family.currentText())
-        size = str(self.form.combo_size.currentText())
+        material = str(self.form_proxy.combo_material.currentText())
+        family = str(self.form_proxy.combo_family.currentText())
+        size = str(self.form_proxy.combo_size.currentText())
 
         if size != "":
             profile = self.profiles[material][family]["sizes"][size]
 
             SETTING_MAP = {
-                "Height": self.form.sb_height,
-                "Width": self.form.sb_width,
-                "Thickness": self.form.sb_main_thickness,
-                "Flange Thickness": self.form.sb_flange_thickness,
-                "Radius1": self.form.sb_radius1,
-                "Radius2": self.form.sb_radius2,
-                "Weight": self.form.sb_weight,
+                "Height": self.form_proxy.sb_height,
+                "Width": self.form_proxy.sb_width,
+                "Thickness": self.form_proxy.sb_main_thickness,
+                "Flange Thickness": self.form_proxy.sb_flange_thickness,
+                "Radius1": self.form_proxy.sb_radius1,
+                "Radius2": self.form_proxy.sb_radius2,
+                "Weight": self.form_proxy.sb_weight
             }
 
-            self.form.sb_height.setEnabled(False)
-            self.form.sb_width.setEnabled(False)
-            self.form.sb_main_thickness.setEnabled(False)
-            self.form.sb_flange_thickness.setEnabled(False)
-            self.form.sb_radius1.setEnabled(False)
-            self.form.sb_radius2.setEnabled(False)
-            self.form.sb_weight.setEnabled(False)
+            self.form_proxy.sb_height.setEnabled(False)
+            self.form_proxy.sb_height.setValue(0.0)
+            self.form_proxy.sb_width.setEnabled(False)
+            self.form_proxy.sb_width.setValue(0.0)
+            self.form_proxy.sb_main_thickness.setEnabled(False)
+            self.form_proxy.sb_main_thickness.setValue(0.0)
+            self.form_proxy.sb_flange_thickness.setEnabled(False)
+            self.form_proxy.sb_flange_thickness.setValue(0.0)
+            self.form_proxy.sb_radius1.setEnabled(False)
+            self.form_proxy.sb_radius1.setValue(0.0)
+            self.form_proxy.sb_radius2.setEnabled(False)
+            self.form_proxy.sb_radius2.setValue(0.0)
+            self.form_proxy.sb_weight.setEnabled(False)
+            self.form_proxy.sb_weight.setValue(0.0)
 
             for s in profile:
                 if s == "Size":
@@ -118,15 +135,16 @@ class CreateProfileTaskPanel:
         self.update_image()
 
     def update_image(self):
-        material = str(self.form.combo_material.currentText())
-        family = str(self.form.combo_family.currentText())
+        material = str(self.form_proxy.combo_material.currentText())
+        family = str(self.form_proxy.combo_family.currentText())
 
-        img_name = family.replace(" ", "_")
-        if self.form.cb_make_fillet.isChecked():
+
+        img_name = family.replace(' ', "_")
+        if self.form_proxy.cb_make_fillet.isChecked():
             img_name += "_Fillet"
         img_name += ".png"
 
-        self.form.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, material, img_name)))
+        self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, material, img_name)))
 
     def open(self):
         App.Console.PrintMessage(translate("frameforge", "Opening CreateProfile\n"))
@@ -143,13 +161,13 @@ class CreateProfileTaskPanel:
         return True
 
     def accept(self):
-        if len(Gui.Selection.getSelectionEx()) or self.form.sb_length.value() > 0:
+        if len(Gui.Selection.getSelectionEx()) or self.form_proxy.sb_length.value() > 0:
             App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile\n"))
 
             param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
-            param.SetString("Default Profile Material", self.form.combo_material.currentText())
-            param.SetString("Default Profile Family", self.form.combo_family.currentText())
-            param.SetString("Default Profile Size", self.form.combo_size.currentText())
+            param.SetString("Default Profile Material", self.form_proxy.combo_material.currentText())
+            param.SetString("Default Profile Family", self.form_proxy.combo_family.currentText())
+            param.SetString("Default Profile Size", self.form_proxy.combo_size.currentText())
 
             self.proceed()
             self.clean()
@@ -178,23 +196,25 @@ class CreateProfileTaskPanel:
         selection_list = Gui.Selection.getSelectionEx()
 
         p_name = "Profile"
-        if len(selection_list) == 1 and self.form.cb_sketch_in_name.isChecked():
+        if len(selection_list) == 1 and self.form_proxy.cb_sketch_in_name.isChecked():
             sketch_sel = selection_list[0]
 
             p_name += "_" + sketch_sel.Object.Name
 
-        if self.form.cb_family_in_name.isChecked():
-            p_name += "_" + self.form.combo_family.currentText().replace(" ", "_")
+        if self.form_proxy.cb_family_in_name.isChecked():
+            p_name += "_" + self.form_proxy.combo_family.currentText().replace(" ", "_")
 
-        if self.form.cb_size_in_name.isChecked():
-            p_name += "_" + self.form.combo_size.currentText()
+        if self.form_proxy.cb_size_in_name.isChecked():
+            p_name += "_" + self.form_proxy.combo_size.currentText()
+
+        p_name += "_000"
 
         if len(selection_list):
             # create part or group and
             container = None
-            if self.form.rb_profiles_in_part.isChecked():
-                container = App.activeDocument().addObject("App::Part", "Part")
-            # elif self.form.rb_profiles_in_group.isChecked(): # not working
+            if self.form_proxy.rb_profiles_in_part.isChecked():
+                container = App.activeDocument().addObject('App::Part','Part')
+            # elif self.form_proxy.rb_profiles_in_group.isChecked(): # not working
             #     container = App.activeDocument().addObject('App::DocumentObjectGroup','Group')
 
             # creates profiles
@@ -225,9 +245,7 @@ class CreateProfileTaskPanel:
             sk_parent.addObject(obj)
 
         # Create a ViewObject in current GUI
-        obj.ViewObject.Proxy = 0
-        view_obj = Gui.ActiveDocument.getObject(obj.Name)
-        view_obj.DisplayMode = "Flat Lines"
+        ViewProviderProfile(obj.ViewObject)
 
         if sketch is not None and edge is not None:
             # Tuple assignment for edge
@@ -243,8 +261,8 @@ class CreateProfileTaskPanel:
         else:
             link_sub = None
 
-        if not self.form.cb_reverse_attachment.isChecked():
-            # print("Not reverse attachment")
+        if not self.form_proxy.cb_reverse_attachment.isChecked():
+            #print("Not reverse attachment")
             obj.MapPathParameter = 1
         else:
             # print("Reverse attachment")
@@ -253,20 +271,22 @@ class CreateProfileTaskPanel:
 
         Profile(
             obj,
-            self.form.sb_width.value(),
-            self.form.sb_height.value(),
-            self.form.sb_main_thickness.value(),
-            self.form.sb_flange_thickness.value(),
-            self.form.sb_radius1.value(),
-            self.form.sb_radius2.value(),
-            self.form.sb_length.value(),
-            self.form.sb_weight.value(),
-            self.form.cb_make_fillet.isChecked(),  # and self.form.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
-            self.form.cb_height_centered.isChecked(),
-            self.form.cb_width_centered.isChecked(),
-            self.form.combo_family.currentText(),
-            self.form.cb_combined_bevel.isChecked(),
-            link_sub,
+            self.form_proxy.sb_width.value(),
+            self.form_proxy.sb_height.value(),
+            self.form_proxy.sb_main_thickness.value(),
+            self.form_proxy.sb_flange_thickness.value(),
+            self.form_proxy.sb_radius1.value(),
+            self.form_proxy.sb_radius2.value(),
+            self.form_proxy.sb_length.value(),
+            self.form_proxy.sb_weight.value(),
+            self.form_proxy.cb_make_fillet.isChecked(), # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
+            self.form_proxy.cb_height_centered.isChecked(),
+            self.form_proxy.cb_width_centered.isChecked(),
+            self.form_proxy.combo_material.currentText(),
+            self.form_proxy.combo_family.currentText(),
+            self.form_proxy.combo_size.currentText(),
+            self.form_proxy.cb_combined_bevel.isChecked(),
+            link_sub
         )
 
     def addSelection(self, doc, obj, sub, other):
@@ -277,8 +297,8 @@ class CreateProfileTaskPanel:
 
     def update_selection(self):
         if len(Gui.Selection.getSelectionEx()) > 0:
-            self.form.sb_length.setEnabled(False)
-            self.form.sb_length.setValue(0.0)
+            self.form_proxy.sb_length.setEnabled(False)
+            self.form_proxy.sb_length.setValue(0.0)
 
             obj_name = ""
             for sel in Gui.Selection.getSelectionEx():
@@ -293,10 +313,10 @@ class CreateProfileTaskPanel:
                 # obj_name += '\n'
 
         else:
-            self.form.sb_length.setEnabled(True)
-            obj_name = "Not Attached / Define length"
+            self.form_proxy.sb_length.setEnabled(True)
+            obj_name = 'Not Attached / Define length'
 
-        self.form.label_attach.setText(obj_name)
+        self.form_proxy.label_attach.setText(obj_name)
 
 
 class CreateProfilesCommand:

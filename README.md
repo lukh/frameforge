@@ -78,6 +78,14 @@ And others people that I don't know but they should be in this [thread](https://
 
 ## Changelog
 
+* v0.1.4
+  - Split UI for create_profiles
+  - Rename Profile CutType 
+  - Edit Profile
+  - Add size, family, material in obj
+  - fix #28, center offset on circular profile
+  - Add wood profiles
+
 * v0.1.3
   - Fix #10, Non attached profile (move profile inside the sketch 's parent)
   - Fix #27, Link to object go out of the allowed scope
