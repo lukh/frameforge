@@ -2062,7 +2062,7 @@
     "Square": {
         "norm": "EN",
         "unit": "Metric Units",
-        "fillet": true,
+        "fillet": false,
         "sizes": {
             "6x6": {
                 "Height": "6",

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Trim Profile</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
@@ -21,9 +21,9 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="QRadioButton" name="rb_copedcut">
+       <widget class="QRadioButton" name="rb_perfectfit">
         <property name="text">
-         <string>Coped Cut</string>
+         <string>Perfect fit</string>
         </property>
         <property name="icon">
          <iconset>
@@ -38,9 +38,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="rb_simplecut">
+       <widget class="QRadioButton" name="rb_simplefit">
         <property name="text">
-         <string>Simple Cut</string>
+         <string>Simple fit</string>
         </property>
         <property name="icon">
          <iconset>
@@ -126,7 +126,7 @@
         <item>
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -147,7 +147,7 @@
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -159,8 +159,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
