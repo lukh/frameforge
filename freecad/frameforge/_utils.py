@@ -31,7 +31,11 @@ def getShape(obj, prop, shape_type):
                 n = eval(obj.getPropertyByName(prop)[1][0].lstrip(shape_type))
                 osh = obj.getPropertyByName(prop)[0].Shape
                 sh = osh.copy()
-                if sh and (not shape_type == "Vertex") and hasattr(obj.getPropertyByName(prop)[0], "getGlobalPlacement"):
+                if (
+                    sh
+                    and (not shape_type == "Vertex")
+                    and hasattr(obj.getPropertyByName(prop)[0], "getGlobalPlacement")
+                ):
                     pl = obj.getPropertyByName(prop)[0].getGlobalPlacement()
                     sh.Placement = pl
                 return getSubShape(sh, shape_type, n)
@@ -57,4 +61,3 @@ def getShape(obj, prop, shape_type):
     else:
         # FreeCAD.Console.PrintError("CurvesWB._utils.getShape: %r has no property %r\n"%(obj, prop))
         return None
-
