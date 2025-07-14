@@ -1,9 +1,10 @@
 import os
-import FreeCADGui as Gui
+
 import FreeCAD as App
-from freecad.frameforge.translate_utils import translate
+import FreeCADGui as Gui
 
 from freecad.frameforge import ICONPATH, TRANSLATIONSPATH
+from freecad.frameforge.translate_utils import translate
 
 
 class FrameForge(Gui.Workbench):
@@ -29,12 +30,12 @@ class FrameForge(Gui.Workbench):
         This function is called at the first activation of the workbench.
         here is the place to import all the commands
         """
-        from freecad.frameforge import parametric_line
         from freecad.frameforge import (
-            create_profiles_tool,
-            edit_profile_tool,
-            create_trimmed_profiles_tool,
             create_end_miter_tool,
+            create_profiles_tool,
+            create_trimmed_profiles_tool,
+            edit_profile_tool,
+            parametric_line,
         )
 
         # Add translations path

@@ -1,17 +1,16 @@
-import os, glob
+import glob
 import json
+import os
 
+import ArchCommands
+import BOPTools.SplitAPI
+import FreeCAD as App
+import FreeCADGui as Gui
+import Part
 from PySide import QtCore, QtGui
 
-import FreeCADGui as Gui
-import FreeCAD as App
-
-import Part, ArchCommands
-import BOPTools.SplitAPI
-
+from freecad.frameforge import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
 from freecad.frameforge.translate_utils import translate
-from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPATH
-
 from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
 
 
