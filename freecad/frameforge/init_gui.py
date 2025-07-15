@@ -44,7 +44,7 @@ class FrameForge(Gui.Workbench):
         here is the place to import all the commands
         """
         from freecad.frameforge import parametric_line
-        from freecad.frameforge import create_profiles_tool, create_trimmed_profiles_tool, create_end_miter_tool
+        from freecad.frameforge import create_profiles_tool, edit_profile_tool, create_trimmed_profiles_tool, create_end_miter_tool
 
         # Add translations path
         Gui.addLanguagePath(TRANSLATIONSPATH)

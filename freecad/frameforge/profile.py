@@ -1,9 +1,11 @@
 import math
 
+import FreeCADGui as Gui
 import FreeCAD as App
 import Part
 
 from .profile_generators import *
+import freecad.frameforge
 
 # Global variable for a 3D float vector (used in Profile class)
 vec = App.Base.Vector
@@ -13,13 +15,19 @@ class Profile:
     _busy = False
 
     def __init__(self, obj, init_w, init_h, init_mt, init_ft, init_r1, init_r2, init_len, init_wg, init_mf,
-                 init_hc, init_wc, fam, bevels_combined, link_sub=None):
+                 init_hc, init_wc, material, fam, size_name, bevels_combined, link_sub=None):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
         with initialization value 'init_w' to 'init_wc' : ProfileHeight, ProfileWidth, [...] CenteredOnWidth. Depending
         on 'bevels_combined' parameters, there is 4 others properties for bevels : BevelStartCut1, etc. Depending on
         'fam' parameter, there is properties specific to profile family.
         """
+
+        self.Type = 'Profile'
+
+        obj.addProperty("App::PropertyString", "Material", "Profile", "", ).Material = material
+        obj.addProperty("App::PropertyString", "Family", "Profile", "", ).Family = fam
+        obj.addProperty("App::PropertyString", "SizeName", "Profile", "", ).SizeName = size_name
 
         obj.addProperty("App::PropertyFloat", "ProfileHeight", "Profile", "", ).ProfileHeight = init_h
         obj.addProperty("App::PropertyFloat", "ProfileWidth", "Profile", "").ProfileWidth = init_w
@@ -97,7 +105,7 @@ class Profile:
             obj.setExpression('.AttachmentOffset.Base.z', u'-OffsetA')
 
         self.WM = init_wg
-        self.fam = fam
+
         self.bevels_combined = bevels_combined
         obj.Proxy = self
 
@@ -134,6 +142,8 @@ class Profile:
                 Profile._busy = False
 
     def execute(self, obj):
+        if not hasattr(obj, "Family"): # for compat
+            obj.addProperty("App::PropertyString", "Family", "Profile", "", ).Family = self.fam
 
         try:
             L = obj.Target[0].getSubObject(obj.Target[1][0]).Length
@@ -154,7 +164,6 @@ class Profile:
         r = obj.RadiusSmall
         d = vec(0, 0, 1)
 
-        if W == 0: W = H
         w = h = 0
 
         if self.bevels_combined == False:
