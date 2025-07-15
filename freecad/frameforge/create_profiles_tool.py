@@ -253,7 +253,14 @@ class CreateProfileTaskPanel():
         # move it to the sketch's parent if possible
         if sketch is not None and len(sketch.Parents) > 0:
             sk_parent = sketch.Parents[-1][0]
-            sk_parent.addObject(obj)
+            try:
+                # Check if parent is a Body (which won't accept arbitrary objects)
+                if hasattr(sk_parent, 'TypeId') and 'Body' not in sk_parent.TypeId:
+                    sk_parent.addObject(obj)
+                else:
+                    App.Console.PrintWarning(f"Cannot add profile to {sk_parent.Label} (type: {sk_parent.TypeId}). Creating at document root level.\n")
+            except Exception as e:
+                App.Console.PrintWarning(f"Cannot add profile to parent: {str(e)}. Creating at document root level.\n")
 
         # Create a ViewObject in current GUI
         ViewProviderProfile(obj.ViewObject)
@@ -302,6 +309,9 @@ class CreateProfileTaskPanel():
         )
 
 
+        # Ensure centering flags are explicitly set based on UI
+        obj.CenteredOnWidth = self.form.cb_width_centered.isChecked()
+        obj.CenteredOnHeight = self.form.cb_height_centered.isChecked()
 
     def addSelection(self, doc, obj, sub, other):
         self.update_selection()
@@ -310,6 +320,15 @@ class CreateProfileTaskPanel():
         self.update_selection()
 
     def update_selection(self):
+        # First check if form still exists
+        if not hasattr(self, "form") or self.form is None:
+            # Form is no longer available, remove observer to prevent further callbacks
+            try:
+                Gui.Selection.removeObserver(self)
+            except:
+                pass
+            return
+
         if len(Gui.Selection.getSelectionEx()) > 0:
             self.form_proxy.sb_length.setEnabled(False)
             self.form_proxy.sb_length.setValue(0.0)
