@@ -1,14 +1,13 @@
-import os, glob
+import glob
 import json
+import os
 
+import FreeCAD as App
+import FreeCADGui as Gui
 from PySide import QtCore, QtGui
 
-import FreeCADGui as Gui
-import FreeCAD as App
-
-from freecad.frameforge.profile import Profile, ViewProviderProfile
-
 from freecad.frameforge.create_profiles_tool import CreateProfileTaskPanel
+from freecad.frameforge.profile import Profile, ViewProviderProfile
 
 
 class EditProfileTaskPanel(CreateProfileTaskPanel):
@@ -42,10 +41,8 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
 
         # self.form_proxy.cb_combined_bevel.setChecked()
 
-
     def open(self):
         App.ActiveDocument.openTransaction("Edit Profile")
-
 
     def reject(self):
         self.profile.restoreContent(self.dump)
@@ -58,7 +55,6 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
 
         return True
 
-
     def accept(self):
         self.profile.Proxy.set_properties(
             self.profile,
@@ -70,7 +66,7 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
             self.form_proxy.sb_radius2.value(),
             self.form_proxy.sb_length.value(),
             self.form_proxy.sb_weight.value(),
-            self.form_proxy.cb_make_fillet.isChecked(), # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
+            self.form_proxy.cb_make_fillet.isChecked(),  # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
             self.form_proxy.cb_height_centered.isChecked(),
             self.form_proxy.cb_width_centered.isChecked(),
             self.form_proxy.combo_material.currentText(),
@@ -84,4 +80,3 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
         Gui.ActiveDocument.resetEdit()
 
         return True
-

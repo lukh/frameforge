@@ -1,23 +1,22 @@
-import os, glob
+import glob
 import json
+import os
 
+import FreeCAD as App
+import FreeCADGui as Gui
 from PySide import QtCore, QtGui
 
-import FreeCADGui as Gui
-import FreeCAD as App
-
-from freecad.frameforge.translate_utils import translate
-from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPATH
-
-from freecad.frameforge.profile import Profile, ViewProviderProfile
-
+from freecad.frameforge import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
 from freecad.frameforge._ui_utils import FormProxy
+from freecad.frameforge.profile import Profile, ViewProviderProfile
+from freecad.frameforge.translate_utils import translate
 
-class CreateProfileTaskPanel():
+
+class CreateProfileTaskPanel:
     def __init__(self):
         self.form = [
             Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles1.ui")),
-            Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles2.ui"))
+            Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles2.ui")),
         ]
 
         self.form_proxy = FormProxy(self.form)
@@ -25,18 +24,16 @@ class CreateProfileTaskPanel():
         self.load_data()
         self.initialize_ui()
 
-
     def load_data(self):
         self.profiles = {}
 
-        files = [f for f in os.listdir(PROFILESPATH) if f.endswith('.json')]
+        files = [f for f in os.listdir(PROFILESPATH) if f.endswith(".json")]
 
         for f in files:
             material_name = os.path.splitext(f)[0].capitalize()
 
             with open(os.path.join(PROFILESPATH, f)) as fd:
                 self.profiles[material_name] = json.load(fd)
-
 
     def initialize_ui(self):
         self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, "Warehouse.png")))
@@ -48,7 +45,6 @@ class CreateProfileTaskPanel():
         self.form_proxy.cb_make_fillet.stateChanged.connect(self.on_cb_make_fillet_changed)
 
         self.form_proxy.combo_material.addItems([k for k in self.profiles])
-
 
         param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
         default_material_index = self.form_proxy.combo_material.findText(param.GetString("Default Profile Material"))
@@ -63,7 +59,6 @@ class CreateProfileTaskPanel():
                 if default_size_index > -1:
                     self.form_proxy.combo_size.setCurrentIndex(default_size_index)
 
-
     def on_material_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
 
@@ -77,25 +72,24 @@ class CreateProfileTaskPanel():
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
 
-        self.form_proxy.cb_make_fillet.setChecked(self.profiles[material][family]['fillet'])
-        self.form_proxy.cb_make_fillet.setEnabled(self.profiles[material][family]['fillet'])
+        self.form_proxy.cb_make_fillet.setChecked(self.profiles[material][family]["fillet"])
+        self.form_proxy.cb_make_fillet.setEnabled(self.profiles[material][family]["fillet"])
 
         self.update_image()
 
-        self.form_proxy.label_norm.setText(self.profiles[material][family]['norm'])
-        self.form_proxy.label_unit.setText(self.profiles[material][family]['unit'])
+        self.form_proxy.label_norm.setText(self.profiles[material][family]["norm"])
+        self.form_proxy.label_unit.setText(self.profiles[material][family]["unit"])
 
         self.form_proxy.combo_size.clear()
-        self.form_proxy.combo_size.addItems([s for s in self.profiles[material][family]['sizes']])
-        
+        self.form_proxy.combo_size.addItems([s for s in self.profiles[material][family]["sizes"]])
 
     def on_size_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
         size = str(self.form_proxy.combo_size.currentText())
 
-        if size != '':
-            profile  = self.profiles[material][family]['sizes'][size]
+        if size != "":
+            profile = self.profiles[material][family]["sizes"][size]
 
             SETTING_MAP = {
                 "Height": self.form_proxy.sb_height,
@@ -104,7 +98,7 @@ class CreateProfileTaskPanel():
                 "Flange Thickness": self.form_proxy.sb_flange_thickness,
                 "Radius1": self.form_proxy.sb_radius1,
                 "Radius2": self.form_proxy.sb_radius2,
-                "Weight": self.form_proxy.sb_weight
+                "Weight": self.form_proxy.sb_weight,
             }
 
             self.form_proxy.sb_height.setEnabled(False)
@@ -127,38 +121,32 @@ class CreateProfileTaskPanel():
                     continue
 
                 if s not in SETTING_MAP:
-                    raise ValueError('Setting Unkown')
+                    raise ValueError("Setting Unkown")
 
                 sb = SETTING_MAP[s]
                 sb.setEnabled(True)
 
                 sb.setValue(float(profile[s]))
 
-
-
     def on_cb_make_fillet_changed(self, state):
         self.update_image()
-
-
 
     def update_image(self):
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
 
-        img_name = family.replace(' ', "_")
+        img_name = family.replace(" ", "_")
         if self.form_proxy.cb_make_fillet.isChecked():
             img_name += "_Fillet"
         img_name += ".png"
 
         self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, material, img_name)))
 
-
     def open(self):
         App.Console.PrintMessage(translate("frameforge", "Opening CreateProfile\n"))
         self.update_selection()
 
         App.ActiveDocument.openTransaction("Add Profile")
-
 
     def reject(self):
         App.Console.PrintMessage(translate("frameforge", "Rejecting CreateProfile\n"))
@@ -167,7 +155,6 @@ class CreateProfileTaskPanel():
         App.ActiveDocument.abortTransaction()
 
         return True
-
 
     def accept(self):
         if len(Gui.Selection.getSelectionEx()) or self.form_proxy.sb_length.value() > 0:
@@ -189,17 +176,17 @@ class CreateProfileTaskPanel():
         else:
             App.Console.PrintMessage(translate("frameforge", "Not Accepting CreateProfile\nSelect Edges or set Length"))
 
-            diag = QtGui.QMessageBox(QtGui.QMessageBox.Warning, 'Create Profile', 'Select Edges or set Length to create a profile')
+            diag = QtGui.QMessageBox(
+                QtGui.QMessageBox.Warning, "Create Profile", "Select Edges or set Length to create a profile"
+            )
             diag.setWindowModality(QtCore.Qt.ApplicationModal)
             diag.exec_()
-        
-            return False
 
+            return False
 
     def clean(self):
         Gui.Selection.removeObserver(self)
         Gui.Selection.removeSelectionGate()
-
 
     def proceed(self):
         selection_list = Gui.Selection.getSelectionEx()
@@ -219,10 +206,10 @@ class CreateProfileTaskPanel():
         p_name += "_000"
 
         if len(selection_list):
-            # create part or group and 
+            # create part or group and
             container = None
             if self.form_proxy.rb_profiles_in_part.isChecked():
-                container = App.activeDocument().addObject('App::Part','Part')
+                container = App.activeDocument().addObject("App::Part", "Part")
             # elif self.form_proxy.rb_profiles_in_group.isChecked(): # not working
             #     container = App.activeDocument().addObject('App::DocumentObjectGroup','Group')
 
@@ -234,7 +221,7 @@ class CreateProfileTaskPanel():
 
                 if len(sketch_sel.SubElementNames) > 0:
                     edges = sketch_sel.SubElementNames
-                else: #use on the whole sketch
+                else:  # use on the whole sketch
                     edges = [f"Edge{idx + 1}" for idx, e in enumerate(sketch_sel.Object.Shape.Edges)]
 
                 for i, edge in enumerate(edges):
@@ -242,8 +229,6 @@ class CreateProfileTaskPanel():
 
         else:
             self.make_profile(None, None, p_name)
-
-        
 
     def make_profile(self, sketch, edge, name):
         # Create an object in current document
@@ -266,20 +251,19 @@ class CreateProfileTaskPanel():
 
             try:
                 obj.AttachmentSupport = (feature, edge)
-            except AttributeError: # for Freecad <= 0.21 support
+            except AttributeError:  # for Freecad <= 0.21 support
                 obj.Support = (feature, edge)
-            
+
         else:
             link_sub = None
 
         if not self.form_proxy.cb_reverse_attachment.isChecked():
-            #print("Not reverse attachment")
+            # print("Not reverse attachment")
             obj.MapPathParameter = 1
         else:
-            #print("Reverse attachment")
+            # print("Reverse attachment")
             obj.MapPathParameter = 0
             obj.MapReversed = True
-
 
         Profile(
             obj,
@@ -291,17 +275,15 @@ class CreateProfileTaskPanel():
             self.form_proxy.sb_radius2.value(),
             self.form_proxy.sb_length.value(),
             self.form_proxy.sb_weight.value(),
-            self.form_proxy.cb_make_fillet.isChecked(), # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
+            self.form_proxy.cb_make_fillet.isChecked(),  # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
             self.form_proxy.cb_height_centered.isChecked(),
             self.form_proxy.cb_width_centered.isChecked(),
             self.form_proxy.combo_material.currentText(),
             self.form_proxy.combo_family.currentText(),
             self.form_proxy.combo_size.currentText(),
             self.form_proxy.cb_combined_bevel.isChecked(),
-            link_sub
+            link_sub,
         )
-
-
 
     def addSelection(self, doc, obj, sub, other):
         self.update_selection()
@@ -314,35 +296,35 @@ class CreateProfileTaskPanel():
             self.form_proxy.sb_length.setEnabled(False)
             self.form_proxy.sb_length.setValue(0.0)
 
-            obj_name = ''
+            obj_name = ""
             for sel in Gui.Selection.getSelectionEx():
                 selected_obj_name = sel.ObjectName
-                subs = ''
+                subs = ""
                 for sub in sel.SubElementNames:
-                    subs += '{},'.format(sub)
+                    subs += "{},".format(sub)
 
-                obj_name += selected_obj_name 
+                obj_name += selected_obj_name
                 obj_name += " / "
                 obj_name += subs
                 # obj_name += '\n'
 
         else:
             self.form_proxy.sb_length.setEnabled(True)
-            obj_name = 'Not Attached / Define length'
-        
+            obj_name = "Not Attached / Define length"
 
         self.form_proxy.label_attach.setText(obj_name)
 
 
-
-class CreateProfilesCommand():
+class CreateProfilesCommand:
     """Create Profiles with standards dimensions"""
 
     def GetResources(self):
-        return {"Pixmap"  : os.path.join(ICONPATH, "warehouse_profiles.svg"),
-                "Accel"   : "Shift+S", # a default shortcut (optional)
-                "MenuText": "Create Profile",
-                "ToolTip" : "Create new profiles from Edges"}
+        return {
+            "Pixmap": os.path.join(ICONPATH, "warehouse_profiles.svg"),
+            "Accel": "Shift+S",  # a default shortcut (optional)
+            "MenuText": "Create Profile",
+            "ToolTip": "Create new profiles from Edges",
+        }
 
     def Activated(self):
         """Do something here"""
@@ -352,10 +334,10 @@ class CreateProfilesCommand():
 
         Gui.Control.showDialog(panel)
 
-
     def IsActive(self):
         """Here you can define if the command must be active or not (greyed) if certain conditions
         are met or not. This function is optional."""
         return App.ActiveDocument is not None
+
 
 Gui.addCommand("FrameForge_CreateProfiles", CreateProfilesCommand())
