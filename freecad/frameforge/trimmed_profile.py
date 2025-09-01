@@ -54,11 +54,15 @@ class TrimmedProfile:
                 cut_shape = Part.Shape()
                 for link in fp.TrimmingBoundary:
                     part = link[0]
-                    for sub in link[1]  :
-                        face = part.getSubObject(sub)
-                        if isinstance(face.Surface, Part.Plane):
-                            shp = self.getOutsideCV(face, fp.TrimmedBody.Shape)
-                            cut_shapes.append(shp)
+                    for sub in link[1]:
+                        shape = part.getSubObject(sub)
+                        # Check that shape exists and is valid before accessing ShapeType
+                        if shape and not shape.isNull():
+                            if shape.ShapeType == "Face":  # Fix: check shape type
+                                face = shape
+                                if hasattr(face, 'Surface') and isinstance(face.Surface, Part.Plane):
+                                    shp = self.getOutsideCV(face, fp.TrimmedBody.Shape)
+                                    cut_shapes.append(shp)
         
         elif fp.TrimmedProfileType == "End Miter":
             doc = App.activeDocument()
