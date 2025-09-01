@@ -30,6 +30,7 @@ class Profile:
         size_name,
         bevels_combined,
         link_sub=None,
+        unit="mm"
     ):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
@@ -39,6 +40,8 @@ class Profile:
         """
 
         self.Type = "Profile"
+
+        # App.Units.Quantity(str(W) + ' ' + unit_suffix)
 
         obj.addProperty(
             "App::PropertyString",
@@ -59,24 +62,19 @@ class Profile:
             "",
         ).SizeName = size_name
 
-        obj.addProperty(
-            "App::PropertyFloat",
-            "ProfileHeight",
-            "Profile",
-            "",
-        ).ProfileHeight = init_h
-        obj.addProperty("App::PropertyFloat", "ProfileWidth", "Profile", "").ProfileWidth = init_w
-        obj.addProperty("App::PropertyFloat", "ProfileLength", "Profile", "").ProfileLength = init_len  # should it be ?
+        obj.addProperty("App::PropertyLength", "ProfileHeight", "Profile","").ProfileHeight = App.Units.Quantity(f"{init_h} {unit}")
+        obj.addProperty("App::PropertyLength", "ProfileWidth", "Profile", "").ProfileWidth = App.Units.Quantity(f"{init_w} {unit}")
+        obj.addProperty("App::PropertyLength", "ProfileLength", "Profile", "").ProfileLength = App.Units.Quantity(f"{init_len} {unit}")  # should it be ?
 
         obj.addProperty(
-            "App::PropertyFloat", "Thickness", "Profile", "Thickness of all the profile or the web"
-        ).Thickness = init_mt
+            "App::PropertyLength", "Thickness", "Profile", "Thickness of all the profile or the web"
+        ).Thickness = App.Units.Quantity(f"{init_mt} {unit}")
         obj.addProperty(
-            "App::PropertyFloat", "ThicknessFlange", "Profile", "Thickness of the flanges"
-        ).ThicknessFlange = init_ft
+            "App::PropertyLength", "ThicknessFlange", "Profile", "Thickness of the flanges"
+        ).ThicknessFlange = App.Units.Quantity(f"{init_ft} {unit}")
 
-        obj.addProperty("App::PropertyFloat", "RadiusLarge", "Profile", "Large radius").RadiusLarge = init_r1
-        obj.addProperty("App::PropertyFloat", "RadiusSmall", "Profile", "Small radius").RadiusSmall = init_r2
+        obj.addProperty("App::PropertyLength", "RadiusLarge", "Profile", "Large radius").RadiusLarge = App.Units.Quantity(f"{init_r1} {unit}")
+        obj.addProperty("App::PropertyLength", "RadiusSmall", "Profile", "Small radius").RadiusSmall = App.Units.Quantity(f"{init_r2} {unit}")
         obj.addProperty(
             "App::PropertyBool", "MakeFillet", "Profile", "Whether to draw the fillets or not"
         ).MakeFillet = init_mf
@@ -139,29 +137,16 @@ class Profile:
             obj.addProperty("App::PropertyBool", "IPN", "Profile", "IPE/HEA style or IPN style").IPN = True
             obj.addProperty("App::PropertyFloat", "FlangeAngle", "Profile").FlangeAngle = 8
 
-        obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure").Width = (
-            obj.ProfileWidth
-        )  # Property for structure
-        obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure").Height = (
-            obj.ProfileLength
-        )  # Property for structure
-        obj.addProperty(
-            "App::PropertyLength",
-            "Length",
-            "Structure",
-            "Parameter for structure",
-        ).Length = obj.ProfileHeight  # Property for structure
+        obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure").Width = obj.ProfileWidth # Property for structure
+        obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure").Height = obj.ProfileHeight # Property for structure
+        obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure").Length = obj.ProfileLength  # Property for structure
+
         obj.setEditorMode("Width", 1)  # user doesn't change !
         obj.setEditorMode("Height", 1)
         obj.setEditorMode("Length", 1)
 
-        obj.addProperty("App::PropertyFloat", "OffsetA", "Structure", "Parameter for structure").OffsetA = (
-            0.0  # Property for structure
-        )
-
-        obj.addProperty("App::PropertyFloat", "OffsetB", "Structure", "Parameter for structure").OffsetB = (
-            0.0  # Property for structure
-        )
+        obj.addProperty("App::PropertyLength", "OffsetA", "Structure", "Parameter for structure").OffsetA = 0.0
+        obj.addProperty("App::PropertyLength", "OffsetB", "Structure", "Parameter for structure").OffsetB = 0.0
 
         if link_sub:
             obj.addProperty("App::PropertyLinkSub", "Target", "Base", "Target face").Target = link_sub
@@ -189,21 +174,22 @@ class Profile:
         material,
         fam,
         size_name,
+        unit="mm"
     ):
 
         obj.Material = material
         obj.Family = fam
         obj.SizeName = size_name
 
-        obj.ProfileHeight = init_h
-        obj.ProfileWidth = init_w
-        obj.ProfileLength = init_len  # should it be ?
+        obj.ProfileHeight = App.Units.Quantity(f"{init_h} {unit}")
+        obj.ProfileWidth = App.Units.Quantity(f"{init_w} {unit}")
+        obj.ProfileLength = App.Units.Quantity(f"{init_len} {unit}")  # should it be ?
 
-        obj.Thickness = init_mt
-        obj.ThicknessFlange = init_ft
+        obj.Thickness = App.Units.Quantity(f"{init_mt} {unit}")
+        obj.ThicknessFlange = App.Units.Quantity(f"{init_ft} {unit}")
 
-        obj.RadiusLarge = init_r1
-        obj.RadiusSmall = init_r2
+        obj.RadiusLarge = App.Units.Quantity(f"{init_r1} {unit}")
+        obj.RadiusSmall = App.Units.Quantity(f"{init_r2} {unit}")
         obj.MakeFillet = init_mf
 
         # if not bevels_combined:
@@ -245,8 +231,8 @@ class Profile:
             obj.FlangeAngle = 8
 
         obj.Width = obj.ProfileWidth  # Property for structure
-        obj.Height = obj.ProfileLength  # Property for structure
-        obj.Length = obj.ProfileHeight  # Property for structure
+        obj.Height = obj.ProfileHeight  # Property for structure
+        obj.Length = obj.ProfileLength  # Property for structure
 
         # obj.OffsetA = .0  # Property for structure
         # obj.OffsetB = .0  # Property for structure
@@ -283,23 +269,26 @@ class Profile:
             ).Family = self.fam
 
         try:
-            L = obj.Target[0].getSubObject(obj.Target[1][0]).Length
-            L += obj.OffsetA + obj.OffsetB
+            L = obj.Target[0].getSubObject(obj.Target[1][0]).Length # Target.Length in internal unit
+            L += obj.OffsetA.Value + obj.OffsetB.Value
             obj.ProfileLength = L
         except:
-            L = obj.ProfileLength + obj.OffsetA + obj.OffsetB
+            L = obj.ProfileLength.Value + obj.OffsetA.Value + obj.OffsetB.Value
+
+        obj.Length = L
 
         obj.ApproxWeight = self.WM * L / 1000
-        W = obj.ProfileWidth
-        H = obj.ProfileHeight
-        obj.Height = L
-        pl = obj.Placement
-        TW = obj.Thickness
-        TF = obj.ThicknessFlange
 
-        R = obj.RadiusLarge
-        r = obj.RadiusSmall
+        W = obj.ProfileWidth.Value
+        H = obj.ProfileHeight.Value
+        TW = obj.Thickness.Value
+        TF = obj.ThicknessFlange.Value
+
+        R = obj.RadiusLarge.Value
+        r = obj.RadiusSmall.Value
         d = vec(0, 0, 1)
+
+        pl = obj.Placement
 
         w = h = 0
 
