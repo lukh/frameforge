@@ -8,7 +8,7 @@
   <maintainer email="vivien.henry@inductivebrain.fr">Vivien Henry</maintainer>
   <license file="LICENSE">LGPLv3</license>
   <url branch="main" type="repository">https://github.com/lukh/frameforge.git</url>
-  <url type="readme">https://github.com/lukh/frameforge.git/-/raw/main/README.md</url>
+  <url type="readme">https://github.com/lukh/frameforge/blob/main/README.md</url>
   <icon>freecad/frameforge/resources/icons/metalwb.svg</icon>
 
   <content>
