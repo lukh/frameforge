@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+    <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Dialog</class>
  <widget class="QDialog" name="Dialog">
@@ -144,7 +144,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_4">
      <property name="title">
-      <string>Attachment / Lenght</string>
+      <string>Attachment / Length</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
@@ -164,7 +164,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Lenght</string>
+         <string>Length</string>
         </property>
        </widget>
       </item>
