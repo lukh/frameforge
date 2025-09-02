@@ -10,6 +10,9 @@ import freecad.frameforge
 vec = App.Base.Vector
 
 
+class FrameForgeUnitError(ValueError):
+    pass
+
 class Profile:
     def __init__(
         self,
@@ -40,11 +43,16 @@ class Profile:
         """
 
         if unit not in ['mm', 'in']:
-            raise ValueError("Unit must be 'mm' or 'in'")
+            raise FrameForgeUnitError("Unit must be 'mm' or 'in'")
 
         self.Type = "Profile"
 
-        # App.Units.Quantity(str(W) + ' ' + unit_suffix)
+        obj.addProperty(
+            "App::PropertyString",
+            "Unit",
+            "Profile",
+            "",
+        ).Unit = unit
 
         obj.addProperty(
             "App::PropertyString",
@@ -155,7 +163,10 @@ class Profile:
             obj.addProperty("App::PropertyLinkSub", "Target", "Base", "Target face").Target = link_sub
             obj.setExpression(".AttachmentOffset.Base.z", "-OffsetA")
 
-        self.WM = init_wg
+        obj.addProperty("App::PropertyFloat", "ApproxLinearWeight", "Base", "Approximate linear weight in Kilogram/unit").ApproxLinearWeight = (
+            init_wg
+        )
+        self.WM = init_wg # for compat 
 
         self.bevels_combined = bevels_combined
         obj.Proxy = self
@@ -180,21 +191,26 @@ class Profile:
         unit="mm"
     ):
         if unit not in ['mm', 'in']:
-            raise ValueError("Unit must be 'mm' or 'in'")
+            raise FrameForgeUnitError("Unit must be 'mm' or 'in'")
 
+        try:
+            obj.Unit = unit
+        except:
+            App.Console.PrintMessage("Profile built with older (<=0.1.4) version of FrameForge, ignoring unit\n")
+    
         obj.Material = material
         obj.Family = fam
         obj.SizeName = size_name
 
-        obj.ProfileHeight = App.Units.Quantity(f"{init_h} {unit}")
-        obj.ProfileWidth = App.Units.Quantity(f"{init_w} {unit}")
-        obj.ProfileLength = App.Units.Quantity(f"{init_len} {unit}")  # should it be ?
+        obj.ProfileHeight = init_h
+        obj.ProfileWidth = init_w
+        obj.ProfileLength = init_len  # should it be ?
 
-        obj.Thickness = App.Units.Quantity(f"{init_mt} {unit}")
-        obj.ThicknessFlange = App.Units.Quantity(f"{init_ft} {unit}")
+        obj.Thickness = init_mt
+        obj.ThicknessFlange = init_ft
 
-        obj.RadiusLarge = App.Units.Quantity(f"{init_r1} {unit}")
-        obj.RadiusSmall = App.Units.Quantity(f"{init_r2} {unit}")
+        obj.RadiusLarge = init_r1
+        obj.RadiusSmall = init_r2
         obj.MakeFillet = init_mf
 
         # if not bevels_combined:
@@ -215,6 +231,12 @@ class Profile:
         #                     "Bevel on First axle at the end of the profile").BevelEndCut = 0
         #     obj.BevelEndRotate", "Profile",
         #                     "Rotate the second cut on Profile axle").BevelEndRotate = 0
+
+        try:
+            obj.ApproxLinearWeight = init_wg
+        except:
+            App.Console.PrintMessage("Profile built with older (<=0.1.4) version of FrameForge, fallback\n")
+            self.WM = init_wg
 
         obj.ApproxWeight = init_wg * init_len / 1000
 
@@ -275,22 +297,47 @@ class Profile:
 
         try:
             L = obj.Target[0].getSubObject(obj.Target[1][0]).Length # Target.Length in internal unit
-            L += obj.OffsetA.Value + obj.OffsetB.Value
+            if isinstance(obj.OffsetA, App.Units.Quantity):
+                L += obj.OffsetA.Value + obj.OffsetB.Value
+            else:
+                L += obj.OffsetA + obj.OffsetB
+
             obj.ProfileLength = L
         except:
-            L = obj.ProfileLength.Value + obj.OffsetA.Value + obj.OffsetB.Value
+            if isinstance(obj.OffsetA, App.Units.Quantity):
+                L = obj.ProfileLength.Value + obj.OffsetA.Value + obj.OffsetB.Value
+            else:
+                L = obj.ProfileLength.Value + obj.OffsetA + obj.OffsetB
+
 
         obj.Length = L
 
-        obj.ApproxWeight = self.WM * L / 1000
+        try:
+            obj.ApproxWeight = obj.ApproxLinearWeight * L / 1000
+        except Exception as e:
+            App.Console.PrintMessage("Profile built with older (<=0.1.4) version of FrameForge, fallback\n")
+            App.Console.PrintMessage(str(e))
+            obj.ApproxWeight = self.WM * L / 1000
 
-        W = obj.ProfileWidth.Value
-        H = obj.ProfileHeight.Value
-        TW = obj.Thickness.Value
-        TF = obj.ThicknessFlange.Value
 
-        R = obj.RadiusLarge.Value
-        r = obj.RadiusSmall.Value
+        try:
+            W = obj.ProfileWidth.Value
+            H = obj.ProfileHeight.Value
+            TW = obj.Thickness.Value
+            TF = obj.ThicknessFlange.Value
+
+            R = obj.RadiusLarge.Value
+            r = obj.RadiusSmall.Value
+        except:
+            W = obj.ProfileWidth
+            H = obj.ProfileHeight
+            TW = obj.Thickness
+            TF = obj.ThicknessFlange
+
+            R = obj.RadiusLarge
+            r = obj.RadiusSmall
+
+
         d = vec(0, 0, 1)
 
         pl = obj.Placement
