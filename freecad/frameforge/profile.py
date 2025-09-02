@@ -39,6 +39,9 @@ class Profile:
         'fam' parameter, there is properties specific to profile family.
         """
 
+        if unit not in ['mm', 'in']:
+            raise ValueError("Unit must be 'mm' or 'in'")
+
         self.Type = "Profile"
 
         # App.Units.Quantity(str(W) + ' ' + unit_suffix)
@@ -176,6 +179,8 @@ class Profile:
         size_name,
         unit="mm"
     ):
+        if unit not in ['mm', 'in']:
+            raise ValueError("Unit must be 'mm' or 'in'")
 
         obj.Material = material
         obj.Family = fam
