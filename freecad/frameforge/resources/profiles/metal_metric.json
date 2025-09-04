@@ -1,7 +1,7 @@
 {
     "Equal Leg Angles": {
         "norm": "EN 10056-1",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "250x250x35": {
@@ -544,7 +544,7 @@
     },
     "Unequal Leg Angles": {
         "norm": "EN 10056-1",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "250x150x15": {
@@ -919,7 +919,7 @@
     },
     "Flat Sections": {
         "norm": "EN10025",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": false,
         "sizes": {
             "10x3": {
@@ -2061,7 +2061,7 @@
     },
     "Square": {
         "norm": "EN",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": false,
         "sizes": {
             "6x6": {
@@ -2188,7 +2188,7 @@
     },
     "Square Hollow": {
         "norm": "EN10210/10219",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "10x1.0": {
@@ -3395,7 +3395,7 @@
     },
     "Rectangular Hollow": {
         "norm": "EN 10210/10219",
-        "unit": "Metric Units ",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "30x10x1.5": {
@@ -4714,7 +4714,7 @@
     },
     "UPE": {
         "norm": "EN24-62 DIN1025",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "80": {
@@ -4847,7 +4847,7 @@
     },
     "UPN": {
         "norm": "EN24-62 DIN1025",
-        "unit": "Metric Units ",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "50x25": {
@@ -5007,7 +5007,7 @@
     },
     "HEA": {
         "norm": "EN53-62 DIN1025",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "100": {
@@ -5206,7 +5206,7 @@
     },
     "HEB": {
         "norm": "EN53-62 DIN1025",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "100": {
@@ -5405,7 +5405,7 @@
     },
     "HEM": {
         "norm": "EN53-62 DIN1025",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "100": {
@@ -5604,7 +5604,7 @@
     },
     "IPE": {
         "norm": "EN 19-57 DIN 1025",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "80": {
@@ -5755,7 +5755,7 @@
     },
     "IPN": {
         "norm": "EN24-62 DIN1026",
-        "unit": "Metric Units",
+        "unit": "mm",
         "fillet": true,
         "sizes": {
             "80": {

@@ -1,0 +1,17 @@
+{
+"Rectangular Hollow": {
+        "norm": "XXXX",
+        "unit": "in",
+        "fillet": true,
+        "sizes": {
+            "30x10x1.5": {
+                "Height": "1",
+                "Width": "1",
+                "Thickness": "0.3",
+                "Radius1": "0.1",
+                "Radius2": "0.1",
+                "Weight": "2.00"
+            }
+        }
+    }
+}

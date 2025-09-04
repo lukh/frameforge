@@ -72,6 +72,7 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
             self.form_proxy.combo_material.currentText(),
             self.form_proxy.combo_family.currentText(),
             self.form_proxy.combo_size.currentText(),
+            self.form_proxy.label_unit.text()
         )
 
         App.ActiveDocument.commitTransaction()
