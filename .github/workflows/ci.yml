@@ -1,12 +1,12 @@
 name: CI
 
 on:
-  pull_request:   # Déclenche pour toutes les PR
+  pull_request:
     branches:
-      - '**'     # Toutes les branches cibles
+      - '**'
   push:
     branches:
-      - main     # Toujours déclencher sur les commits direct sur main
+      - main
 
 jobs:
   lint:
