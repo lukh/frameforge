@@ -166,10 +166,51 @@ class Profile:
         obj.addProperty("App::PropertyFloat", "ApproxLinearWeight", "Base", "Approximate linear weight in Kilogram/unit").ApproxLinearWeight = (
             init_wg
         )
-        self.WM = init_wg # for compat 
 
         self.bevels_combined = bevels_combined
         obj.Proxy = self
+
+
+    def update_from_v104(self, obj, unit, init_wg):
+        if hasattr(obj, "Unit"):
+            return
+
+        App.Console.PrintMessage(obj.Name + " / update_from_v104\n")
+
+        obj.addProperty(
+            "App::PropertyString",
+            "Unit",
+            "Profile",
+            "",
+        ).Unit = unit
+        obj.addProperty("App::PropertyFloat", "ApproxLinearWeight", "Base", "Approximate linear weight in Kilogram/unit").ApproxLinearWeight = (
+            init_wg
+        )
+
+        def migrate_from_v104(obj, prop_name, unit):
+            value = obj.getPropertyByName(prop_name)
+            group = obj.getGroupOfProperty(prop_name)
+            description = obj.getDocumentationOfProperty(prop_name)
+
+            # Supprimer la propriété existante
+            obj.removeProperty(prop_name)
+
+            # Ajouter la nouvelle propriété de type Quantity
+            obj.addProperty("App::PropertyLength", prop_name, group, description)
+
+            quantity = App.Units.Quantity(f"{value} {unit}")
+            setattr(obj, prop_name, quantity)
+
+        migrate_from_v104(obj, "ProfileHeight", "mm")
+        migrate_from_v104(obj, "ProfileWidth", "mm")
+        migrate_from_v104(obj, "ProfileLength", "mm")
+        migrate_from_v104(obj, "Thickness", "mm")
+        migrate_from_v104(obj, "ThicknessFlange", "mm")
+        migrate_from_v104(obj, "RadiusLarge", "mm")
+        migrate_from_v104(obj, "RadiusSmall", "mm")
+        migrate_from_v104(obj, "OffsetA", "mm")
+        migrate_from_v104(obj, "OffsetB", "mm")
+
 
     def set_properties(
         self,
@@ -193,11 +234,12 @@ class Profile:
         if unit not in ['mm', 'in']:
             raise FrameForgeUnitError("Unit must be 'mm' or 'in'")
 
-        try:
-            obj.Unit = unit
-        except:
-            App.Console.PrintMessage("Profile built with older (<=0.1.4) version of FrameForge, ignoring unit\n")
-    
+        if not hasattr(obj, "Unit"):
+            App.Console.PrintMessage(obj.Name + " / set_properties: Profile built with older (<=0.1.4) version of FrameForge, setting default unit and updating profiles\n")
+            self.update_from_v104(obj, unit, init_wg)
+
+        obj.Unit = unit
+
         obj.Material = material
         obj.Family = fam
         obj.SizeName = size_name
@@ -232,12 +274,7 @@ class Profile:
         #     obj.BevelEndRotate", "Profile",
         #                     "Rotate the second cut on Profile axle").BevelEndRotate = 0
 
-        try:
-            obj.ApproxLinearWeight = init_wg
-        except:
-            App.Console.PrintMessage("Profile built with older (<=0.1.4) version of FrameForge, fallback\n")
-            self.WM = init_wg
-
+        obj.ApproxLinearWeight = init_wg
         obj.ApproxWeight = init_wg * init_len / 1000
 
         obj.CenteredOnHeight = init_hc
@@ -287,55 +324,30 @@ class Profile:
             self.execute(obj)
 
     def execute(self, obj):
-        if not hasattr(obj, "Family"):  # for compat
-            obj.addProperty(
-                "App::PropertyString",
-                "Family",
-                "Profile",
-                "",
-            ).Family = self.fam
+        if not hasattr(obj, "Unit"):
+            App.Console.PrintMessage(obj.Name + " / Execute: Profile built with older (<=0.1.4) version of FrameForge, setting default unit and updating profiles\n")
+            self.update_from_v104(obj, "mm", obj.ApproxWeight / (obj.Height.Value / 1000)) # yes, using height because there were a mistake in previous version
 
-        try:
+        if hasattr(obj, "Target"):
             L = obj.Target[0].getSubObject(obj.Target[1][0]).Length # Target.Length in internal unit
-            if isinstance(obj.OffsetA, App.Units.Quantity):
-                L += obj.OffsetA.Value + obj.OffsetB.Value
-            else:
-                L += obj.OffsetA + obj.OffsetB
+            L += obj.OffsetA.Value + obj.OffsetB.Value
 
-            obj.ProfileLength = L
-        except:
-            if isinstance(obj.OffsetA, App.Units.Quantity):
-                L = obj.ProfileLength.Value + obj.OffsetA.Value + obj.OffsetB.Value
-            else:
-                L = obj.ProfileLength.Value + obj.OffsetA + obj.OffsetB
+            obj.ProfileLength.Value = L
+
+        else:
+            L = obj.ProfileLength.Value + obj.OffsetA.Value + obj.OffsetB.Value
 
 
         obj.Length = L
+        obj.ApproxWeight = obj.ApproxLinearWeight * L / 1000
 
-        try:
-            obj.ApproxWeight = obj.ApproxLinearWeight * L / 1000
-        except Exception as e:
-            App.Console.PrintMessage("Profile built with older (<=0.1.4) version of FrameForge, fallback\n")
-            App.Console.PrintMessage(str(e))
-            obj.ApproxWeight = self.WM * L / 1000
+        W = obj.ProfileWidth.Value
+        H = obj.ProfileHeight.Value
+        TW = obj.Thickness.Value
+        TF = obj.ThicknessFlange.Value
 
-
-        try:
-            W = obj.ProfileWidth.Value
-            H = obj.ProfileHeight.Value
-            TW = obj.Thickness.Value
-            TF = obj.ThicknessFlange.Value
-
-            R = obj.RadiusLarge.Value
-            r = obj.RadiusSmall.Value
-        except:
-            W = obj.ProfileWidth
-            H = obj.ProfileHeight
-            TW = obj.Thickness
-            TF = obj.ThicknessFlange
-
-            R = obj.RadiusLarge
-            r = obj.RadiusSmall
+        R = obj.RadiusLarge.Value
+        r = obj.RadiusSmall.Value
 
 
         d = vec(0, 0, 1)
