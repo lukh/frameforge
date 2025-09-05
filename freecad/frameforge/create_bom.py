@@ -50,7 +50,6 @@ def get_all_cutting_angles(trimmed_profile):
 
     angle_div = 2.0 if trimmed_profile.TrimmedProfileType == "End Miter" else 1.0
 
-    print(trimmed_profile.CutType)
     if trimmed_profile.TrimmedProfileType == "End Miter" or trimmed_profile.CutType == "Simple fit":
         for bound in trimmed_profile.TrimmingBoundary:
             for sub in bound[1]:  # sous-objets (souvent "FaceX")
@@ -111,14 +110,11 @@ def length_along_normal(obj):
 
 
 def traverse_assembly(spreadsheet, obj, row=1, parent=""):
-    print(parent)
     if is_fusion(obj):
-        print("fusion", obj.Name)
         for child in obj.Shapes:
             row = traverse_assembly(spreadsheet, child, row, parent=obj.Label)
             
     elif is_profile(obj):
-        print("profile", obj.Name)
         spreadsheet.set("A" + str(row), parent)
         spreadsheet.set("B" + str(row), obj.Label)
         spreadsheet.set("C" + str(row), getattr(obj, "Family", "N/A"))
@@ -134,7 +130,6 @@ def traverse_assembly(spreadsheet, obj, row=1, parent=""):
         row += 1
 
     elif is_trimmedbody(obj):
-        print("trimmedbody", obj.Name)
         prof = get_profile_from_trimmedbody(obj)
         angles = get_all_cutting_angles(obj)
         spreadsheet.set("A" + str(row), parent)
@@ -173,5 +168,3 @@ def make_bom(objects):
     row = 2
     for obj in objects:
         row = traverse_assembly(spreadsheet, obj, row)
-
-    print("BOM générée dans le Spreadsheet 'BOM'")
