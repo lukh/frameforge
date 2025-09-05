@@ -22,6 +22,8 @@ class FrameForge(Gui.Workbench):
 
     toolbox_part = ["Part_Fuse", "Part_Cut", "PartDesign_Body", "PartDesign_Pad", "PartDesign_Pocket"]
 
+    toolbox_output = ["FrameForge_CreateBOM"]
+
     def GetClassName(self):
         return "Gui::PythonWorkbench"
 
@@ -36,6 +38,7 @@ class FrameForge(Gui.Workbench):
             create_trimmed_profiles_tool,
             edit_profile_tool,
             parametric_line,
+            create_bom_tool
         )
 
         # Add translations path
@@ -52,6 +55,9 @@ class FrameForge(Gui.Workbench):
 
         self.appendToolbar(translate("frameforge", "Part Primitives"), self.toolbox_part)
         self.appendMenu(translate("frameforge", "Part Primitives"), self.toolbox_part)
+
+        self.appendToolbar(translate("frameforge", "Frameforge output"), self.toolbox_output)
+        self.appendMenu(translate("frameforge", "Frameforge output"), self.toolbox_output)
 
     def Activated(self):
         """
