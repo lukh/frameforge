@@ -1,3 +1,5 @@
+from itertools import groupby
+
 import FreeCAD
 import FreeCADGui as Gui
 import Assembly
@@ -109,48 +111,87 @@ def length_along_normal(obj):
 
 
 
-def traverse_assembly(spreadsheet, obj, row=1, parent=""):
+def traverse_assembly(data, obj, parent=""):
+    d = {}
     if is_fusion(obj):
         for child in obj.Shapes:
-            row = traverse_assembly(spreadsheet, child, row, parent=obj.Label)
+            traverse_assembly(data, child, parent=obj.Label)
             
     elif is_profile(obj):
-        spreadsheet.set("A" + str(row), parent)
-        spreadsheet.set("B" + str(row), obj.Label)
-        spreadsheet.set("C" + str(row), getattr(obj, "Family", "N/A"))
-        spreadsheet.set("D" + str(row), getattr(obj, "SizeName", "N/A"))
-        spreadsheet.set("E" + str(row), getattr(obj, "Material", "N/A"))
-        spreadsheet.set("F" + str(row), str(length_along_normal(obj)))
-        spreadsheet.set("G" + str(row), str(getattr(obj, "BevelStartCut1", "N/A")))
-        spreadsheet.set("H" + str(row), str(getattr(obj, "BevelStartCut2", "N/A")))
-        spreadsheet.set("I" + str(row), str(getattr(obj, "BevelEndCut1", "N/A")))
-        spreadsheet.set("J" + str(row), str(getattr(obj, "BevelEndCut2", "N/A")))
-        spreadsheet.set("K" + str(row), str(getattr(obj, "ApproxWeight", "N/A")))
-        spreadsheet.set("L" + str(row), getattr(obj, "Quantity", "1"))
-        row += 1
+        d["parent"] =  parent
+        d["label"] =  obj.Label
+        d["family"] =  getattr(obj, "Family", "N/A")
+        d["size_name"] =  getattr(obj, "SizeName", "N/A")
+        d["material"] =  getattr(obj, "Material", "N/A")
+        d["length"] =  str(length_along_normal(obj))
+        d["bevel_start_cut_1"] =  str(getattr(obj, "BevelStartCut1", "N/A"))
+        d["bevel_start_cut_2"] =  str(getattr(obj, "BevelStartCut2", "N/A"))
+        d["bevel_end_cut_1"] =  str(getattr(obj, "BevelEndCut1", "N/A"))
+        d["bevel_end_cut_2"] =  str(getattr(obj, "BevelEndCut2", "N/A"))
+        d["approx_weight"] =  str(getattr(obj, "ApproxWeight", "N/A"))
+        d["quantity"] =  getattr(obj, "Quantity", "1")
+
+        data.append(d)
 
     elif is_trimmedbody(obj):
         prof = get_profile_from_trimmedbody(obj)
         angles = get_all_cutting_angles(obj)
-        spreadsheet.set("A" + str(row), parent)
-        spreadsheet.set("B" + str(row), obj.Label)
-        spreadsheet.set("C" + str(row), getattr(prof, "Family", "N/A"))
-        spreadsheet.set("D" + str(row), getattr(prof, "SizeName", "N/A"))
-        spreadsheet.set("E" + str(row), getattr(prof, "Material", "N/A"))
-        spreadsheet.set("F" + str(row), str(length_along_normal(obj)))
-        spreadsheet.set("G" + str(row), str(angles[0]))
-        spreadsheet.set("H" + str(row), "N/A")
-        spreadsheet.set("I" + str(row), str(angles[1]))
-        spreadsheet.set("J" + str(row), "N/A")
-        spreadsheet.set("K" + str(row), str(getattr(obj, "ApproxWeight", "N/A")))
-        spreadsheet.set("L" + str(row), getattr(obj, "Quantity", "1"))
-        row += 1
-    return row
+
+        d["parent"] =  parent
+        d["label"] =  obj.Label
+        d["family"] =  getattr(prof, "Family", "N/A")
+        d["size_name"] =  getattr(prof, "SizeName", "N/A")
+        d["material"] =  getattr(prof, "Material", "N/A")
+        d["length"] =  str(length_along_normal(obj))
+        d["bevel_start_cut_1"] =  str(angles[0])
+        d["bevel_start_cut_2"] =  "N/A"
+        d["bevel_end_cut_1"] =  str(angles[1])
+        d["bevel_end_cut_2"] =  "N/A"
+        d["approx_weight"] =  str(getattr(obj, "ApproxWeight", "N/A"))
+        d["quantity"] =  getattr(obj, "Quantity", "1")
+
+        data.append(d)
 
 
-def make_bom(objects):
+def sort_profiles(profiles_data):
+    key_func = lambda x: (
+        x['parent'],
+        x['bevel_end_cut_1'], x['bevel_end_cut_2'], x['bevel_start_cut_1'], x['bevel_start_cut_2'], 
+        x['family'],
+        round(float(x['length']), 1),
+        x['material'], x['size_name']
+    )
+
+    profiles_data_sorted = sorted(profiles_data, key=key_func)
+
+    profiles_data_grouped = []
+
+    for k, group in groupby(profiles_data_sorted, key=key_func):
+        group = list(group)
+        g = group[0]
+        d = {}
+
+        d["parent"] = g["parent"]
+        d["label"] = ", ".join([g['label'] for g in group])
+        d["family"] = g["family"]
+        d["size_name"] = g["size_name"]
+        d["material"] = g["material"]
+        d["length"] = g["length"]
+        d["bevel_start_cut_1"] = g["bevel_start_cut_1"]
+        d["bevel_start_cut_2"] = g["bevel_start_cut_2"]
+        d["bevel_end_cut_1"] = g["bevel_end_cut_1"]
+        d["bevel_end_cut_2"] = g["bevel_end_cut_2"]
+        d["approx_weight"] = g["approx_weight"]
+        d["quantity"] = len(group)
+
+        profiles_data_grouped.append(d)
+
+
+    return profiles_data_grouped
+
+def make_bom(objects, bom_name="BOM", group_profiles=False):
     doc = FreeCAD.ActiveDocument
-    spreadsheet = doc.addObject("Spreadsheet::Sheet", "BOM")
+    spreadsheet = doc.addObject("Spreadsheet::Sheet", bom_name)
 
     spreadsheet.set("A1", "Parent")
     spreadsheet.set("B1", "Name")
@@ -166,5 +207,29 @@ def make_bom(objects):
     spreadsheet.set("L1", "Quantity")
 
     row = 2
+
+    profiles_data = []
     for obj in objects:
-        row = traverse_assembly(spreadsheet, obj, row)
+        traverse_assembly(profiles_data, obj)
+
+
+    if group_profiles:
+        profiles_data = sort_profiles(profiles_data)
+
+
+
+    for prof in profiles_data:
+        spreadsheet.set("A" + str(row), prof['parent'])
+        spreadsheet.set("B" + str(row), prof['label'])
+        spreadsheet.set("C" + str(row), prof['family'])
+        spreadsheet.set("D" + str(row), prof['size_name'])
+        spreadsheet.set("E" + str(row), prof['material'])
+        spreadsheet.set("F" + str(row), prof['length'])
+        spreadsheet.set("G" + str(row), prof['bevel_start_cut_1'])
+        spreadsheet.set("H" + str(row), prof['bevel_start_cut_2'])
+        spreadsheet.set("I" + str(row), prof['bevel_end_cut_1'])
+        spreadsheet.set("J" + str(row), prof['bevel_end_cut_2'])
+        spreadsheet.set("K" + str(row), prof['approx_weight'])
+        spreadsheet.set("L" + str(row), str(prof['quantity']))
+
+        row += 1
