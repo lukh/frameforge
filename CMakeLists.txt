@@ -10,6 +10,7 @@ set(Namespace_SRCS
         freecad/frameforge/resources/icons/joincurve.svg
         freecad/frameforge/resources/icons/overlap.svg
         freecad/frameforge/resources/icons/box.svg
+        freecad/frameforge/resources/icons/bom.svg
         freecad/frameforge/resources/icons/parts_list.svg
         freecad/frameforge/resources/icons/corner-coped-type.svg
         freecad/frameforge/resources/icons/corner-simple-type.svg
