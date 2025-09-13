@@ -1,15 +1,13 @@
 
 import os  # Make sure 'os' is imported for the icon path.
 
-import FreeCAD
+import FreeCAD as App
 import Part
 
-import SheetMetalTools
+from freecad.frameforge.translate_utils import translate
 
-SMException = SheetMetalTools.SMException
-
-# List of properties to be saved as defaults.
-smExtrudedCutoutDefaultVars = []
+class FrameForgeException(baseException):
+    pass
 
 
 class ExtrudedCutout:
@@ -18,26 +16,22 @@ class ExtrudedCutout:
         properties.
         """
         obj.addProperty("App::PropertyLink", "Sketch", "ExtrudedCutout",
-                FreeCAD.Qt.translate("SheetMetal", "The sketch for the cut"),
+                translate("SheetMetal", "The sketch for the cut"),
         ).Sketch = sketch
-
-        # Add other properties (is necessary this way to not cause
-        # errors on old files).
-        self.addVerifyProperties(obj, selected_face)
 
         obj.setEditorMode("ImproveLevel", 2)  # Hide by default
         obj.addProperty("App::PropertyLength", "ExtrusionLength1", "ExtrudedCutout",
-                FreeCAD.Qt.translate("SheetMetal", "Length of the extrusion direction 1"),
+                translate("SheetMetal", "Length of the extrusion direction 1"),
         ).ExtrusionLength1 = 500.0
         obj.setEditorMode("ExtrusionLength1", 2)  # Hide by default
         obj.addProperty("App::PropertyLength", "ExtrusionLength2", "ExtrudedCutout",
-                FreeCAD.Qt.translate("SheetMetal", "Length of the extrusion direction 2"),
+                translate("SheetMetal", "Length of the extrusion direction 2"),
         ).ExtrusionLength2 = 500.0
         obj.setEditorMode("ExtrusionLength2", 2)  # Hide by default
 
         # CutType property
         obj.addProperty("App::PropertyEnumeration", "CutType", "ExtrudedCutout",
-                        FreeCAD.Qt.translate("SheetMetal", "Cut type")).CutType = [
+                        translate("SheetMetal", "Cut type")).CutType = [
                 "Two dimensions",
                 "Symmetric",
                 "Through everything both sides",
@@ -48,40 +42,14 @@ class ExtrudedCutout:
 
         # CutSide property.
         obj.addProperty("App::PropertyEnumeration", "CutSide", "ExtrudedCutout",
-                        FreeCAD.Qt.translate("SheetMetal", "Side of the cut")).CutSide = [
+                        translate("SheetMetal", "Side of the cut")).CutSide = [
                 "Inside",
                 "Outside",
         ]
         obj.CutSide = "Inside"  # Default value.
-        SheetMetalTools.taskRestoreDefaults(obj, smExtrudedCutoutDefaultVars)
 
         obj.Proxy = self
 
-    def addVerifyProperties(self, obj, selected_face=None):
-        SheetMetalTools.smAddProperty(obj, "App::PropertyLinkSub", "baseObject",
-                                      FreeCAD.Qt.translate("SheetMetal", "Selected face"),
-                                      selected_face,
-                                      "ExtrudedCutout",
-                                      # Rename SelectedFace to baseObject
-                                      # for compatibility with GUI system.
-                                      "SelectedFace")
-        SheetMetalTools.smAddBoolProperty(obj, "Refine",
-                FreeCAD.Qt.translate("SheetMetal", "Refine the geometry"),
-                False,
-                "ExtrudedCutoutImprovements")
-
-        SheetMetalTools.smAddProperty(obj, "App::PropertyIntegerConstraint", "ImproveLevel",
-                FreeCAD.Qt.translate("SheetMetal",
-                    "Level of cut improvement quality. More than 10 can take a very long time"),
-                (4, 2, 20, 1),
-                "ExtrudedCutoutImprovements")
-
-        SheetMetalTools.smAddBoolProperty(obj, "ImproveCut",
-                FreeCAD.Qt.translate("SheetMetal",
-                    "Improve cut geometry if it enters the cutting zone. Only select true if the "
-                    "cut needs fix, 'cause it can be slow"),
-                False,
-                "ExtrudedCutoutImprovements")
 
     def onChanged(self, fp, prop):
         """Respond to property changes."""
@@ -106,13 +74,10 @@ class ExtrudedCutout:
 
     def execute(self, fp):
         """Perform the cut when the object is recomputed."""
-
-        self.addVerifyProperties(fp)
-
         try:
             # Ensure the Sketch and baseObject properties are valid.
             if fp.Sketch is None or fp.baseObject is None:
-                raise SMException("Both the Sketch and baseObject properties must be set.")
+                raise FrameForgeException("Both the Sketch and baseObject properties must be set.")
 
             # Get the sketch from the properties.
             cutSketch = fp.Sketch
@@ -176,7 +141,7 @@ class ExtrudedCutout:
                                 continue
 
             if min_distance == float("inf"):
-                raise SMException("No opposite face found to calculate thickness.")
+                raise FrameForgeException("No opposite face found to calculate thickness.")
 
             # Appear that rounding can help on speed performance of the
             # rest of the code.
@@ -200,7 +165,7 @@ class ExtrudedCutout:
             if parallel_faces:
                 shell = Part.Shell(parallel_faces)
             else:
-                raise SMException(
+                raise FrameForgeException(
                         "No pairs of parallel faces with the specified"
                         " thickness distance were found.")
 
@@ -231,7 +196,7 @@ class ExtrudedCutout:
             compFaces = Part.Compound(myFacesList)
 
             if ExtLength1 == 0 and ExtLength2 == 0:
-                raise SMException("Cut length cannot be zero for both sides.")
+                raise FrameForgeException("Cut length cannot be zero for both sides.")
             else:
                 if ExtLength1 == 0:
                     ExtLength1 = -ExtLength2
@@ -317,12 +282,12 @@ class ExtrudedCutout:
                     else:
                         cut_result = selected_object.Shape.common(combined_offset)
                 else:
-                    raise SMException("Invalid CutSide value.")
+                    raise FrameForgeException("Invalid CutSide value.")
 
                 fp.Shape = cut_result
             else:
-                raise SMException("No valid offset shapes were created.")
-        except SMException as e:
+                raise FrameForgeException("No valid offset shapes were created.")
+        except FrameForgeException as e:
             FreeCAD.Console.PrintError(f"Error: {e}\n")
 
     def find_connected_faces(self, shape):
