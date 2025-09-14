@@ -31,7 +31,7 @@ class ExtrudedCutout:
             "App::PropertyBool",
             "Refine",
             "ExtrudedCutoutImprovements",
-            translate("SheetMetal", "Refine the geometry")
+            translate("FrameForge", "Refine the geometry")
         ).Refine = False
 
         obj.addProperty(
@@ -39,7 +39,7 @@ class ExtrudedCutout:
             "ImproveLevel",
             "ExtrudedCutoutImprovements",
             translate(
-                "SheetMetal",
+                "FrameForge",
                 "Level of cut improvement quality. More than 10 can take a very long time",
             )
         ).ImproveLevel = (4, 2, 20, 1)
@@ -49,7 +49,7 @@ class ExtrudedCutout:
             "ImproveCut",
             "ExtrudedCutoutImprovements",
             translate(
-                "SheetMetal",
+                "FrameForge",
                 "Improve cut geometry if it enters the cutting zone. Only select true if the cut needs fix, 'cause it can be slow",
             )
         ).ImproveCut = False
@@ -58,22 +58,22 @@ class ExtrudedCutout:
 
 
         obj.addProperty("App::PropertyLink", "Sketch", "ExtrudedCutout",
-                translate("SheetMetal", "The sketch for the cut"),
+                translate("FrameForge", "The sketch for the cut"),
         ).Sketch = sketch
 
         obj.setEditorMode("ImproveLevel", 2)  # Hide by default
         obj.addProperty("App::PropertyLength", "ExtrusionLength1", "ExtrudedCutout",
-                translate("SheetMetal", "Length of the extrusion direction 1"),
+                translate("FrameForge", "Length of the extrusion direction 1"),
         ).ExtrusionLength1 = 500.0
         obj.setEditorMode("ExtrusionLength1", 2)  # Hide by default
         obj.addProperty("App::PropertyLength", "ExtrusionLength2", "ExtrudedCutout",
-                translate("SheetMetal", "Length of the extrusion direction 2"),
+                translate("FrameForge", "Length of the extrusion direction 2"),
         ).ExtrusionLength2 = 500.0
         obj.setEditorMode("ExtrusionLength2", 2)  # Hide by default
 
         # CutType property
         obj.addProperty("App::PropertyEnumeration", "CutType", "ExtrudedCutout",
-                        translate("SheetMetal", "Cut type")).CutType = [
+                        translate("FrameForge", "Cut type")).CutType = [
                 "Two dimensions",
                 "Symmetric",
                 "Through everything both sides",
@@ -84,7 +84,7 @@ class ExtrudedCutout:
 
         # CutSide property.
         obj.addProperty("App::PropertyEnumeration", "CutSide", "ExtrudedCutout",
-                        translate("SheetMetal", "Side of the cut")).CutSide = [
+                        translate("FrameForge", "Side of the cut")).CutSide = [
                 "Inside",
                 "Outside",
         ]
