@@ -330,7 +330,7 @@ class ExtrudedCutout:
             else:
                 raise FrameForgeException("No valid offset shapes were created.")
         except FrameForgeException as e:
-            FreeCAD.Console.PrintError(f"Error: {e}\n")
+            App.Console.PrintError(f"Error: {e}\n")
 
     def find_connected_faces(self, shape):
         """Find connected faces in a shape."""
@@ -407,6 +407,10 @@ class ViewProviderExtrudedCutout:
         pass
 
     def onDelete(self, fp, sub):
+        if self.Object.baseObject:
+            self.Object.baseObject[0].ViewObject.Visibility = True
+        if self.Object.Sketch:
+            self.Object.Sketch.ViewObject.Visibility = True
         return True
 
 

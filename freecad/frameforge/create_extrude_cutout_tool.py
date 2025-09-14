@@ -16,7 +16,7 @@ from freecad.frameforge import FrameForgeException
 
 
 
-class FrameForgeExtrudedCutoutTaskPanel:
+class CreateExtrudedCutoutTaskPanel:
     """TaskPanel pour FrameForge ExtrudedCutout (corrigé pour CutType)."""
 
     def __init__(self, obj):
@@ -32,21 +32,21 @@ class FrameForgeExtrudedCutoutTaskPanel:
         ]
 
         # Widget principal
-        self.form = QtWidgets.QWidget()
-        layout = QtWidgets.QVBoxLayout(self.form)
+        self.form = QtGui.QWidget()
+        layout = QtGui.QVBoxLayout(self.form)
 
         # CutSide (Inside / Outside)
-        cutsideBox = QtWidgets.QGroupBox("Cut Side")
-        hbox = QtWidgets.QHBoxLayout(cutsideBox)
-        self.radioInside = QtWidgets.QRadioButton("Inside")
-        self.radioOutside = QtWidgets.QRadioButton("Outside")
+        cutsideBox = QtGui.QGroupBox("Cut Side")
+        hbox = QtGui.QHBoxLayout(cutsideBox)
+        self.radioInside = QtGui.QRadioButton("Inside")
+        self.radioOutside = QtGui.QRadioButton("Outside")
         hbox.addWidget(self.radioInside)
         hbox.addWidget(self.radioOutside)
         layout.addWidget(cutsideBox)
 
         # CutType (Combo)
-        layout.addWidget(QtWidgets.QLabel("Cut type"))
-        self.comboCutType = QtWidgets.QComboBox()
+        layout.addWidget(QtGui.QLabel("Cut type"))
+        self.comboCutType = QtGui.QComboBox()
         self.comboCutType.addItems(self.cut_types)
         # positionner l'index courant d'après la valeur courante de la propriété
         try:
@@ -58,7 +58,7 @@ class FrameForgeExtrudedCutoutTaskPanel:
         layout.addWidget(self.comboCutType)
 
         # Extrusion lengths
-        self.spinA = QtWidgets.QDoubleSpinBox()
+        self.spinA = QtGui.QDoubleSpinBox()
         self.spinA.setRange(-1e6, 1e6)
         self.spinA.setDecimals(4)
         # essayer de récupérer la valeur (supporte PropertyLength avec .Value)
@@ -70,7 +70,7 @@ class FrameForgeExtrudedCutoutTaskPanel:
             except Exception:
                 self.spinA.setValue(500.0)
 
-        self.spinB = QtWidgets.QDoubleSpinBox()
+        self.spinB = QtGui.QDoubleSpinBox()
         self.spinB.setRange(-1e6, 1e6)
         self.spinB.setDecimals(4)
         try:
@@ -81,13 +81,13 @@ class FrameForgeExtrudedCutoutTaskPanel:
             except Exception:
                 self.spinB.setValue(500.0)
 
-        layout.addWidget(QtWidgets.QLabel("Extrusion Length 1"))
+        layout.addWidget(QtGui.QLabel("Extrusion Length 1"))
         layout.addWidget(self.spinA)
-        layout.addWidget(QtWidgets.QLabel("Extrusion Length 2"))
+        layout.addWidget(QtGui.QLabel("Extrusion Length 2"))
         layout.addWidget(self.spinB)
 
         # Refine
-        self.checkRefine = QtWidgets.QCheckBox("Refine geometry")
+        self.checkRefine = QtGui.QCheckBox("Refine geometry")
         try:
             self.checkRefine.setChecked(bool(self.obj.Refine))
         except Exception:
@@ -102,8 +102,6 @@ class FrameForgeExtrudedCutoutTaskPanel:
         self.spinA.valueChanged.connect(self.onLengthAChanged)
         self.spinB.valueChanged.connect(self.onLengthBChanged)
         self.checkRefine.stateChanged.connect(self.onRefineChanged)
-        btnBox.accepted.connect(self.accept)
-        btnBox.rejected.connect(self.reject)
 
         # Initialiser l’affichage des radios
         if getattr(self.obj, "CutSide", "Inside") == "Inside":
@@ -117,7 +115,7 @@ class FrameForgeExtrudedCutoutTaskPanel:
     def onCutSideChanged(self, checked):
         self.obj.CutSide = "Inside" if self.radioInside.isChecked() else "Outside"
         try:
-            self.obj.Document.recompute()
+            self.obj.recompute()
         except Exception:
             pass
 
@@ -128,44 +126,20 @@ class FrameForgeExtrudedCutoutTaskPanel:
         else:
             self.obj.CutType = self.cut_types[0]
         self.updateWidgetsVisibility()
-        try:
-            self.obj.Document.recompute()
-        except Exception:
-            pass
+
+        self.obj.recompute()
 
     def onLengthAChanged(self, val):
-        # Essayons de respecter PropertyLength : on assigne un float (FreeCAD convertira)
-        try:
-            self.obj.ExtrusionLength1 = val
-        except Exception:
-            try:
-                self.obj.ExtrusionLength1 = FreeCAD.Units.Quantity(str(val))
-            except Exception:
-                pass
-        try:
-            self.obj.Document.recompute()
-        except Exception:
-            pass
+        self.obj.ExtrusionLength1 = val
+        self.obj.recompute()
 
     def onLengthBChanged(self, val):
-        try:
-            self.obj.ExtrusionLength2 = val
-        except Exception:
-            try:
-                self.obj.ExtrusionLength2 = FreeCAD.Units.Quantity(str(val))
-            except Exception:
-                pass
-        try:
-            self.obj.Document.recompute()
-        except Exception:
-            pass
+        self.obj.ExtrusionLength2 = val
+        self.obj.recompute()
 
     def onRefineChanged(self, state):
         self.obj.Refine = bool(state)
-        try:
-            self.obj.Document.recompute()
-        except Exception:
-            pass
+        self.obj.recompute()
 
     def updateWidgetsVisibility(self):
         """Afficher/masquer les widgets de longueur selon CutType selectionné."""
@@ -192,10 +166,13 @@ class FrameForgeExtrudedCutoutTaskPanel:
         App.ActiveDocument.commitTransaction()
         App.ActiveDocument.recompute()
 
+        return True
+
     def reject(self):
         App.Console.PrintMessage(translate("frameforge", "Rejecting Create Extrude Cutout\n"))
         App.ActiveDocument.abortTransaction()
 
+        return True
 
 
 
@@ -252,11 +229,18 @@ class AddExtrudedCutoutCommandClass:
 
 
 
+        App.ActiveDocument.openTransaction("Create Cutout")
         obj = App.ActiveDocument.addObject("Part::FeaturePython", "ExtrudedCutout")
         obj.addExtension("Part::AttachExtensionPython")
 
-        ExtrudedCutout(obj, cutSketch, selected_face)
+        extrude_cutout = ExtrudedCutout(obj, cutSketch, selected_face)
         ViewProviderExtrudedCutout(obj.ViewObject)
+        App.ActiveDocument.commitTransaction()
+
+        obj.recompute()
+
+        panel = CreateExtrudedCutoutTaskPanel(obj)
+        Gui.Control.showDialog(panel)
 
 
     def IsActive(self):
