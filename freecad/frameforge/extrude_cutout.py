@@ -14,39 +14,42 @@ from freecad.frameforge.translate_utils import translate
 
 from freecad.frameforge import FrameForgeException
 
+
 class ExtrudedCutout:
     def __init__(self, obj, sketch, selected_face):
         """Initialize the parametric Sheet Metal Cut object and add
         properties.
         """
 
-        obj.addProperty(
-            "App::PropertyLinkSub",
-            "baseObject",
-            "ExtrudedCutout",
-            "SelectedFace" 
-        ).baseObject = selected_face
+        obj.addProperty("App::PropertyLinkSub", "baseObject", "ExtrudedCutout", "SelectedFace").baseObject = (
+            selected_face
+        )
 
-        obj.addProperty("App::PropertyLink", "Sketch", "ExtrudedCutout",
-                translate("FrameForge", "The sketch for the cut"),
+        obj.addProperty(
+            "App::PropertyLink",
+            "Sketch",
+            "ExtrudedCutout",
+            translate("FrameForge", "The sketch for the cut"),
         ).Sketch = sketch
 
-        obj.addProperty("App::PropertyLength", "ExtrusionLength", "ExtrudedCutout",
-                translate("FrameForge", "Length of the extrusion direction 1"),
+        obj.addProperty(
+            "App::PropertyLength",
+            "ExtrusionLength",
+            "ExtrudedCutout",
+            translate("FrameForge", "Length of the extrusion direction 1"),
         ).ExtrusionLength = 500.0
         obj.setEditorMode("ExtrusionLength", 2)  # Hide by default
 
-
         # CutType property
-        obj.addProperty("App::PropertyEnumeration", "CutType", "ExtrudedCutout",
-                translate("FrameForge", "Cut type")).CutType = [
-                "Through All",
-                "Distance",
+        obj.addProperty(
+            "App::PropertyEnumeration", "CutType", "ExtrudedCutout", translate("FrameForge", "Cut type")
+        ).CutType = [
+            "Through All",
+            "Distance",
         ]
         obj.CutType = "Through All"
 
         obj.Proxy = self
-
 
     def onChanged(self, fp, prop):
         """Respond to property changes."""
@@ -80,8 +83,6 @@ class ExtrudedCutout:
 
                 ExtLength = TotalLength
 
-            
-
             # Create face from sketch
             skWiresList = cutSketch.Shape.Wires
             myFacesList = []
@@ -100,12 +101,13 @@ class ExtrudedCutout:
             # Assigne la forme au FeaturePython
             fp.Shape = cut_shape
 
-
         except FrameForgeException as e:
             App.Console.PrintError(f"Error: {e}\n")
 
+
 class ViewProviderExtrudedCutout:
     """Part WB style ViewProvider."""
+
     def __init__(self, obj):
         """Set this object to the proxy object of the actual view provider"""
         obj.Proxy = self
@@ -144,8 +146,6 @@ class ViewProviderExtrudedCutout:
                     child.ViewObject.Visibility = False
         return childrens
 
-
-
     def onChanged(self, vp, prop):
         pass
 
@@ -155,7 +155,6 @@ class ViewProviderExtrudedCutout:
         if self.Object.Sketch:
             self.Object.Sketch.ViewObject.Visibility = True
         return True
-
 
     def __getstate__(self):
         """When saving the document this object gets stored using Python's cPickle module.
@@ -174,9 +173,7 @@ class ViewProviderExtrudedCutout:
         if mode != 0:
             return None
 
-        taskd = freecad.frameforge.create_extrude_cutout_tool.CreateExtrudedCutoutTaskPanel(
-            self.Object
-        )
+        taskd = freecad.frameforge.create_extrude_cutout_tool.CreateExtrudedCutoutTaskPanel(self.Object)
         Gui.Control.showDialog(taskd)
         return True
 
@@ -190,9 +187,8 @@ class ViewProviderExtrudedCutout:
     def edit(self):
         FreeCADGui.ActiveDocument.setEdit(self.Object, 0)
 
-
     def getIcon(self):
-        return  """
+        return """
         /* XPM */
             static char *profile[] = {
             /* columns rows colors chars-per-pixel */
@@ -232,5 +228,3 @@ class ViewProviderExtrudedCutout:
             };
 
         """
-
-

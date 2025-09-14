@@ -15,7 +15,6 @@ from freecad.frameforge.translate_utils import translate
 from freecad.frameforge import FrameForgeException
 
 
-
 class CreateExtrudedCutoutTaskPanel:
     """TaskPanel pour FrameForge ExtrudedCutout (corrigé pour CutType)."""
 
@@ -52,16 +51,13 @@ class CreateExtrudedCutoutTaskPanel:
             except Exception:
                 self.spinA.setValue(500.0)
 
-
         layout.addWidget(QtGui.QLabel("Extrusion Length"))
         layout.addWidget(self.spinA)
-
 
         self.comboCutType.currentIndexChanged.connect(self.onCutTypeChanged)
         self.spinA.valueChanged.connect(self.onLengthAChanged)
 
         self.updateWidgetsVisibility()
-
 
     def onCutTypeChanged(self, idx):
         if 0 <= idx < len(self.cut_types):
@@ -75,8 +71,6 @@ class CreateExtrudedCutoutTaskPanel:
     def onLengthAChanged(self, val):
         self.obj.ExtrusionLength = val
         self.obj.recompute()
-
-
 
     def updateWidgetsVisibility(self):
         """Afficher/masquer les widgets de longueur selon CutType selectionné."""
@@ -111,24 +105,23 @@ class CreateExtrudedCutoutTaskPanel:
         return True
 
 
-
 class AddExtrudedCutoutCommandClass:
     """Add Extruded Cutout command."""
 
     def GetResources(self):
         return {
-                # The name of a svg file available in the resources.
-                "Pixmap": os.path.join(ICONPATH, "extrude-cutout.svg"),
-                "MenuText": translate("FrameForge", "Extruded Cutout"),
-                "Accel": "E, C",
-                "ToolTip": translate(
-                    "FrameForge",
-                    "Extruded cutout from sketch extrusion\n"
-                    "1. Select a face of the sheet metal part (must not be the thickness face) and\n"
-                    "2. Select a sketch for the extruded cut (the sketch must be closed).\n"
-                    "3. Use Property editor to modify other parameters",
-                    ),
-                }
+            # The name of a svg file available in the resources.
+            "Pixmap": os.path.join(ICONPATH, "extrude-cutout.svg"),
+            "MenuText": translate("FrameForge", "Extruded Cutout"),
+            "Accel": "E, C",
+            "ToolTip": translate(
+                "FrameForge",
+                "Extruded cutout from sketch extrusion\n"
+                "1. Select a face of the sheet metal part (must not be the thickness face) and\n"
+                "2. Select a sketch for the extruded cut (the sketch must be closed).\n"
+                "3. Use Property editor to modify other parameters",
+            ),
+        }
 
     def Activated(self):
         """Create an Extruded Cutout object from user selections."""
@@ -160,10 +153,7 @@ class AddExtrudedCutoutCommandClass:
             cutSketch = selection.Object
 
         if cutSketch is None or not selected_object.Shape:
-            raise FrameForgeException(
-                "Both a valid sketch and an object with a shape must be selected.")
-
-
+            raise FrameForgeException("Both a valid sketch and an object with a shape must be selected.")
 
         App.ActiveDocument.openTransaction("Create Cutout")
         obj = App.ActiveDocument.addObject("Part::FeaturePython", "ExtrudedCutout")
@@ -177,7 +167,6 @@ class AddExtrudedCutoutCommandClass:
 
         panel = CreateExtrudedCutoutTaskPanel(obj)
         Gui.Control.showDialog(panel)
-
 
     def IsActive(self):
         return len(Gui.Selection.getSelection()) == 2

@@ -18,7 +18,12 @@ class FrameForge(Gui.Workbench):
 
     toolbox_drawing = ["Sketcher_NewSketch", "FrameForge_ParametricLine"]
 
-    toolbox_frameforge = ["FrameForge_CreateProfiles", "FrameForge_TrimProfiles", "FrameForge_EndMiter", "FrameForge_AddExtrudeCutout"]
+    toolbox_frameforge = [
+        "FrameForge_CreateProfiles",
+        "FrameForge_TrimProfiles",
+        "FrameForge_EndMiter",
+        "FrameForge_AddExtrudeCutout",
+    ]
 
     toolbox_part = ["Part_Fuse", "Part_Cut", "PartDesign_Body"]
 
