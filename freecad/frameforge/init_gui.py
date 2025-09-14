@@ -20,7 +20,7 @@ class FrameForge(Gui.Workbench):
 
     toolbox_frameforge = ["FrameForge_CreateProfiles", "FrameForge_TrimProfiles", "FrameForge_EndMiter", "FrameForge_AddExtrudeCutout"]
 
-    toolbox_part = ["Part_Fuse", "Part_Cut", "PartDesign_Body", "PartDesign_Pad", "PartDesign_Pocket"]
+    toolbox_part = ["Part_Fuse", "Part_Cut", "PartDesign_Body"]
 
     def GetClassName(self):
         return "Gui::PythonWorkbench"
