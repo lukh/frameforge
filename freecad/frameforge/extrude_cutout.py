@@ -1,20 +1,62 @@
-
-import os  # Make sure 'os' is imported for the icon path.
+import glob
+import math
+import os
 
 import FreeCAD as App
+import FreeCADGui as Gui
 import Part
+from PySide import QtCore, QtGui
 
+
+import freecad.frameforge
+from freecad.frameforge import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
 from freecad.frameforge.translate_utils import translate
 
-class FrameForgeException(baseException):
-    pass
-
+from freecad.frameforge import FrameForgeException
 
 class ExtrudedCutout:
     def __init__(self, obj, sketch, selected_face):
         """Initialize the parametric Sheet Metal Cut object and add
         properties.
         """
+
+        obj.addProperty(
+            "App::PropertyLinkSub",
+            "baseObject",
+            "ExtrudedCutout",
+            "SelectedFace" 
+        ).baseObject = selected_face
+
+        obj.addProperty(
+            "App::PropertyBool",
+            "Refine",
+            "ExtrudedCutoutImprovements",
+            translate("SheetMetal", "Refine the geometry")
+        ).Refine = False
+
+        obj.addProperty(
+            "App::PropertyIntegerConstraint",
+            "ImproveLevel",
+            "ExtrudedCutoutImprovements",
+            translate(
+                "SheetMetal",
+                "Level of cut improvement quality. More than 10 can take a very long time",
+            )
+        ).ImproveLevel = (4, 2, 20, 1)
+
+        obj.addProperty(
+            "App::PropertyBool",
+            "ImproveCut",
+            "ExtrudedCutoutImprovements",
+            translate(
+                "SheetMetal",
+                "Improve cut geometry if it enters the cutting zone. Only select true if the cut needs fix, 'cause it can be slow",
+            )
+        ).ImproveCut = False
+
+
+
+
         obj.addProperty("App::PropertyLink", "Sketch", "ExtrudedCutout",
                 translate("SheetMetal", "The sketch for the cut"),
         ).Sketch = sketch
@@ -316,4 +358,133 @@ class ExtrudedCutout:
                 dfs(face, component)
                 components.append(component)
         return components
+
+
+
+class ViewProviderExtrudedCutout:
+    """Part WB style ViewProvider."""
+    def __init__(self, obj):
+        """Set this object to the proxy object of the actual view provider"""
+        obj.Proxy = self
+
+    def attach(self, vobj):
+        """Setup the scene sub-graph of the view provider, this method is mandatory"""
+        self.ViewObject = vobj
+        self.Object = vobj.Object
+        return
+
+    def updateData(self, fp, prop):
+        """If a property of the handled feature has changed we have the chance to handle this here"""
+        return
+
+    def getDisplayModes(self, obj):
+        """Return a list of display modes."""
+        modes = []
+        return modes
+
+    def getDefaultDisplayMode(self):
+        """Return the name of the default display mode. It must be defined in getDisplayModes."""
+        return "FlatLines"
+
+    def setDisplayMode(self, mode):
+        """Map the display mode defined in attach with those defined in getDisplayModes.
+        Since they have the same names nothing needs to be done. This method is optional.
+        """
+        return mode
+
+    def claimChildren(self):
+        # childrens = [self.Object.TrimmedBody]
+        # if len(childrens) > 0:
+        #     for child in childrens:
+        #         if child:
+        #             # if hasattr("ViewObject", child)
+        #             child.ViewObject.Visibility = False
+        # return childrens
+        return []
+
+
+
+    def onChanged(self, vp, prop):
+        pass
+
+    def onDelete(self, fp, sub):
+        return True
+
+
+    def __getstate__(self):
+        """When saving the document this object gets stored using Python's cPickle module.
+        Since we have some un-pickable here -- the Coin stuff -- we must define this method
+        to return a tuple of all pickable objects or None.
+        """
+        return None
+
+    def __setstate__(self, state):
+        """When restoring the pickled object from document we have the chance to set some
+        internals here. Since no data were pickled nothing needs to be done here.
+        """
+        return None
+
+    def setEdit(self, vobj, mode):
+        if mode != 0:
+            return None
+
+        taskd = freecad.frameforge.create_extrude_cutout_tool.FrameForgeExtrudedCutoutTaskPanel(
+            self.Object
+        )
+        Gui.Control.showDialog(taskd)
+        return True
+
+    def unsetEdit(self, vobj, mode):
+        if mode != 0:
+            return None
+
+        Gui.Control.closeDialog()
+        return True
+
+    def edit(self):
+        FreeCADGui.ActiveDocument.setEdit(self.Object, 0)
+
+
+    def getIcon(self):
+        return  """
+        /* XPM */
+            static char *profile[] = {
+            /* columns rows colors chars-per-pixel */
+            "15 16 15 1 ",
+            "  c #060E20",
+            ". c #343636",
+            "X c #53595F",
+            "o c #303A4E",
+            "O c #2A4A73",
+            "+ c #31465A",
+            "@ c #615954",
+            "# c #AC6F35",
+            "$ c #FFC400",
+            "% c None",
+            "& c #315F9B",
+            "* c #5E6D84",
+            "= c #E2A19F",
+            "- c #E5D8D6",
+            "; c #B8ADAC",
+            /* pixels */
+            "               ",
+            "      Xo.      ",
+            "    .o&&&o.    ",
+            "    oOO&&&OX   ",
+            " .o.o&&OO&&Oo  ",
+            " X-;+O+OOO+##. ",
+            " X---;#oOO#$#  ",
+            " X--==-ooO%$#  ",
+            " X===--#o+%$#  ",
+            " X=-=-=#+O%$#  ",
+            " X=-===*&O%$@  ",
+            " X====-@o+#o.  ",
+            " .;-==-o XX    ",
+            "  .@--;o       ",
+            "    X*@X       ",
+            "     ..        "
+            };
+
+        """
+
 
