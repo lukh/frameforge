@@ -393,14 +393,13 @@ class ViewProviderExtrudedCutout:
         return mode
 
     def claimChildren(self):
-        # childrens = [self.Object.TrimmedBody]
-        # if len(childrens) > 0:
-        #     for child in childrens:
-        #         if child:
-        #             # if hasattr("ViewObject", child)
-        #             child.ViewObject.Visibility = False
-        # return childrens
-        return []
+        childrens = [self.Object.baseObject[0], self.Object.Sketch]
+        if len(childrens) > 0:
+            for child in childrens:
+                if child:
+                    # if hasattr("ViewObject", child)
+                    child.ViewObject.Visibility = False
+        return childrens
 
 
 
