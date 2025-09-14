@@ -22,33 +22,17 @@ class CreateExtrudedCutoutTaskPanel:
     def __init__(self, obj):
         self.obj = obj
 
-        # Liste des types (gardez-la synchronisée avec la définition de la propriété)
         self.cut_types = [
-            "Two dimensions",
-            "Symmetric",
-            "Through everything both sides",
-            "Through everything side 1",
-            "Through everything side 2",
+            "Through All",
+            "Distance",
         ]
 
-        # Widget principal
         self.form = QtGui.QWidget()
         layout = QtGui.QVBoxLayout(self.form)
 
-        # CutSide (Inside / Outside)
-        cutsideBox = QtGui.QGroupBox("Cut Side")
-        hbox = QtGui.QHBoxLayout(cutsideBox)
-        self.radioInside = QtGui.QRadioButton("Inside")
-        self.radioOutside = QtGui.QRadioButton("Outside")
-        hbox.addWidget(self.radioInside)
-        hbox.addWidget(self.radioOutside)
-        layout.addWidget(cutsideBox)
-
-        # CutType (Combo)
         layout.addWidget(QtGui.QLabel("Cut type"))
         self.comboCutType = QtGui.QComboBox()
         self.comboCutType.addItems(self.cut_types)
-        # positionner l'index courant d'après la valeur courante de la propriété
         try:
             current = str(self.obj.CutType)
             idx = self.cut_types.index(current)
@@ -57,11 +41,9 @@ class CreateExtrudedCutoutTaskPanel:
         self.comboCutType.setCurrentIndex(idx)
         layout.addWidget(self.comboCutType)
 
-        # Extrusion lengths
         self.spinA = QtGui.QDoubleSpinBox()
         self.spinA.setRange(-1e6, 1e6)
         self.spinA.setDecimals(4)
-        # essayer de récupérer la valeur (supporte PropertyLength avec .Value)
         try:
             self.spinA.setValue(float(self.obj.ExtrusionLength1.Value))
         except Exception:
@@ -70,57 +52,18 @@ class CreateExtrudedCutoutTaskPanel:
             except Exception:
                 self.spinA.setValue(500.0)
 
-        self.spinB = QtGui.QDoubleSpinBox()
-        self.spinB.setRange(-1e6, 1e6)
-        self.spinB.setDecimals(4)
-        try:
-            self.spinB.setValue(float(self.obj.ExtrusionLength2.Value))
-        except Exception:
-            try:
-                self.spinB.setValue(float(self.obj.ExtrusionLength2))
-            except Exception:
-                self.spinB.setValue(500.0)
 
-        layout.addWidget(QtGui.QLabel("Extrusion Length 1"))
+        layout.addWidget(QtGui.QLabel("Extrusion Length"))
         layout.addWidget(self.spinA)
-        layout.addWidget(QtGui.QLabel("Extrusion Length 2"))
-        layout.addWidget(self.spinB)
-
-        # Refine
-        self.checkRefine = QtGui.QCheckBox("Refine geometry")
-        try:
-            self.checkRefine.setChecked(bool(self.obj.Refine))
-        except Exception:
-            self.checkRefine.setChecked(False)
-        layout.addWidget(self.checkRefine)
 
 
-
-        # Connexions signaux
-        self.radioInside.toggled.connect(self.onCutSideChanged)
         self.comboCutType.currentIndexChanged.connect(self.onCutTypeChanged)
         self.spinA.valueChanged.connect(self.onLengthAChanged)
-        self.spinB.valueChanged.connect(self.onLengthBChanged)
-        self.checkRefine.stateChanged.connect(self.onRefineChanged)
 
-        # Initialiser l’affichage des radios
-        if getattr(self.obj, "CutSide", "Inside") == "Inside":
-            self.radioInside.setChecked(True)
-        else:
-            self.radioOutside.setChecked(True)
-
-        # Mettre à jour visibilité widgets selon CutType
         self.updateWidgetsVisibility()
 
-    def onCutSideChanged(self, checked):
-        self.obj.CutSide = "Inside" if self.radioInside.isChecked() else "Outside"
-        try:
-            self.obj.recompute()
-        except Exception:
-            pass
 
     def onCutTypeChanged(self, idx):
-        # idx → valeur via self.cut_types
         if 0 <= idx < len(self.cut_types):
             self.obj.CutType = self.cut_types[idx]
         else:
@@ -130,22 +73,15 @@ class CreateExtrudedCutoutTaskPanel:
         self.obj.recompute()
 
     def onLengthAChanged(self, val):
-        self.obj.ExtrusionLength1 = val
+        self.obj.ExtrusionLength = val
         self.obj.recompute()
 
-    def onLengthBChanged(self, val):
-        self.obj.ExtrusionLength2 = val
-        self.obj.recompute()
 
-    def onRefineChanged(self, state):
-        self.obj.Refine = bool(state)
-        self.obj.recompute()
 
     def updateWidgetsVisibility(self):
         """Afficher/masquer les widgets de longueur selon CutType selectionné."""
         ct = getattr(self.obj, "CutType", self.cut_types[0])
-        self.spinA.setVisible(ct in ["Two dimensions", "Symmetric"])
-        self.spinB.setVisible(ct == "Two dimensions")
+        self.spinA.setVisible(ct in ["Distance"])
 
     def open(self):
         App.Console.PrintMessage(translate("frameforge", "Opening Create Extrude Cutout\n"))
