@@ -37,7 +37,7 @@ class FrameForge(Gui.Workbench):
         """
         from freecad.frameforge import (
             create_end_miter_tool,
-            create_extrude_cutout_tool,
+            create_extruded_cutout_tool,
             create_profiles_tool,
             create_trimmed_profiles_tool,
             edit_profile_tool,

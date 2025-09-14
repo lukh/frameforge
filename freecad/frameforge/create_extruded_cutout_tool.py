@@ -8,7 +8,7 @@ from PySide import QtCore, QtGui
 
 from freecad.frameforge import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, FrameForgeException
 from freecad.frameforge._ui_utils import FormProxy
-from freecad.frameforge.extrude_cutout import ExtrudedCutout, ViewProviderExtrudedCutout
+from freecad.frameforge.extruded_cutout import ExtrudedCutout, ViewProviderExtrudedCutout
 from freecad.frameforge.translate_utils import translate
 
 
@@ -108,7 +108,7 @@ class AddExtrudedCutoutCommandClass:
     def GetResources(self):
         return {
             # The name of a svg file available in the resources.
-            "Pixmap": os.path.join(ICONPATH, "extrude-cutout.svg"),
+            "Pixmap": os.path.join(ICONPATH, "extruded-cutout.svg"),
             "MenuText": translate("FrameForge", "Extruded Cutout"),
             "Accel": "E, C",
             "ToolTip": translate(
@@ -156,7 +156,7 @@ class AddExtrudedCutoutCommandClass:
         obj = App.ActiveDocument.addObject("Part::FeaturePython", "ExtrudedCutout")
         obj.addExtension("Part::AttachExtensionPython")
 
-        extrude_cutout = ExtrudedCutout(obj, cutSketch, selected_face)
+        extruded_cutout = ExtrudedCutout(obj, cutSketch, selected_face)
         ViewProviderExtrudedCutout(obj.ViewObject)
         App.ActiveDocument.commitTransaction()
 
