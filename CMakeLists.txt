@@ -18,6 +18,7 @@ set(Namespace_SRCS
         freecad/frameforge/resources/icons/list-remove.svg
         freecad/frameforge/resources/icons/extendcurve.svg
         freecad/frameforge/resources/icons/list-add.svg
+        freecad/frameforge/resources/icons/extrude-cutout.svg
 
         freecad/frameforge/resources/images/profiles/Metal/HEB_Fillet.png
         freecad/frameforge/resources/images/profiles/Metal/Square_Hollow.png

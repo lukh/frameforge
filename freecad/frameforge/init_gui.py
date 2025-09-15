@@ -18,9 +18,14 @@ class FrameForge(Gui.Workbench):
 
     toolbox_drawing = ["Sketcher_NewSketch", "FrameForge_ParametricLine"]
 
-    toolbox_frameforge = ["FrameForge_CreateProfiles", "FrameForge_TrimProfiles", "FrameForge_EndMiter"]
+    toolbox_frameforge = [
+        "FrameForge_CreateProfiles",
+        "FrameForge_TrimProfiles",
+        "FrameForge_EndMiter",
+        "FrameForge_AddExtrudeCutout",
+    ]
 
-    toolbox_part = ["Part_Fuse", "Part_Cut", "PartDesign_Body", "PartDesign_Pad", "PartDesign_Pocket"]
+    toolbox_part = ["Part_Fuse", "Part_Cut", "PartDesign_Body"]
 
     toolbox_output = ["FrameForge_CreateBOM"]
 
@@ -34,6 +39,7 @@ class FrameForge(Gui.Workbench):
         """
         from freecad.frameforge import (
             create_end_miter_tool,
+            create_extruded_cutout_tool,
             create_profiles_tool,
             create_trimmed_profiles_tool,
             edit_profile_tool,
