@@ -15,6 +15,12 @@ def is_fusion(obj):
             return True
     return False
 
+def is_part(obj):
+    return obj.TypeId == "App::Part"
+
+def is_group(obj):
+    return obj.TypeId == "App::DocumentObjectGroup"
+
 def is_profile(obj):
     if obj.TypeId == "Part::FeaturePython":
         if hasattr(obj, "Family") or hasattr(obj, "ProfileLength"):
@@ -27,14 +33,44 @@ def is_trimmedbody(obj):
             return True
     return False
 
-
+def is_extrudedcutout(obj):
+    if obj.TypeId == "Part::FeaturePython":
+        if hasattr(obj, "baseObject"):
+            return True
+    return False
 
 def get_profile_from_trimmedbody(obj):
-    if hasattr(obj, "TrimmedBody"):
+    if is_trimmedbody(obj):
         return get_profile_from_trimmedbody(obj.TrimmedBody)
     else:
         return obj
 
+def get_profile_from_extrudedcutout(obj):
+    if is_extrudedcutout(obj):
+        bo = obj.baseObject[0]
+        if is_profile(bo):
+            return bo
+        elif is_trimmedbody(bo):
+            return get_profile_from_trimmedbody(bo)
+        elif is_extrudedcutout(bo):
+            return get_profile_from_extrudedcutout(bo)
+        else:
+            return None
+
+    else:
+        raise Exception("Not an extruded cutout")
+
+def get_trimmedprofile_from_extrudedcutout(obj):
+    if is_extrudedcutout(obj):
+        bo = obj.baseObject[0]
+        if is_trimmedbody(bo):
+            return bo
+        elif is_extrudedcutout(bo):
+            return get_trimmedprofile_from_extrudedcutout(bo)
+        else:
+            return None
+    else:
+        raise Exception("Not an extruded cutout")
 
 def get_all_cutting_angles(trimmed_profile):
     """Retourne récursivement la liste des angles de coupe (en degrés)
@@ -116,6 +152,16 @@ def traverse_assembly(data, obj, parent=""):
     if is_fusion(obj):
         for child in obj.Shapes:
             traverse_assembly(data, child, parent=obj.Label)
+
+    if is_group(obj):
+        for child in obj.Group:
+            traverse_assembly(data, child, parent=obj.Label)
+
+    if is_part(obj):
+        for child in obj.OutList:
+            if child.InList == [obj]:
+                traverse_assembly(data, child, parent=obj.Label)
+
             
     elif is_profile(obj):
         d["parent"] =  parent
@@ -133,22 +179,32 @@ def traverse_assembly(data, obj, parent=""):
 
         data.append(d)
 
-    elif is_trimmedbody(obj):
-        prof = get_profile_from_trimmedbody(obj)
-        angles = get_all_cutting_angles(obj)
+    elif is_trimmedbody(obj) or is_extrudedcutout(obj):
+        print(obj.Label)
+        if is_trimmedbody(obj):
+            prof = get_profile_from_trimmedbody(obj)
+            trim_prof = obj
+
+            angles = get_all_cutting_angles(obj)
+
+        elif is_extrudedcutout(obj):
+            prof = get_profile_from_extrudedcutout(obj)
+            trim_prof = get_trimmedprofile_from_extrudedcutout(obj)
+
+            angles = get_all_cutting_angles(trim_prof)
 
         d["parent"] =  parent
-        d["label"] =  obj.Label
+        d["label"] =  trim_prof.Label
         d["family"] =  getattr(prof, "Family", "N/A")
         d["size_name"] =  getattr(prof, "SizeName", "N/A")
         d["material"] =  getattr(prof, "Material", "N/A")
-        d["length"] =  str(length_along_normal(obj))
+        d["length"] =  str(length_along_normal(trim_prof if trim_prof else prof))
         d["bevel_start_cut_1"] =  str(angles[0])
         d["bevel_start_cut_2"] =  "N/A"
         d["bevel_end_cut_1"] =  str(angles[1])
         d["bevel_end_cut_2"] =  "N/A"
-        d["approx_weight"] =  str(getattr(obj, "ApproxWeight", "N/A"))
-        d["quantity"] =  getattr(obj, "Quantity", "1")
+        d["approx_weight"] =  str(getattr(prof, "ApproxWeight", "N/A"))
+        d["quantity"] =  "1"
 
         data.append(d)
 
@@ -203,7 +259,7 @@ def make_bom(objects, bom_name="BOM", group_profiles=False):
     spreadsheet.set("H1", "BevelStartCut2")
     spreadsheet.set("I1", "BevelEndCut1")
     spreadsheet.set("J1", "BevelEndCut2")
-    spreadsheet.set("K1", "Weight")
+    spreadsheet.set("K1", "ApproxWeight")
     spreadsheet.set("L1", "Quantity")
 
     row = 2

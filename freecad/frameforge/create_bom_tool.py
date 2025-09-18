@@ -7,7 +7,7 @@ from freecad.frameforge import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPAT
 from freecad.frameforge.translate_utils import translate
 from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
 
-from freecad.frameforge.create_bom import make_bom, is_fusion, is_profile, is_trimmedbody
+from freecad.frameforge.create_bom import make_bom, is_fusion, is_part, is_group, is_profile, is_trimmedbody, is_extrudedcutout
 
 
 class CreateBOMTaskPanel:
@@ -32,7 +32,7 @@ class CreateBOMTaskPanel:
     def accept(self):
         sel = Gui.Selection.getSelection()
 
-        if all([(is_fusion(s) or is_profile(s) or is_trimmedbody(s)) for s in sel]):
+        if all([(is_fusion(s) or is_part(s) or is_group(s) or is_profile(s) or is_trimmedbody(s) or is_extrudedcutout(s)) for s in sel]):
             bom_name = self.form.bom_name_te.text() if self.form.bom_name_te.text() != "" else "BOM"
             make_bom(sel, bom_name=bom_name , group_profiles=self.form.group_profiles_cb.isChecked())
 
@@ -43,6 +43,7 @@ class CreateBOMTaskPanel:
 
         else:
             App.ActiveDocument.abortTransaction()
+            return False
             
 
     def clean(self):
@@ -71,17 +72,13 @@ class CreateBOMCommand:
     def IsActive(self):
         if App.ActiveDocument:
             if len(Gui.Selection.getSelection()) >= 1:
-                active = False
-                for sel in Gui.Selection.getSelection():
-                    if hasattr(sel, "Target"):
-                        active = True
-                    elif hasattr(sel, "TrimmedBody"):
-                        active = True
-                    elif sel.TypeId == "Part::MultiFuse":
-                        active = True
-                    else:
-                        return False
-                return active
+                return all(
+                    [
+                        is_fusion(sel) or is_part(sel) or is_group(sel) or is_profile(sel) or is_trimmedbody(sel) or is_extrudedcutout(sel) 
+                            for sel in Gui.Selection.getSelection()
+                    ]
+                )
+
         return False
 
     def Activated(self):
