@@ -58,7 +58,8 @@ class CreateEndMiterCommand:
     def make_end_miter_profile(self, trimmedBody=None, trimmingBoundary=None):
         doc = App.ActiveDocument
 
-        trimmed_profile = doc.addObject("Part::FeaturePython", "TrimmedProfile")
+        name = "TrimmedProfile" if trimmedBody is None else f"{trimmedBody.Name}_Mt"
+        trimmed_profile = doc.addObject("Part::FeaturePython", name)
 
         if trimmedBody is not None and len(trimmedBody.Parents) > 0:
             trimmedBody.Parents[-1][0].addObject(trimmed_profile)

@@ -153,7 +153,11 @@ class AddExtrudedCutoutCommandClass:
             raise FrameForgeException("Both a valid sketch and an object with a shape must be selected.")
 
         App.ActiveDocument.openTransaction("Create Cutout")
-        obj = App.ActiveDocument.addObject("Part::FeaturePython", "ExtrudedCutout")
+
+        
+        name = "ExtrudedCutout" if selected_object is None else f"{selected_object.Name}_Ex"
+
+        obj = App.ActiveDocument.addObject("Part::FeaturePython", name)
         obj.addExtension("Part::AttachExtensionPython")
 
         extruded_cutout = ExtrudedCutout(obj, cutSketch, selected_face)
