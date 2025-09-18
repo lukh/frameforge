@@ -25,6 +25,11 @@ class FrameForge(Gui.Workbench):
         "FrameForge_AddExtrudeCutout",
     ]
 
+
+    toolbox_group = [
+        "Std_Group", "Std_Part"
+    ]
+
     toolbox_part = ["Part_Fuse", "Part_Cut", "PartDesign_Body"]
 
     toolbox_output = ["FrameForge_CreateBOM"]
@@ -58,6 +63,9 @@ class FrameForge(Gui.Workbench):
 
         self.appendToolbar(translate("frameforge", "Frameforge"), self.toolbox_frameforge)
         self.appendMenu(translate("frameforge", "Frameforge"), self.toolbox_frameforge)
+
+        self.appendToolbar(translate("frameforge", "Profiles Group"), self.toolbox_group)
+        self.appendMenu(translate("frameforge", "Profiles Group"), self.toolbox_group)
 
         self.appendToolbar(translate("frameforge", "Part Primitives"), self.toolbox_part)
         self.appendMenu(translate("frameforge", "Part Primitives"), self.toolbox_part)
