@@ -25,10 +25,7 @@ class FrameForge(Gui.Workbench):
         "FrameForge_AddExtrudeCutout",
     ]
 
-
-    toolbox_group = [
-        "Std_Group", "Std_Part"
-    ]
+    toolbox_group = ["Std_Group", "Std_Part"]
 
     toolbox_part = ["Part_Fuse", "Part_Cut", "PartDesign_Body"]
 
@@ -49,7 +46,7 @@ class FrameForge(Gui.Workbench):
             create_trimmed_profiles_tool,
             edit_profile_tool,
             parametric_line,
-            create_bom_tool
+            create_bom_tool,
         )
 
         # Add translations path

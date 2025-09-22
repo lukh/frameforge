@@ -154,7 +154,6 @@ class AddExtrudedCutoutCommandClass:
 
         App.ActiveDocument.openTransaction("Create Cutout")
 
-        
         name = "ExtrudedCutout" if selected_object is None else f"{selected_object.Name}_Ex"
 
         obj = App.ActiveDocument.addObject("Part::FeaturePython", name)
