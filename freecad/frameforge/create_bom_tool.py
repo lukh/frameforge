@@ -4,18 +4,17 @@ import FreeCAD as App
 import FreeCADGui as Gui
 
 from freecad.frameforge import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
-from freecad.frameforge.translate_utils import translate
-from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
-
 from freecad.frameforge.create_bom import (
-    make_bom,
+    is_extrudedcutout,
     is_fusion,
-    is_part,
     is_group,
+    is_part,
     is_profile,
     is_trimmedbody,
-    is_extrudedcutout,
+    make_bom,
 )
+from freecad.frameforge.translate_utils import translate
+from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
 
 
 class CreateBOMTaskPanel:

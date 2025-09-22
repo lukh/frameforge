@@ -1,9 +1,9 @@
+import math
 from itertools import groupby
 
+import Assembly
 import FreeCAD
 import FreeCADGui as Gui
-import Assembly
-import math
 import Part
 
 
