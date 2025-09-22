@@ -156,6 +156,13 @@ class AddExtrudedCutoutCommandClass:
         obj = App.ActiveDocument.addObject("Part::FeaturePython", "ExtrudedCutout")
         obj.addExtension("Part::AttachExtensionPython")
 
+        if len(selected_object.Parents) > 0:
+            part = selected_object.Parents[-1][0]
+            part.addObject(obj)
+
+            part.addObject(cutSketch)
+
+
         extruded_cutout = ExtrudedCutout(obj, cutSketch, selected_face)
         ViewProviderExtrudedCutout(obj.ViewObject)
         App.ActiveDocument.commitTransaction()
