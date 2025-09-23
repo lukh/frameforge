@@ -78,6 +78,12 @@ And others people that I don't know but they should be in this [thread](https://
 
 ## Changelog
 
+* v0.1.5
+  - Add ExtrudedCutout
+  - Add BOM
+  - Add linting
+  - Fix typo
+
 * v0.1.4
   - Split UI for create_profiles
   - Rename Profile CutType 
