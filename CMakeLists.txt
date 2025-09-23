@@ -10,6 +10,7 @@ set(Namespace_SRCS
         freecad/frameforge/resources/icons/joincurve.svg
         freecad/frameforge/resources/icons/overlap.svg
         freecad/frameforge/resources/icons/box.svg
+        freecad/frameforge/resources/icons/bom.svg
         freecad/frameforge/resources/icons/parts_list.svg
         freecad/frameforge/resources/icons/corner-coped-type.svg
         freecad/frameforge/resources/icons/corner-simple-type.svg
@@ -17,6 +18,7 @@ set(Namespace_SRCS
         freecad/frameforge/resources/icons/list-remove.svg
         freecad/frameforge/resources/icons/extendcurve.svg
         freecad/frameforge/resources/icons/list-add.svg
+        freecad/frameforge/resources/icons/extrude-cutout.svg
 
         freecad/frameforge/resources/images/profiles/Metal/HEB_Fillet.png
         freecad/frameforge/resources/images/profiles/Metal/Square_Hollow.png

@@ -18,9 +18,18 @@ class FrameForge(Gui.Workbench):
 
     toolbox_drawing = ["Sketcher_NewSketch", "FrameForge_ParametricLine"]
 
-    toolbox_frameforge = ["FrameForge_CreateProfiles", "FrameForge_TrimProfiles", "FrameForge_EndMiter"]
+    toolbox_frameforge = [
+        "FrameForge_CreateProfiles",
+        "FrameForge_TrimProfiles",
+        "FrameForge_EndMiter",
+        "FrameForge_AddExtrudeCutout",
+    ]
 
-    toolbox_part = ["Part_Fuse", "Part_Cut", "PartDesign_Body", "PartDesign_Pad", "PartDesign_Pocket"]
+    toolbox_group = ["Std_Group", "Std_Part"]
+
+    toolbox_part = ["Part_Fuse", "Part_Cut", "PartDesign_Body"]
+
+    toolbox_output = ["FrameForge_CreateBOM"]
 
     def GetClassName(self):
         return "Gui::PythonWorkbench"
@@ -31,7 +40,9 @@ class FrameForge(Gui.Workbench):
         here is the place to import all the commands
         """
         from freecad.frameforge import (
+            create_bom_tool,
             create_end_miter_tool,
+            create_extruded_cutout_tool,
             create_profiles_tool,
             create_trimmed_profiles_tool,
             edit_profile_tool,
@@ -50,8 +61,14 @@ class FrameForge(Gui.Workbench):
         self.appendToolbar(translate("frameforge", "Frameforge"), self.toolbox_frameforge)
         self.appendMenu(translate("frameforge", "Frameforge"), self.toolbox_frameforge)
 
+        self.appendToolbar(translate("frameforge", "Profiles Group"), self.toolbox_group)
+        self.appendMenu(translate("frameforge", "Profiles Group"), self.toolbox_group)
+
         self.appendToolbar(translate("frameforge", "Part Primitives"), self.toolbox_part)
         self.appendMenu(translate("frameforge", "Part Primitives"), self.toolbox_part)
+
+        self.appendToolbar(translate("frameforge", "Frameforge output"), self.toolbox_output)
+        self.appendMenu(translate("frameforge", "Frameforge output"), self.toolbox_output)
 
     def Activated(self):
         """

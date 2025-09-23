@@ -8,3 +8,7 @@ ICONPATH = os.path.join(RESSOURCESPATH, "icons")
 PROFILEIMAGES_PATH = os.path.join(RESSOURCESPATH, "images", "profiles")
 UIPATH = os.path.join(RESSOURCESPATH, "ui")
 TRANSLATIONSPATH = os.path.join(RESSOURCESPATH, "translations")
+
+
+class FrameForgeException(BaseException):
+    pass
