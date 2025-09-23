@@ -36,8 +36,6 @@ For a start, we are going to create a simple frame.
 
 1. Select a profile from the lists (Material / Family / Size)
 
-![profiles choice](images/11-profiles-family.png)
-
 
 You can change the size just below the family, the tool has a lot of predefined profile, you can also change the parameters...
 
@@ -45,6 +43,8 @@ You can change the size just below the family, the tool has a lot of predefined 
 3. In the 3D View, select edges to apply the profile creation:
 
 ![Edge Selection](images/13-edge-selection.png)
+
+(You can also select the sketch in the view before launching the create profile tool, it will create profiles for all edges in the profiles)
 
 1. And press OK in the Create Profile Task. Now, you have four profiles !
 
@@ -201,6 +201,8 @@ We first must add offsets to the existing profiles...  (offsets adds up to the d
 ![alt text](images/54-miter-end.png)
 
 
+Do that again for others profiles of the top frame
+
 ### Via End Trim Command
 
 Let's finish the 3 others corners of the second frame...
@@ -228,7 +230,7 @@ Let's open again the corner manager, selecting "end trim"
 ![alt text](images/64-select-trimming-boundaries-1.png)
 ![alt text](images/64-select-trimming-boundaries-2.png)
 
-You can change the cut type: straight or following the other profile.
+You can change the cut type: straight or following the other profile. (for notch) for instance
 
 ![alt text](images/64-select-cuttype-1.png)
 ![alt text](images/64-select-cuttype-2.png)
@@ -236,13 +238,31 @@ You can change the cut type: straight or following the other profile.
 
 And you also can add faces related to the other side of the trimmed profile.
 
+You can speed up your development process by first selecting the TrimmedObject, THEN the Trimming Boundaries (faces of profiles to cut with), then click on Trim Profile command; it will fill the "Trim Primitives"
+
 ## Organizing Objects
 
-That's the bad part.
+Now, you should have something like this:
 
-I find the tree view messy. Really messy.
+![alt text](images/70-startwith.png)
+
+
+You have Profiles, and TrimmedProfiles object (with two differents icons) TrimmedProfiles have Profiles or other TrimmedProfile as child.
+
+There are three solutions to help organizing the project: (accessible from the frameforge toolbar)
+
+
+- Part Container
+- Fusion
+- Group Container
+
+My favorite is Part container because it is very close to the manufacturing process. each profile is a unique item that is manufactured, then assembled into a frame (the Part) then assembled into the full project. But you can keep "access" to the profile, as a specific part (cut, make holes...export to STEP, draw it)
+
+The fusion, on the other way, will lock and "fuse" (well...) everything, making it hard to draw a 2D View for specific Profiles. (But for a long time it was the only way to cut and drill the profiles)
 
 ### Part Container
+
+(My favorite solution)
 
 I often use Part container for grouping profiles, sketches, etc.
 
@@ -250,11 +270,13 @@ I often use Part container for grouping profiles, sketches, etc.
 
 ![alt text](images/71-part-container.png)
 
-You should drag only one profile to the container... I don't know why, but FreeCAD is not happy about a group drag.
+You should drag only one object to the container... start by the first sketch, the rest should follow
+... I don't know why, but FreeCAD is not happy about a group drag.
 
-Sometime parts and profile get out of the Part Container.
+Sometime parts and profile get out of the Part Container. (mainly fixed now !)
 
 
+It allows to group profiles, in a "light" way. profiles can be updated
 
 ### Fusion
 
@@ -264,12 +286,16 @@ One can fuse profiles together.
 
 ![alt text](images/72-fusion-done.png)
 
-It allows to group objects. 
+It allows to group profiles, in a "strong" way. profiles can be updated.
+
+The fusion can be converted into a baseFeature allowing to be used into a Body (PartDesign) (extrude, etc)
 
 
-## Using profiles in Part Design... ie, making holes !
+**The profiles MUST BE "closed", without any crossed profiles.** The fusion tool need that. And the Body tool as well. Expect bugs if Profiles are not trimmed correctly.
 
-To use all of these profiles in PartDesign, for instance, to make holes... in it.. !
+#### Using the fusion in Part Design... ie, making holes !
+
+To use all of these profiles in PartDesign, for instance, to make holes
 
 you need to use a fusion of the profile, and create a body...
 
@@ -283,6 +309,34 @@ you need to use a fusion of the profile, and create a body...
 
 You can map a sketch to any face, and use Part design to do whatever you want !
 
+![Making Holes](images/82-create-sketch.png)
 ![Making Holes](images/82-making-holes.png)
 
 ![Holes Made](images/83-holes-made.png)
+
+### Group Container
+
+(my least prefered solution)
+
+A group is just a folder. Simply add your objects into the Group. You are done. Can't be used in assembly for instance. 
+
+
+## Cutout / Drill
+
+It is possible to map a sketch to a face of a profile, then cutout / make pocket.
+
+1. Select a face's profile and Click on the Sketch tool
+
+![alt text](images/90-create-sketch-on-face.png)
+
+A Dialog opens, keep it default (Attach to "Plane Face")
+
+2. Defines the sketch, all sketch tool features works (external geometry too!)
+
+![alt text](images/90-draw-sketch.png)
+
+3. Select the face, then the skecth in the 3D view and click on the Extruded Cutout
+
+![alt text](images/91-extrudedcutout.png)
+
+![alt text](images/92-extrudedcutout-done.png)
