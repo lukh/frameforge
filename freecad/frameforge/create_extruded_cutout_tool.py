@@ -162,7 +162,6 @@ class AddExtrudedCutoutCommandClass:
 
             part.addObject(cutSketch)
 
-
         extruded_cutout = ExtrudedCutout(obj, cutSketch, selected_face)
         ViewProviderExtrudedCutout(obj.ViewObject)
         App.ActiveDocument.commitTransaction()
