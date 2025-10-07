@@ -2,6 +2,15 @@
 
 Frameforge is a FreeCAD workbench that aids in designing beams and frames, with cut, mitter joins and so on.
 
+Features:
+
+- Create Beams (metal, wood) from a sketch or Edges
+- Trim, offset, cut, mitter cut
+- Cutout (make holes) from a sketch
+- Export a BOM with cut angles, lenght, material
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/L3L41KKMJR)
+
 ## Prerequisite
 
 - FreeCAD ≥ v0.21.x
