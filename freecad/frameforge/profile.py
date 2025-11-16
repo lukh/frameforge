@@ -6,6 +6,9 @@ import Part
 
 import freecad.frameforge
 
+from freecad.frameforge.extrusions import vslot20x20, vslot20x40, vslot20x60, vslot20x80
+from freecad.frameforge.extrusions import tslot20x20, tslot20x20_three_slot, tslot20x20_two_slot, tslot20x20_two_slot_opp, tslot20x20_one_slot
+
 # Global variable for a 3D float vector (used in Profile class)
 vec = App.Base.Vector
 
@@ -904,6 +907,37 @@ class Profile:
             p1 = Part.Face(wire1)
             p2 = Part.Face(wire2)
             p = p1.cut(p2)
+
+        if obj.Family == "V-Slot":
+            if H == 20.0 and W == 20.0:
+                p = vslot20x20()
+            elif H == 20.0 and W == 40.0:
+                p = vslot20x40()
+            elif H == 20.0 and W == 60.0:
+                p = vslot20x60()
+            elif H == 20.0 and W == 80.0:
+                p = vslot20x80()
+
+        if obj.Family == "T-Slot":
+            if H == 20.0 and W == 20.0:
+                p = tslot20x20()
+
+        if obj.Family == "T-Slot 3-Slots":
+            if H == 20.0 and W == 20.0:
+                p = tslot20x20_three_slot()
+                
+        if obj.Family == "T-Slot 2-Slots":
+            if H == 20.0 and W == 20.0:
+                p = tslot20x20_two_slot()
+
+        if obj.Family == "T-Slot 2-Slots Opp":
+            if H == 20.0 and W == 20.0:
+                p = tslot20x20_two_slot_opp()
+
+        if obj.Family == "T-Slot 1-Slot":
+            if H == 20.0 and W == 20.0:
+                p = tslot20x20_one_slot()
+
 
         if L:
             ProfileFull = p.extrude(vec(0, 0, L))
