@@ -283,6 +283,7 @@ class CreateProfileTaskPanel:
             self.form_proxy.combo_size.currentText(),
             self.form_proxy.cb_combined_bevel.isChecked(),
             link_sub,
+            self.form_proxy.label_unit.text()
         )
 
     def addSelection(self, doc, obj, sub, other):

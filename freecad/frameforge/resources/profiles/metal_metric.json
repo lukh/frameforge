@@ -1,0 +1,6338 @@
+{
+    "Equal Leg Angles": {
+        "norm": "EN 10056-1",
+        "unit": "mm",
+        "fillet": true,
+        "sizes": {
+            "250x250x35": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "35",
+                "Radius1": "18",
+                "Radius2": "9",
+                "Weight": "128"
+            },
+            "250x250x32": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "32",
+                "Radius1": "20",
+                "Radius2": "10",
+                "Weight": "118"
+            },
+            "250x250x28": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "28",
+                "Radius1": "18",
+                "Radius2": "9",
+                "Weight": "104"
+            },
+            "250x250x25": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "25",
+                "Radius1": "20",
+                "Radius2": "10",
+                "Weight": "93.6"
+            },
+            "200x200x24": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "24",
+                "Radius1": "18",
+                "Radius2": "9",
+                "Weight": "71.1"
+            },
+            "200x200x20": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "20",
+                "Radius1": "18",
+                "Radius2": "9",
+                "Weight": "59.9"
+            },
+            "200x200x18": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "18",
+                "Radius1": "18",
+                "Radius2": "9",
+                "Weight": "54.2"
+            },
+            "200x200x16": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "16",
+                "Radius1": "18",
+                "Radius2": "9",
+                "Weight": "48.5"
+            },
+            "180x180x18": {
+                "Height": "180",
+                "Width": "180",
+                "Thickness": "18",
+                "Radius1": "18",
+                "Radius2": "9",
+                "Weight": "48.6"
+            },
+            "180x180x16": {
+                "Height": "180",
+                "Width": "180",
+                "Thickness": "16",
+                "Radius1": "18",
+                "Radius2": "9",
+                "Weight": "43.5"
+            },
+            "160x160x15": {
+                "Height": "160",
+                "Width": "160",
+                "Thickness": "15",
+                "Radius1": "17",
+                "Radius2": "8.5",
+                "Weight": "36.2"
+            },
+            "150x150x18": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "18",
+                "Radius1": "16",
+                "Radius2": "8",
+                "Weight": "40.1"
+            },
+            "150x150x15": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "15",
+                "Radius1": "16",
+                "Radius2": "8",
+                "Weight": "33.8"
+            },
+            "150x150x12": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "12",
+                "Radius1": "16",
+                "Radius2": "8",
+                "Weight": "27.3"
+            },
+            "150x150x10": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "10",
+                "Radius1": "16",
+                "Radius2": "8",
+                "Weight": "23"
+            },
+            "130x130x12": {
+                "Height": "130",
+                "Width": "130",
+                "Thickness": "12",
+                "Radius1": "14",
+                "Radius2": "7",
+                "Weight": "23.5"
+            },
+            "120x120x15": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "15",
+                "Radius1": "13",
+                "Radius2": "6.5",
+                "Weight": "26.6"
+            },
+            "120x120x12": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "12",
+                "Radius1": "13",
+                "Radius2": "6.5",
+                "Weight": "21.6"
+            },
+            "120x120x10": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "10",
+                "Radius1": "13",
+                "Radius2": "6.5",
+                "Weight": "18.2"
+            },
+            "120x120x8": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "8",
+                "Radius1": "13",
+                "Radius2": "6.5",
+                "Weight": "14.7"
+            },
+            "100x100x15": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "15",
+                "Radius1": "12",
+                "Radius2": "6.5",
+                "Weight": "21.9"
+            },
+            "100x100x12": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "12",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "17.8"
+            },
+            "100x100x10": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "10",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "15"
+            },
+            "100x100x8": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "12.2"
+            },
+            "90x90x12": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "12",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "15.9"
+            },
+            "90x90x10": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "10",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "13.4"
+            },
+            "90x90x9": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "9",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "12.2"
+            },
+            "90x90x8": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "8",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "10.9"
+            },
+            "90x90x7": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "7",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "9.6"
+            },
+            "90x90x6": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "6",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "8.3"
+            },
+            "80x80x10": {
+                "Height": "80",
+                "Width": "80",
+                "Thickness": "10",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "11.9"
+            },
+            "80x80x8": {
+                "Height": "80",
+                "Width": "80",
+                "Thickness": "8",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "9.6"
+            },
+            "80x80x6": {
+                "Height": "80",
+                "Width": "80",
+                "Thickness": "6",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "7.3"
+            },
+            "75x75x8": {
+                "Height": "75",
+                "Width": "75",
+                "Thickness": "8",
+                "Radius1": "9",
+                "Radius2": "5",
+                "Weight": "9"
+            },
+            "75x75x6": {
+                "Height": "75",
+                "Width": "75",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "4.5",
+                "Weight": "6.9"
+            },
+            "70x70x10": {
+                "Height": "70",
+                "Width": "70",
+                "Thickness": "10",
+                "Radius1": "9",
+                "Radius2": "4.5",
+                "Weight": "10.3"
+            },
+            "70x70x7": {
+                "Height": "70",
+                "Width": "70",
+                "Thickness": "8",
+                "Radius1": "9",
+                "Radius2": "4.5",
+                "Weight": "8.4"
+            },
+            "70x70x8": {
+                "Height": "70",
+                "Width": "70",
+                "Thickness": "7",
+                "Radius1": "9",
+                "Radius2": "4.5",
+                "Weight": "7.4"
+            },
+            "70x70x6": {
+                "Height": "70",
+                "Width": "70",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "4.5",
+                "Weight": "6.4"
+            },
+            "65x65x7": {
+                "Height": "65",
+                "Width": "65",
+                "Thickness": "7",
+                "Radius1": "9",
+                "Radius2": "4.5",
+                "Weight": "6.8"
+            },
+            "60x60x10": {
+                "Height": "60",
+                "Width": "60",
+                "Thickness": "10",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "8.7"
+            },
+            "60x60x8": {
+                "Height": "60",
+                "Width": "60",
+                "Thickness": "8",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "7.1"
+            },
+            "60x60x6": {
+                "Height": "60",
+                "Width": "60",
+                "Thickness": "6",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "5.4"
+            },
+            "60x60x5": {
+                "Height": "60",
+                "Width": "60",
+                "Thickness": "5",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "4.6"
+            },
+            "50x50x8": {
+                "Height": "50",
+                "Width": "50",
+                "Thickness": "8",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "5.8"
+            },
+            "50x50x6": {
+                "Height": "50",
+                "Width": "50",
+                "Thickness": "6",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "4.5"
+            },
+            "50x50x5": {
+                "Height": "50",
+                "Width": "50",
+                "Thickness": "5",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "3.8"
+            },
+            "50x50x4": {
+                "Height": "50",
+                "Width": "50",
+                "Thickness": "4",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "3.1"
+            },
+            "50x50x3": {
+                "Height": "50",
+                "Width": "50",
+                "Thickness": "3",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "2.3"
+            },
+            "45x45x6": {
+                "Height": "45",
+                "Width": "45",
+                "Thickness": "6",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "4"
+            },
+            "45x45x5": {
+                "Height": "45",
+                "Width": "45",
+                "Thickness": "5",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "3.4"
+            },
+            "45x45x4.5": {
+                "Height": "45",
+                "Width": "45",
+                "Thickness": "4.5",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "3.1"
+            },
+            "45x45x4": {
+                "Height": "45",
+                "Width": "45",
+                "Thickness": "4",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "2.7"
+            },
+            "45x45x3": {
+                "Height": "45",
+                "Width": "45",
+                "Thickness": "3",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "2.1"
+            },
+            "40x40x6": {
+                "Height": "40",
+                "Width": "40",
+                "Thickness": "6",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "3.5"
+            },
+            "40x40x5": {
+                "Height": "40",
+                "Width": "40",
+                "Thickness": "5",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "3.0"
+            },
+            "40x40x4": {
+                "Height": "40",
+                "Width": "40",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "2.4"
+            },
+            "40x40x3": {
+                "Height": "40",
+                "Width": "40",
+                "Thickness": "3",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "1.8"
+            },
+            "35x35x4": {
+                "Height": "35",
+                "Width": "35",
+                "Thickness": "4",
+                "Radius1": "5",
+                "Radius2": "2.5",
+                "Weight": "2.1"
+            },
+            "30x30x5": {
+                "Height": "30",
+                "Width": "30",
+                "Thickness": "5",
+                "Radius1": "5",
+                "Radius2": "2.5",
+                "Weight": "2.2"
+            },
+            "30x30x4": {
+                "Height": "30",
+                "Width": "30",
+                "Thickness": "4",
+                "Radius1": "5",
+                "Radius2": "2.5",
+                "Weight": "1.8"
+            },
+            "30x30x3": {
+                "Height": "30",
+                "Width": "30",
+                "Thickness": "3",
+                "Radius1": "5",
+                "Radius2": "2.5",
+                "Weight": "1.4"
+            },
+            "25x25x5": {
+                "Height": "25",
+                "Width": "25",
+                "Thickness": "5",
+                "Radius1": "3.5",
+                "Radius2": "1.2",
+                "Weight": "1.82"
+            },
+            "25x25x4": {
+                "Height": "25",
+                "Width": "25",
+                "Thickness": "4",
+                "Radius1": "3.5",
+                "Radius2": "1.0",
+                "Weight": "1.50"
+            },
+            "25x25x3": {
+                "Height": "25",
+                "Width": "25",
+                "Thickness": "3",
+                "Radius1": "4",
+                "Radius2": "1.8",
+                "Weight": "1.15"
+            },
+            "20x20x3": {
+                "Height": "20",
+                "Width": "20",
+                "Thickness": "3",
+                "Radius1": "4",
+                "Radius2": "1.8",
+                "Weight": "0.90"
+            },
+            "16x16x3": {
+                "Height": "16",
+                "Width": "16",
+                "Thickness": "3",
+                "Radius1": "3",
+                "Radius2": "1.5",
+                "Weight": "0.71"
+            }
+        }
+    },
+    "Unequal Leg Angles": {
+        "norm": "EN 10056-1",
+        "unit": "mm",
+        "fillet": true,
+        "sizes": {
+            "250x150x15": {
+                "Height": "200",
+                "Width": "150",
+                "Thickness": "15",
+                "Radius1": "15",
+                "Radius2": "7.5",
+                "Weight": "39.6"
+            },
+            "200x150x12": {
+                "Height": "200",
+                "Width": "150",
+                "Thickness": "12",
+                "Radius1": "15",
+                "Radius2": "7.5",
+                "Weight": "32.0"
+            },
+            "200x100x15": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "15",
+                "Radius1": "15",
+                "Radius2": "7.5",
+                "Weight": "33.7"
+            },
+            "200x100x12": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "12",
+                "Radius1": "15",
+                "Radius2": "7.5",
+                "Weight": "27.3"
+            },
+            "200x100x10": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "7.5",
+                "Weight": "23.0"
+            },
+            "150x100x12": {
+                "Height": "150",
+                "Width": "100",
+                "Thickness": "12",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "22.5"
+            },
+            "150x100x10": {
+                "Height": "150",
+                "Width": "100",
+                "Thickness": "10",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "19.0"
+            },
+            "150x90x15": {
+                "Height": "150",
+                "Width": "90",
+                "Thickness": "15",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "26.6"
+            },
+            "150x90x12": {
+                "Height": "150",
+                "Width": "90",
+                "Thickness": "12",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "21.6"
+            },
+            "150x90x10": {
+                "Height": "150",
+                "Width": "90",
+                "Thickness": "10",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "18.2"
+            },
+            "150x75x15": {
+                "Height": "150",
+                "Width": "75",
+                "Thickness": "15",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "24.8"
+            },
+            "150x75x12": {
+                "Height": "150",
+                "Width": "75",
+                "Thickness": "12",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "20.2"
+            },
+            "150x75x10": {
+                "Height": "150",
+                "Width": "75",
+                "Thickness": "10",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "17.0"
+            },
+            "150x75x9": {
+                "Height": "150",
+                "Width": "75",
+                "Thickness": "9",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "15.4"
+            },
+            "135x65x10": {
+                "Height": "135",
+                "Width": "65",
+                "Thickness": "10",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "15.0"
+            },
+            "135x65x8": {
+                "Height": "135",
+                "Width": "65",
+                "Thickness": "8",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "12.2"
+            },
+            "125x75x12": {
+                "Height": "125",
+                "Width": "75",
+                "Thickness": "12",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "17.8"
+            },
+            "125x75x10": {
+                "Height": "125",
+                "Width": "75",
+                "Thickness": "10",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "15.0"
+            },
+            "125x75x8": {
+                "Height": "125",
+                "Width": "75",
+                "Thickness": "8",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "12.2"
+            },
+            "120x80x12": {
+                "Height": "120",
+                "Width": "80",
+                "Thickness": "12",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "17.8"
+            },
+            "120x80x10": {
+                "Height": "120",
+                "Width": "80",
+                "Thickness": "10",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "15.0"
+            },
+            "120x80x8": {
+                "Height": "120",
+                "Width": "80",
+                "Thickness": "8",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "12.2"
+            },
+            "100x75x12": {
+                "Height": "100",
+                "Width": "75",
+                "Thickness": "12",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "15.4"
+            },
+            "100x75x10": {
+                "Height": "100",
+                "Width": "75",
+                "Thickness": "10",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "13.0"
+            },
+            "100x75x8": {
+                "Height": "100",
+                "Width": "75",
+                "Thickness": "8",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "10.6"
+            },
+            "100x65x10": {
+                "Height": "100",
+                "Width": "65",
+                "Thickness": "10",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "12.3"
+            },
+            "100x65x8": {
+                "Height": "100",
+                "Width": "65",
+                "Thickness": "8",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "9.9"
+            },
+            "100x65x7": {
+                "Height": "100",
+                "Width": "65",
+                "Thickness": "7",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "8.8"
+            },
+            "100x50x8": {
+                "Height": "100",
+                "Width": "50",
+                "Thickness": "8",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "9.0"
+            },
+            "100x50x6": {
+                "Height": "100",
+                "Width": "50",
+                "Thickness": "6",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "6.8"
+            },
+            "80x60x7": {
+                "Height": "80",
+                "Width": "60",
+                "Thickness": "7",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "7.4"
+            },
+            "80x40x8": {
+                "Height": "80",
+                "Width": "40",
+                "Thickness": "8",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "7.1"
+            },
+            "80x40x6": {
+                "Height": "80",
+                "Width": "40",
+                "Thickness": "6",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "5.4"
+            },
+            "75x50x8": {
+                "Height": "75",
+                "Width": "50",
+                "Thickness": "8",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "7.4"
+            },
+            "75x50x6": {
+                "Height": "75",
+                "Width": "50",
+                "Thickness": "6",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "5.7"
+            },
+            "70x50x6": {
+                "Height": "75",
+                "Width": "50",
+                "Thickness": "6",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "5.4"
+            },
+            "65x50x5": {
+                "Height": "65",
+                "Width": "50",
+                "Thickness": "5",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "4.4"
+            },
+            "60x40x6": {
+                "Height": "60",
+                "Width": "40",
+                "Thickness": "6",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "4.5"
+            },
+            "60x40x5": {
+                "Height": "60",
+                "Width": "40",
+                "Thickness": "5",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "3.8"
+            },
+            "60x30x5": {
+                "Height": "60",
+                "Width": "30",
+                "Thickness": "5",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "3.4"
+            },
+            "50x30x5": {
+                "Height": "50",
+                "Width": "30",
+                "Thickness": "5",
+                "Radius1": "4.5",
+                "Radius2": "2",
+                "Weight": "3.0"
+            },
+            "45x30x4": {
+                "Height": "45",
+                "Width": "30",
+                "Thickness": "4",
+                "Radius1": "4.5",
+                "Radius2": "2",
+                "Weight": "2.3"
+            },
+            "40x25x4": {
+                "Height": "40",
+                "Width": "25",
+                "Thickness": "4",
+                "Radius1": "4",
+                "Radius2": "2",
+                "Weight": "1.9"
+            },
+            "40x20x4": {
+                "Height": "40",
+                "Width": "20",
+                "Thickness": "4",
+                "Radius1": "3.5",
+                "Radius2": "2",
+                "Weight": "1.8"
+            },
+            "30x20x4": {
+                "Height": "30",
+                "Width": "20",
+                "Thickness": "4",
+                "Radius1": "3.5",
+                "Radius2": "2",
+                "Weight": "1.5"
+            },
+            "30x20x3": {
+                "Height": "30",
+                "Width": "20",
+                "Thickness": "3",
+                "Radius1": "3.5",
+                "Radius2": "2",
+                "Weight": "1.1"
+            }
+        }
+    },
+    "Flat Sections": {
+        "norm": "EN10025",
+        "unit": "mm",
+        "fillet": false,
+        "sizes": {
+            "10x3": {
+                "Height": "3",
+                "Width": "10",
+                "Weight": "0.24"
+            },
+            "13x3": {
+                "Height": "3",
+                "Width": "13",
+                "Weight": "0.32"
+            },
+            "13x5": {
+                "Height": "5",
+                "Width": "13",
+                "Weight": "0.48"
+            },
+            "13x6": {
+                "Height": "6",
+                "Width": "13",
+                "Weight": "0.61"
+            },
+            "16x3": {
+                "Height": "3",
+                "Width": "16",
+                "Weight": "0.38"
+            },
+            "16x5": {
+                "Height": "5",
+                "Width": "16",
+                "Weight": "0.63"
+            },
+            "16x6": {
+                "Height": "6",
+                "Width": "16",
+                "Weight": "0.75"
+            },
+            "20x3": {
+                "Height": "3",
+                "Width": "20",
+                "Weight": "0.47"
+            },
+            "20x5": {
+                "Height": "5",
+                "Width": "20",
+                "Weight": "0.79"
+            },
+            "20x6": {
+                "Height": "6",
+                "Width": "20",
+                "Weight": "0.94"
+            },
+            "20x8": {
+                "Height": "8",
+                "Width": "20",
+                "Weight": "1.25"
+            },
+            "20x10": {
+                "Height": "10",
+                "Width": "20",
+                "Weight": "1.57"
+            },
+            "20x12": {
+                "Height": "12",
+                "Width": "20",
+                "Weight": "1.88"
+            },
+            "25x3": {
+                "Height": "3",
+                "Width": "25",
+                "Weight": "0.59"
+            },
+            "25x5": {
+                "Height": "5",
+                "Width": "25",
+                "Weight": "0.98"
+            },
+            "25x6": {
+                "Height": "6",
+                "Width": "25",
+                "Weight": "1.18"
+            },
+            "25x8": {
+                "Height": "8",
+                "Width": "25",
+                "Weight": "1.57"
+            },
+            "25x10": {
+                "Height": "10",
+                "Width": "25",
+                "Weight": "1.96"
+            },
+            "25x12": {
+                "Height": "12",
+                "Width": "25",
+                "Weight": "2.36"
+            },
+            "25x15": {
+                "Height": "15",
+                "Width": "25",
+                "Weight": "2.94"
+            },
+            "25x20": {
+                "Height": "20",
+                "Width": "25",
+                "Weight": "3.93"
+            },
+            "30x3": {
+                "Height": "3",
+                "Width": "30",
+                "Weight": "0.71"
+            },
+            "30x5": {
+                "Height": "5",
+                "Width": "30",
+                "Weight": "1.18"
+            },
+            "30x6": {
+                "Height": "6",
+                "Width": "30",
+                "Weight": "1.41"
+            },
+            "30x8": {
+                "Height": "8",
+                "Width": "30",
+                "Weight": "1.88"
+            },
+            "30x10": {
+                "Height": "10",
+                "Width": "30",
+                "Weight": "2.36"
+            },
+            "30x12": {
+                "Height": "12",
+                "Width": "30",
+                "Weight": "2.83"
+            },
+            "30x15": {
+                "Height": "15",
+                "Width": "30",
+                "Weight": "3.53"
+            },
+            "30x20": {
+                "Height": "20",
+                "Width": "30",
+                "Weight": "4.71"
+            },
+            "35x3": {
+                "Height": "3",
+                "Width": "35",
+                "Weight": "0.82"
+            },
+            "35x5": {
+                "Height": "5",
+                "Width": "35",
+                "Weight": "1.37"
+            },
+            "35x6": {
+                "Height": "6",
+                "Width": "35",
+                "Weight": "1.65"
+            },
+            "35x8": {
+                "Height": "8",
+                "Width": "35",
+                "Weight": "2.2"
+            },
+            "35x10": {
+                "Height": "10",
+                "Width": "35",
+                "Weight": "2.75"
+            },
+            "35x12": {
+                "Height": "12",
+                "Width": "35",
+                "Weight": "3.3"
+            },
+            "35x15": {
+                "Height": "15",
+                "Width": "35",
+                "Weight": "4.12"
+            },
+            "35x20": {
+                "Height": "20",
+                "Width": "35",
+                "Weight": "5.5"
+            },
+            "35x25": {
+                "Height": "25",
+                "Width": "35",
+                "Weight": "6.87"
+            },
+            "40x3": {
+                "Height": "3",
+                "Width": "40",
+                "Weight": "0.94"
+            },
+            "40x5": {
+                "Height": "5",
+                "Width": "40",
+                "Weight": "1.57"
+            },
+            "40x6": {
+                "Height": "6",
+                "Width": "40",
+                "Weight": "1.88"
+            },
+            "40x8": {
+                "Height": "8",
+                "Width": "40",
+                "Weight": "2.51"
+            },
+            "40x10": {
+                "Height": "10",
+                "Width": "40",
+                "Weight": "3.14"
+            },
+            "40x12": {
+                "Height": "12",
+                "Width": "40",
+                "Weight": "3.77"
+            },
+            "40x15": {
+                "Height": "15",
+                "Width": "40",
+                "Weight": "4.71"
+            },
+            "40x20": {
+                "Height": "20",
+                "Width": "40",
+                "Weight": "6.28"
+            },
+            "40x25": {
+                "Height": "25",
+                "Width": "40",
+                "Weight": "7.85"
+            },
+            "40x30": {
+                "Height": "30",
+                "Width": "40",
+                "Weight": "9.42"
+            },
+            "45x3": {
+                "Height": "3",
+                "Width": "45",
+                "Weight": "1.06"
+            },
+            "45x5": {
+                "Height": "5",
+                "Width": "45",
+                "Weight": "1.77"
+            },
+            "45x6": {
+                "Height": "6",
+                "Width": "45",
+                "Weight": "2.12"
+            },
+            "45x8": {
+                "Height": "8",
+                "Width": "45",
+                "Weight": "2.83"
+            },
+            "45x10": {
+                "Height": "10",
+                "Width": "45",
+                "Weight": "3.53"
+            },
+            "45x12": {
+                "Height": "12",
+                "Width": "45",
+                "Weight": "4.24"
+            },
+            "45x15": {
+                "Height": "15",
+                "Width": "45",
+                "Weight": "5.3"
+            },
+            "45x20": {
+                "Height": "20",
+                "Width": "45",
+                "Weight": "7.07"
+            },
+            "45x25": {
+                "Height": "25",
+                "Width": "45",
+                "Weight": "8.83"
+            },
+            "50x3": {
+                "Height": "3",
+                "Width": "50",
+                "Weight": "1.18"
+            },
+            "50x5": {
+                "Height": "5",
+                "Width": "50",
+                "Weight": "1.96"
+            },
+            "50x6": {
+                "Height": "6",
+                "Width": "50",
+                "Weight": "2.36"
+            },
+            "50x8": {
+                "Height": "8",
+                "Width": "50",
+                "Weight": "3.14"
+            },
+            "50x10": {
+                "Height": "10",
+                "Width": "50",
+                "Weight": "3.93"
+            },
+            "50x12": {
+                "Height": "12",
+                "Width": "50",
+                "Weight": "4.72"
+            },
+            "50x15": {
+                "Height": "15",
+                "Width": "50",
+                "Weight": "5.89"
+            },
+            "50x20": {
+                "Height": "20",
+                "Width": "50",
+                "Weight": "7.85"
+            },
+            "50x25": {
+                "Height": "25",
+                "Width": "50",
+                "Weight": "9.81"
+            },
+            "50x30": {
+                "Height": "30",
+                "Width": "50",
+                "Weight": "11.8"
+            },
+            "50x40": {
+                "Height": "40",
+                "Width": "50",
+                "Weight": "15.7"
+            },
+            "60x5": {
+                "Height": "5",
+                "Width": "60",
+                "Weight": "2.36"
+            },
+            "60x6": {
+                "Height": "6",
+                "Width": "60",
+                "Weight": "2.83"
+            },
+            "60x8": {
+                "Height": "8",
+                "Width": "60",
+                "Weight": "3.77"
+            },
+            "60x10": {
+                "Height": "10",
+                "Width": "60",
+                "Weight": "4.71"
+            },
+            "60x12": {
+                "Height": "12",
+                "Width": "60",
+                "Weight": "5.66"
+            },
+            "60x15": {
+                "Height": "15",
+                "Width": "60",
+                "Weight": "7.07"
+            },
+            "60x20": {
+                "Height": "20",
+                "Width": "60",
+                "Weight": "9.42"
+            },
+            "60x25": {
+                "Height": "25",
+                "Width": "60",
+                "Weight": "11.8"
+            },
+            "60x30": {
+                "Height": "30",
+                "Width": "60",
+                "Weight": "14.13"
+            },
+            "65x5": {
+                "Height": "5",
+                "Width": "65",
+                "Weight": "2.55"
+            },
+            "65x6": {
+                "Height": "6",
+                "Width": "65",
+                "Weight": "3.06"
+            },
+            "65x8": {
+                "Height": "8",
+                "Width": "65",
+                "Weight": "4.08"
+            },
+            "65x10": {
+                "Height": "10",
+                "Width": "65",
+                "Weight": "5.1"
+            },
+            "65x12": {
+                "Height": "12",
+                "Width": "65",
+                "Weight": "6.12"
+            },
+            "65x15": {
+                "Height": "15",
+                "Width": "65",
+                "Weight": "7.65"
+            },
+            "65x20": {
+                "Height": "20",
+                "Width": "65",
+                "Weight": "10.2"
+            },
+            "65x25": {
+                "Height": "25",
+                "Width": "65",
+                "Weight": "12.8"
+            },
+            "65x40": {
+                "Height": "40",
+                "Width": "65",
+                "Weight": "20.4"
+            },
+            "65x50": {
+                "Height": "50",
+                "Width": "65",
+                "Weight": "25.5"
+            },
+            "70x6": {
+                "Height": "6",
+                "Width": "70",
+                "Weight": "3.3"
+            },
+            "70x8": {
+                "Height": "8",
+                "Width": "70",
+                "Weight": "4.4"
+            },
+            "70x10": {
+                "Height": "10",
+                "Width": "70",
+                "Weight": "5.5"
+            },
+            "70x12": {
+                "Height": "12",
+                "Width": "70",
+                "Weight": "6.6"
+            },
+            "70x15": {
+                "Height": "15",
+                "Width": "70",
+                "Weight": "8.24"
+            },
+            "70x20": {
+                "Height": "20",
+                "Width": "70",
+                "Weight": "11"
+            },
+            "70x25": {
+                "Height": "25",
+                "Width": "70",
+                "Weight": "13.7"
+            },
+            "70x30": {
+                "Height": "30",
+                "Width": "70",
+                "Weight": "16.5"
+            },
+            "70x40": {
+                "Height": "40",
+                "Width": "70",
+                "Weight": "22"
+            },
+            "75x6": {
+                "Height": "6",
+                "Width": "75",
+                "Weight": "3.53"
+            },
+            "75x8": {
+                "Height": "8",
+                "Width": "75",
+                "Weight": "4.71"
+            },
+            "75x10": {
+                "Height": "10",
+                "Width": "75",
+                "Weight": "5.89"
+            },
+            "75x12": {
+                "Height": "12",
+                "Width": "75",
+                "Weight": "7.06"
+            },
+            "75x15": {
+                "Height": "15",
+                "Width": "75",
+                "Weight": "8.83"
+            },
+            "75x20": {
+                "Height": "20",
+                "Width": "75",
+                "Weight": "11.8"
+            },
+            "75x25": {
+                "Height": "25",
+                "Width": "75",
+                "Weight": "14.7"
+            },
+            "80x3": {
+                "Height": "3",
+                "Width": "80",
+                "Weight": "1.88"
+            },
+            "80x5": {
+                "Height": "5",
+                "Width": "80",
+                "Weight": "3.14"
+            },
+            "80x6": {
+                "Height": "6",
+                "Width": "80",
+                "Weight": "3.77"
+            },
+            "80x8": {
+                "Height": "8",
+                "Width": "80",
+                "Weight": "5.02"
+            },
+            "80x10": {
+                "Height": "10",
+                "Width": "80",
+                "Weight": "6.28"
+            },
+            "80x12": {
+                "Height": "12",
+                "Width": "80",
+                "Weight": "7.54"
+            },
+            "80x15": {
+                "Height": "15",
+                "Width": "80",
+                "Weight": "9.42"
+            },
+            "80x20": {
+                "Height": "20",
+                "Width": "80",
+                "Weight": "12.6"
+            },
+            "80x25": {
+                "Height": "25",
+                "Width": "80",
+                "Weight": "15.7"
+            },
+            "80x30": {
+                "Height": "30",
+                "Width": "80",
+                "Weight": "18.8"
+            },
+            "80x50": {
+                "Height": "50",
+                "Width": "80",
+                "Weight": "31.4"
+            },
+            "90x5": {
+                "Height": "5",
+                "Width": "90",
+                "Weight": "3.53"
+            },
+            "90x6": {
+                "Height": "6",
+                "Width": "90",
+                "Weight": "4.24"
+            },
+            "92x8": {
+                "Height": "8",
+                "Width": "90",
+                "Weight": "5.65"
+            },
+            "90x10": {
+                "Height": "10",
+                "Width": "90",
+                "Weight": "7.07"
+            },
+            "90x12": {
+                "Height": "12",
+                "Width": "90",
+                "Weight": "8.48"
+            },
+            "90x15": {
+                "Height": "15",
+                "Width": "90",
+                "Weight": "10.6"
+            },
+            "90x20": {
+                "Height": "20",
+                "Width": "90",
+                "Weight": "14.1"
+            },
+            "90x25": {
+                "Height": "25",
+                "Width": "90",
+                "Weight": "17.7"
+            },
+            "90x30": {
+                "Height": "30",
+                "Width": "90",
+                "Weight": "21.2"
+            },
+            "100x3": {
+                "Height": "3",
+                "Width": "100",
+                "Weight": "2.36"
+            },
+            "100x5": {
+                "Height": "5",
+                "Width": "100",
+                "Weight": "3.93"
+            },
+            "100x6": {
+                "Height": "6",
+                "Width": "100",
+                "Weight": "4.71"
+            },
+            "100x8": {
+                "Height": "8",
+                "Width": "100",
+                "Weight": "6.28"
+            },
+            "100x10": {
+                "Height": "10",
+                "Width": "100",
+                "Weight": "7.85"
+            },
+            "100x12": {
+                "Height": "12",
+                "Width": "100",
+                "Weight": "9.42"
+            },
+            "100x15": {
+                "Height": "15",
+                "Width": "100",
+                "Weight": "11.8"
+            },
+            "100x20": {
+                "Height": "20",
+                "Width": "100",
+                "Weight": "15.7"
+            },
+            "100x25": {
+                "Height": "25",
+                "Width": "100",
+                "Weight": "19.6"
+            },
+            "100x30": {
+                "Height": "30",
+                "Width": "100",
+                "Weight": "23.6"
+            },
+            "100x40": {
+                "Height": "40",
+                "Width": "100",
+                "Weight": "31.4"
+            },
+            "100x50": {
+                "Height": "50",
+                "Width": "100",
+                "Weight": "39.3"
+            },
+            "110x6": {
+                "Height": "6",
+                "Width": "110",
+                "Weight": "5.18"
+            },
+            "110x8": {
+                "Height": "8",
+                "Width": "110",
+                "Weight": "6.91"
+            },
+            "110x10": {
+                "Height": "10",
+                "Width": "110",
+                "Weight": "8.64"
+            },
+            "110x12": {
+                "Height": "12",
+                "Width": "110",
+                "Weight": "10.4"
+            },
+            "110x15": {
+                "Height": "15",
+                "Width": "110",
+                "Weight": "13"
+            },
+            "110x20": {
+                "Height": "20",
+                "Width": "110",
+                "Weight": "17.3"
+            },
+            "110x25": {
+                "Height": "25",
+                "Width": "110",
+                "Weight": "21.64"
+            },
+            "120x6": {
+                "Height": "6",
+                "Width": "120",
+                "Weight": "5.65"
+            },
+            "120x8": {
+                "Height": "8",
+                "Width": "120",
+                "Weight": "7.54"
+            },
+            "120x10": {
+                "Height": "10",
+                "Width": "120",
+                "Weight": "9.42"
+            },
+            "120x12": {
+                "Height": "12",
+                "Width": "120",
+                "Weight": "11.3"
+            },
+            "120x15": {
+                "Height": "15",
+                "Width": "120",
+                "Weight": "14.13"
+            },
+            "120x20": {
+                "Height": "20",
+                "Width": "120",
+                "Weight": "18.8"
+            },
+            "120x25": {
+                "Height": "25",
+                "Width": "120",
+                "Weight": "23.6"
+            },
+            "130x5": {
+                "Height": "5",
+                "Width": "130",
+                "Weight": "5.1"
+            },
+            "130x6": {
+                "Height": "6",
+                "Width": "130",
+                "Weight": "6.12"
+            },
+            "130x8": {
+                "Height": "8",
+                "Width": "130",
+                "Weight": "8.16"
+            },
+            "130x10": {
+                "Height": "10",
+                "Width": "130",
+                "Weight": "10.21"
+            },
+            "130x12": {
+                "Height": "12",
+                "Width": "130",
+                "Weight": "12.25"
+            },
+            "130x15": {
+                "Height": "15",
+                "Width": "130",
+                "Weight": "15.31"
+            },
+            "130x20": {
+                "Height": "20",
+                "Width": "130",
+                "Weight": "20.41"
+            },
+            "130x25": {
+                "Height": "25",
+                "Width": "130",
+                "Weight": "25.51"
+            },
+            "130x30": {
+                "Height": "30",
+                "Width": "130",
+                "Weight": "30.62"
+            },
+            "140x6": {
+                "Height": "6",
+                "Width": "140",
+                "Weight": "6.59"
+            },
+            "140x12": {
+                "Height": "12",
+                "Width": "140",
+                "Weight": "13.2"
+            },
+            "140x15": {
+                "Height": "15",
+                "Width": "140",
+                "Weight": "16.49"
+            },
+            "140x25": {
+                "Height": "25",
+                "Width": "140",
+                "Weight": "27.48"
+            },
+            "150x5": {
+                "Height": "5",
+                "Width": "150",
+                "Weight": "5.89"
+            },
+            "150x6": {
+                "Height": "6",
+                "Width": "150",
+                "Weight": "7.07"
+            },
+            "150x8": {
+                "Height": "8",
+                "Width": "150",
+                "Weight": "9.42"
+            },
+            "150x10": {
+                "Height": "10",
+                "Width": "150",
+                "Weight": "11.78"
+            },
+            "150x12": {
+                "Height": "12",
+                "Width": "150",
+                "Weight": "14.13"
+            },
+            "150x15": {
+                "Height": "15",
+                "Width": "150",
+                "Weight": "17.66"
+            },
+            "150x20": {
+                "Height": "20",
+                "Width": "150",
+                "Weight": "23.55"
+            },
+            "150x25": {
+                "Height": "25",
+                "Width": "150",
+                "Weight": "29.44"
+            },
+            "150x30": {
+                "Height": "30",
+                "Width": "150",
+                "Weight": "35.33"
+            },
+            "150x40": {
+                "Height": "40",
+                "Width": "150",
+                "Weight": "47.1"
+            },
+            "180x6": {
+                "Height": "6",
+                "Width": "180",
+                "Weight": "8.48"
+            },
+            "180x8": {
+                "Height": "8",
+                "Width": "180",
+                "Weight": "11.3"
+            },
+            "180x10": {
+                "Height": "10",
+                "Width": "180",
+                "Weight": "14.13"
+            },
+            "180x12": {
+                "Height": "12",
+                "Width": "180",
+                "Weight": "16.96"
+            },
+            "180x15": {
+                "Height": "15",
+                "Width": "180",
+                "Weight": "21.2"
+            },
+            "180x20": {
+                "Height": "20",
+                "Width": "180",
+                "Weight": "28.26"
+            },
+            "180x25": {
+                "Height": "25",
+                "Width": "180",
+                "Weight": "35.33"
+            },
+            "200x6": {
+                "Height": "6",
+                "Width": "200",
+                "Weight": "9.42"
+            },
+            "200x8": {
+                "Height": "8",
+                "Width": "200",
+                "Weight": "12.6"
+            },
+            "200x10": {
+                "Height": "10",
+                "Width": "200",
+                "Weight": "15.7"
+            },
+            "200x12": {
+                "Height": "12",
+                "Width": "200",
+                "Weight": "18.84"
+            },
+            "200x15": {
+                "Height": "15",
+                "Width": "200",
+                "Weight": "23.55"
+            },
+            "200x20": {
+                "Height": "20",
+                "Width": "200",
+                "Weight": "31.4"
+            },
+            "200x25": {
+                "Height": "25",
+                "Width": "200",
+                "Weight": "39.25"
+            },
+            "220x5": {
+                "Height": "5",
+                "Width": "220",
+                "Weight": "8.64"
+            },
+            "220x6": {
+                "Height": "6",
+                "Width": "220",
+                "Weight": "10.36"
+            },
+            "220x8": {
+                "Height": "8",
+                "Width": "220",
+                "Weight": "13.82"
+            },
+            "220x10": {
+                "Height": "10",
+                "Width": "220",
+                "Weight": "17.27"
+            },
+            "220x12": {
+                "Height": "12",
+                "Width": "220",
+                "Weight": "20.72"
+            },
+            "220x15": {
+                "Height": "15",
+                "Width": "220",
+                "Weight": "25.91"
+            },
+            "220x20": {
+                "Height": "20",
+                "Width": "220",
+                "Weight": "34.54"
+            },
+            "220x25": {
+                "Height": "25",
+                "Width": "220",
+                "Weight": "43.18"
+            },
+            "230x10": {
+                "Height": "10",
+                "Width": "230",
+                "Weight": "18.1"
+            },
+            "230x15": {
+                "Height": "15",
+                "Width": "230",
+                "Weight": "27.1"
+            },
+            "230x20": {
+                "Height": "20",
+                "Width": "230",
+                "Weight": "36.1"
+            },
+            "230x25": {
+                "Height": "25",
+                "Width": "230",
+                "Weight": "45.1"
+            },
+            "250x6": {
+                "Height": "6",
+                "Width": "250",
+                "Weight": "11.78"
+            },
+            "250x8": {
+                "Height": "8",
+                "Width": "250",
+                "Weight": "15.7"
+            },
+            "250x10": {
+                "Height": "10",
+                "Width": "250",
+                "Weight": "19.6"
+            },
+            "250x12": {
+                "Height": "12",
+                "Width": "250",
+                "Weight": "23.55"
+            },
+            "250x15": {
+                "Height": "15",
+                "Width": "250",
+                "Weight": "29.44"
+            },
+            "250x20": {
+                "Height": "20",
+                "Width": "250",
+                "Weight": "39.25"
+            },
+            "250x25": {
+                "Height": "25",
+                "Width": "250",
+                "Weight": "49.06"
+            },
+            "300x6": {
+                "Height": "6",
+                "Width": "300",
+                "Weight": "14.13"
+            },
+            "300x8": {
+                "Height": "8",
+                "Width": "300",
+                "Weight": "18.84"
+            },
+            "300x10": {
+                "Height": "10",
+                "Width": "300",
+                "Weight": "23.55"
+            },
+            "300x12": {
+                "Height": "12",
+                "Width": "300",
+                "Weight": "28.26"
+            },
+            "300x15": {
+                "Height": "15",
+                "Width": "300",
+                "Weight": "35.33"
+            },
+            "300x20": {
+                "Height": "20",
+                "Width": "300",
+                "Weight": "47.1"
+            },
+            "300x25": {
+                "Height": "25",
+                "Width": "300",
+                "Weight": "58.88"
+            },
+            "350x10": {
+                "Height": "10",
+                "Width": "350",
+                "Weight": "27.48"
+            },
+            "350x12": {
+                "Height": "12",
+                "Width": "350",
+                "Weight": "33"
+            },
+            "350x15": {
+                "Height": "15",
+                "Width": "350",
+                "Weight": "41.21"
+            },
+            "350x20": {
+                "Height": "20",
+                "Width": "350",
+                "Weight": "54.95"
+            },
+            "350x25": {
+                "Height": "25",
+                "Width": "350",
+                "Weight": "68.69"
+            },
+            "400x10": {
+                "Height": "10",
+                "Width": "400",
+                "Weight": "31.4"
+            },
+            "400x12": {
+                "Height": "12",
+                "Width": "400",
+                "Weight": "37.7"
+            },
+            "400x15": {
+                "Height": "15",
+                "Width": "400",
+                "Weight": "47.1"
+            },
+            "400x20": {
+                "Height": "20",
+                "Width": "400",
+                "Weight": "62.8"
+            },
+            "400x25": {
+                "Height": "25",
+                "Width": "400",
+                "Weight": "78.5"
+            },
+            "450x20": {
+                "Height": "20",
+                "Width": "450",
+                "Weight": "70.7"
+            },
+            "450x25": {
+                "Height": "25",
+                "Width": "450",
+                "Weight": "88.3"
+            },
+            "500x20": {
+                "Height": "20",
+                "Width": "500",
+                "Weight": "78.5"
+            },
+            "500x25": {
+                "Height": "25",
+                "Width": "500",
+                "Weight": "98.1"
+            },
+            "500x30": {
+                "Height": "30",
+                "Width": "500",
+                "Weight": "118"
+            }
+        }
+    },
+    "Square": {
+        "norm": "EN",
+        "unit": "mm",
+        "fillet": false,
+        "sizes": {
+            "6x6": {
+                "Height": "6",
+                "Width": "6",
+                "Weight": "0.29"
+            },
+            "8x8": {
+                "Height": "8",
+                "Width": "8",
+                "Weight": "0.51"
+            },
+            "10x10": {
+                "Height": "10",
+                "Width": "10",
+                "Weight": "0.80"
+            },
+            "12x12": {
+                "Height": "12",
+                "Width": "12",
+                "Weight": "1.15"
+            },
+            "14x14": {
+                "Height": "14",
+                "Width": "14",
+                "Weight": "1.57"
+            },
+            "15x15": {
+                "Height": "15",
+                "Width": "15",
+                "Weight": "1.80"
+            },
+            "16x16": {
+                "Height": "16",
+                "Width": "16",
+                "Weight": "2.05"
+            },
+            "18x18": {
+                "Height": "18",
+                "Width": "18",
+                "Weight": "2.59"
+            },
+            "20x20": {
+                "Height": "20",
+                "Width": "20",
+                "Weight": "3.20"
+            },
+            "25x25": {
+                "Height": "25",
+                "Width": "25",
+                "Weight": "5.00"
+            },
+            "30x30": {
+                "Height": "30",
+                "Width": "30",
+                "Weight": "7.20"
+            },
+            "35x35": {
+                "Height": "35",
+                "Width": "35",
+                "Weight": "9.80"
+            },
+            "40x40": {
+                "Height": "40",
+                "Width": "40",
+                "Weight": "12.8"
+            },
+            "45x45": {
+                "Height": "45",
+                "Width": "45",
+                "Weight": "16.2"
+            },
+            "50x50": {
+                "Height": "50",
+                "Width": "50",
+                "Weight": "20.0"
+            },
+            "60x60": {
+                "Height": "60",
+                "Width": "60",
+                "Weight": "28.8"
+            },
+            "70x70": {
+                "Height": "70",
+                "Width": "70",
+                "Weight": "39.2"
+            },
+            "80x80": {
+                "Height": "80",
+                "Width": "80",
+                "Weight": "51.2"
+            },
+            "90x90": {
+                "Height": "90",
+                "Width": "90",
+                "Weight": "64.8"
+            },
+            "100x100": {
+                "Height": "100",
+                "Width": "100",
+                "Weight": "80.0"
+            },
+            "110x110": {
+                "Height": "110",
+                "Width": "110",
+                "Weight": "96.8"
+            },
+            "120x120": {
+                "Height": "120",
+                "Width": "120",
+                "Weight": "115.20"
+            },
+            "130x130": {
+                "Height": "130",
+                "Width": "130",
+                "Weight": "135.2"
+            },
+            "140x140": {
+                "Height": "140",
+                "Width": "140",
+                "Weight": "156.8"
+            }
+        }
+    },
+    "Square Hollow": {
+        "norm": "EN10210/10219",
+        "unit": "mm",
+        "fillet": true,
+        "sizes": {
+            "10x1.0": {
+                "Height": "10",
+                "Width": "10",
+                "Thickness": "1",
+                "Radius1": "2",
+                "Radius2": "1",
+                "Weight": "0.28"
+            },
+            "12x1.5": {
+                "Height": "12",
+                "Width": "12",
+                "Thickness": "1.5",
+                "Radius1": "2",
+                "Radius2": "1",
+                "Weight": "0.50"
+            },
+            "15x1.5": {
+                "Height": "15",
+                "Width": "15",
+                "Thickness": "1.5",
+                "Radius1": "3",
+                "Radius2": "1.5",
+                "Weight": "0.65"
+            },
+            "15x2.0": {
+                "Height": "15",
+                "Width": "15",
+                "Thickness": "2.0",
+                "Radius1": "4",
+                "Radius2": "2",
+                "Weight": "0.83"
+            },
+            "20x2.0": {
+                "Height": "20",
+                "Width": "20",
+                "Thickness": "2",
+                "Radius1": "4",
+                "Radius2": "2",
+                "Weight": "1.05"
+            },
+            "20x2.5": {
+                "Height": "20",
+                "Width": "20",
+                "Thickness": "2.5",
+                "Radius1": "5",
+                "Radius2": "2.5",
+                "Weight": "1.25"
+            },
+            "25x2.0": {
+                "Height": "25",
+                "Width": "25",
+                "Thickness": "2",
+                "Radius1": "4",
+                "Radius2": "2",
+                "Weight": "1.36"
+            },
+            "25x2.5": {
+                "Height": "25",
+                "Width": "25",
+                "Thickness": "2.5",
+                "Radius1": "5",
+                "Radius2": "2.5",
+                "Weight": "1.64"
+            },
+            "25x3.0": {
+                "Height": "25",
+                "Width": "25",
+                "Thickness": "3",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "1.89"
+            },
+            "30x2.0": {
+                "Height": "30",
+                "Width": "30",
+                "Thickness": "2",
+                "Radius1": "4",
+                "Radius2": "2",
+                "Weight": "1.68"
+            },
+            "30x2.5": {
+                "Height": "30",
+                "Width": "30",
+                "Thickness": "2.5",
+                "Radius1": "5",
+                "Radius2": "2.5",
+                "Weight": "2.0"
+            },
+            "30x3.0": {
+                "Height": "30",
+                "Width": "30",
+                "Thickness": "3",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "2.4"
+            },
+            "40x2.0": {
+                "Height": "40",
+                "Width": "40",
+                "Thickness": "2",
+                "Radius1": "4",
+                "Radius2": "2",
+                "Weight": "2.3"
+            },
+            "40x2.5": {
+                "Height": "40",
+                "Width": "40",
+                "Thickness": "2.5",
+                "Radius1": "5",
+                "Radius2": "2.5",
+                "Weight": "2.8"
+            },
+            "40x3.0": {
+                "Height": "40",
+                "Width": "40",
+                "Thickness": "3",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "3.3"
+            },
+            "40x4.0": {
+                "Height": "40",
+                "Width": "40",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "4.2"
+            },
+            "50x2.0": {
+                "Height": "50",
+                "Width": "50",
+                "Thickness": "2",
+                "Radius1": "4",
+                "Radius2": "2",
+                "Weight": "2.9"
+            },
+            "50x2.5": {
+                "Height": "50",
+                "Width": "50",
+                "Thickness": "2.5",
+                "Radius1": "5",
+                "Radius2": "2.5",
+                "Weight": "3.6"
+            },
+            "50x3.0": {
+                "Height": "50",
+                "Width": "50",
+                "Thickness": "3",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "4.3"
+            },
+            "50x4.0": {
+                "Height": "50",
+                "Width": "50",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "5.5"
+            },
+            "50x5.0": {
+                "Height": "50",
+                "Width": "50",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "6.6"
+            },
+            "60x2.0": {
+                "Height": "60",
+                "Width": "60",
+                "Thickness": "2",
+                "Radius1": "4",
+                "Radius2": "2",
+                "Weight": "3.6"
+            },
+            "60x2.5": {
+                "Height": "60",
+                "Width": "60",
+                "Thickness": "2.5",
+                "Radius1": "5",
+                "Radius2": "2.5",
+                "Weight": "4.4"
+            },
+            "60x3.0": {
+                "Height": "60",
+                "Width": "60",
+                "Thickness": "3",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "5.2"
+            },
+            "60x4.0": {
+                "Height": "60",
+                "Width": "60",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "6.7"
+            },
+            "60x5.0": {
+                "Height": "60",
+                "Width": "60",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "8.1"
+            },
+            "60x6.0": {
+                "Height": "60",
+                "Width": "60",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "9.5"
+            },
+            "60x6.3": {
+                "Height": "60",
+                "Width": "60",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "9.6"
+            },
+            "70x2.5": {
+                "Height": "70",
+                "Width": "70",
+                "Thickness": "2.5",
+                "Radius1": "5",
+                "Radius2": "2.5",
+                "Weight": "5.2"
+            },
+            "70x3.0": {
+                "Height": "70",
+                "Width": "70",
+                "Thickness": "3",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "6.1"
+            },
+            "70x3.6": {
+                "Height": "70",
+                "Width": "70",
+                "Thickness": "3.6",
+                "Radius1": "7.2",
+                "Radius2": "3.6",
+                "Weight": "7.2"
+            },
+            "70x4.0": {
+                "Height": "70",
+                "Width": "70",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "8.0"
+            },
+            "70x5.0": {
+                "Height": "70",
+                "Width": "70",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "9.7"
+            },
+            "70x6.0": {
+                "Height": "70",
+                "Width": "70",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "11.3"
+            },
+            "70x6.3": {
+                "Height": "70",
+                "Width": "70",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "11.5"
+            },
+            "80x3.0": {
+                "Height": "80",
+                "Width": "80",
+                "Thickness": "3",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "7.1"
+            },
+            "80x3.6": {
+                "Height": "80",
+                "Width": "80",
+                "Thickness": "3.6",
+                "Radius1": "7.2",
+                "Radius2": "3.6",
+                "Weight": "8.4"
+            },
+            "80x4.0": {
+                "Height": "80",
+                "Width": "80",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "9.2"
+            },
+            "80x5.0": {
+                "Height": "80",
+                "Width": "80",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "11.3"
+            },
+            "80x6.0": {
+                "Height": "80",
+                "Width": "80",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "13.2"
+            },
+            "80x6.3": {
+                "Height": "80",
+                "Width": "80",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "13.5"
+            },
+            "80x8.0": {
+                "Height": "80",
+                "Width": "80",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "16.4"
+            },
+            "90x3.0": {
+                "Height": "90",
+                "Width": "80",
+                "Thickness": "3",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "8.0"
+            },
+            "90x3.6": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "3.6",
+                "Radius1": "7.2",
+                "Radius2": "3.6",
+                "Weight": "9.5"
+            },
+            "90x4.0": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "10.5"
+            },
+            "90x5.0": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "12.8"
+            },
+            "90x6.0": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "15.1"
+            },
+            "90x6.3": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "15.5"
+            },
+            "90x8.0": {
+                "Height": "90",
+                "Width": "90",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "18.9"
+            },
+            "100x3.0": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "3",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "9.0"
+            },
+            "100x4.0": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "11.7"
+            },
+            "100x5.0": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "14.4"
+            },
+            "100x6.0": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "17.0"
+            },
+            "100x6.3": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "17.5"
+            },
+            "100x8.0": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "21.4"
+            },
+            "100x10.0": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "25.6"
+            },
+            "100x12.0": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "28.3"
+            },
+            "100x12.5": {
+                "Height": "100",
+                "Width": "100",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "29.1"
+            },
+            "120x3.0": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "3",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "10.8"
+            },
+            "120x4.0": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "14.2"
+            },
+            "120x5.0": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "17.5"
+            },
+            "120x6.0": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "20.7"
+            },
+            "120x6.3": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "21.4"
+            },
+            "120x8.0": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "26.4"
+            },
+            "120x10.0": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "31.8"
+            },
+            "120x12.0": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "35.8"
+            },
+            "120x12.5": {
+                "Height": "120",
+                "Width": "120",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "36.9"
+            },
+            "140x4.0": {
+                "Height": "140",
+                "Width": "140",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "16.8"
+            },
+            "140x5.0": {
+                "Height": "140",
+                "Width": "140",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "20.7"
+            },
+            "140x6.0": {
+                "Height": "140",
+                "Width": "140",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "24.5"
+            },
+            "140x6.3": {
+                "Height": "140",
+                "Width": "140",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "25.4"
+            },
+            "140x8.0": {
+                "Height": "140",
+                "Width": "140",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "31.4"
+            },
+            "140x10.0": {
+                "Height": "140",
+                "Width": "140",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "38.1"
+            },
+            "140x12.0": {
+                "Height": "140",
+                "Width": "140",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "43.4"
+            },
+            "140x12.5": {
+                "Height": "140",
+                "Width": "140",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "44.8"
+            },
+            "150x4.0": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "18.0"
+            },
+            "150x5.0": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "22.3"
+            },
+            "150x6.0": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "26.4"
+            },
+            "150x6.3": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "27.4"
+            },
+            "150x8.0": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "33.9"
+            },
+            "150x10.0": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "41.3"
+            },
+            "150x12.0": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "47.1"
+            },
+            "150x12.5": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "48.7"
+            },
+            "150x16.0": {
+                "Height": "150",
+                "Width": "150",
+                "Thickness": "16",
+                "Radius1": "48",
+                "Radius2": "32",
+                "Weight": "58.7"
+            },
+            "160x4.0": {
+                "Height": "160",
+                "Width": "160",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "19.3"
+            },
+            "160x5.0": {
+                "Height": "160",
+                "Width": "160",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "23.8"
+            },
+            "160x6.0": {
+                "Height": "160",
+                "Width": "160",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "28.3"
+            },
+            "160x6.3": {
+                "Height": "160",
+                "Width": "160",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "29.3"
+            },
+            "160x8.0": {
+                "Height": "160",
+                "Width": "160",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "36.5"
+            },
+            "160x10.0": {
+                "Height": "160",
+                "Width": "160",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "44.4"
+            },
+            "160x12.0": {
+                "Height": "160",
+                "Width": "160",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "50.9"
+            },
+            "160x12.5": {
+                "Height": "160",
+                "Width": "160",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "52.6"
+            },
+            "160x16.0": {
+                "Height": "160",
+                "Width": "160",
+                "Thickness": "16",
+                "Radius1": "48",
+                "Radius2": "32",
+                "Weight": "63.7"
+            },
+            "180x4.0": {
+                "Height": "180",
+                "Width": "180",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "21.8"
+            },
+            "180x5.0": {
+                "Height": "180",
+                "Width": "180",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "27.0"
+            },
+            "180x6.0": {
+                "Height": "180",
+                "Width": "180",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "32.1"
+            },
+            "180x6.3": {
+                "Height": "180",
+                "Width": "180",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "33.3"
+            },
+            "180x8.0": {
+                "Height": "180",
+                "Width": "180",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "41.5"
+            },
+            "180x10.0": {
+                "Height": "180",
+                "Width": "180",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "50.7"
+            },
+            "180x12.0": {
+                "Height": "180",
+                "Width": "180",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "58.5"
+            },
+            "180x12.5": {
+                "Height": "180",
+                "Width": "180",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "60.5"
+            },
+            "180x16.0": {
+                "Height": "180",
+                "Width": "180",
+                "Thickness": "16",
+                "Radius1": "48",
+                "Radius2": "32",
+                "Weight": "73.8"
+            },
+            "200x4.0": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "4",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "24.3"
+            },
+            "200x5.0": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "30.1"
+            },
+            "200x6.0": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "35.8"
+            },
+            "200x6.3": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "37.2"
+            },
+            "200x8.0": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "46.5"
+            },
+            "200x10.0": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "57.0"
+            },
+            "200x12.0": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "66.0"
+            },
+            "200x12.5": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "68.3"
+            },
+            "200x16.0": {
+                "Height": "200",
+                "Width": "200",
+                "Thickness": "16",
+                "Radius1": "48",
+                "Radius2": "32",
+                "Weight": "83.8"
+            },
+            "220x5.0": {
+                "Height": "220",
+                "Width": "220",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "33.2"
+            },
+            "220x6.0": {
+                "Height": "220",
+                "Width": "220",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "39.6"
+            },
+            "220x6.3": {
+                "Height": "220",
+                "Width": "220",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "41.2"
+            },
+            "220x8.0": {
+                "Height": "220",
+                "Width": "220",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "51.5"
+            },
+            "220x10.0": {
+                "Height": "220",
+                "Width": "220",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "63.2"
+            },
+            "220x12.0": {
+                "Height": "220",
+                "Width": "220",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "73.5"
+            },
+            "220x12.5": {
+                "Height": "220",
+                "Width": "220",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "76.2"
+            },
+            "220x16.0": {
+                "Height": "220",
+                "Width": "220",
+                "Thickness": "16",
+                "Radius1": "48",
+                "Radius2": "32",
+                "Weight": "93.9"
+            },
+            "250x5.0": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "38.0"
+            },
+            "250x6.0": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "45.2"
+            },
+            "250x6.3": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "47.1"
+            },
+            "250x8.0": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "59.1"
+            },
+            "250x10.0": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "72.7"
+            },
+            "250x12.0": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "84.8"
+            },
+            "250x12.5": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "88.0"
+            },
+            "250x16.0": {
+                "Height": "250",
+                "Width": "250",
+                "Thickness": "16",
+                "Radius1": "48",
+                "Radius2": "32",
+                "Weight": "109"
+            },
+            "260x6.0": {
+                "Height": "260",
+                "Width": "260",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "47.1"
+            },
+            "260x6.3": {
+                "Height": "260",
+                "Width": "260",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "49.1"
+            },
+            "260x8.0": {
+                "Height": "260",
+                "Width": "260",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "61.6"
+            },
+            "260x10.0": {
+                "Height": "260",
+                "Width": "260",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "75.8"
+            },
+            "260x12.0": {
+                "Height": "260",
+                "Width": "260",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "88.6"
+            },
+            "260x12.5": {
+                "Height": "260",
+                "Width": "260",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "91.9"
+            },
+            "260x16.0": {
+                "Height": "260",
+                "Width": "260",
+                "Thickness": "16",
+                "Radius1": "48",
+                "Radius2": "32",
+                "Weight": "114"
+            },
+            "300x6.0": {
+                "Height": "300",
+                "Width": "300",
+                "Thickness": "6",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "54.7"
+            },
+            "300x6.3": {
+                "Height": "300",
+                "Width": "300",
+                "Thickness": "6.3",
+                "Radius1": "15.75",
+                "Radius2": "9.45",
+                "Weight": "57.0"
+            },
+            "300x8.0": {
+                "Height": "300",
+                "Width": "300",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "71.6"
+            },
+            "300x10.0": {
+                "Height": "300",
+                "Width": "300",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "88.4"
+            },
+            "300x12.0": {
+                "Height": "300",
+                "Width": "300",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "104"
+            },
+            "300x12.5": {
+                "Height": "300",
+                "Width": "300",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "108"
+            },
+            "300x16.0": {
+                "Height": "300",
+                "Width": "300",
+                "Thickness": "16",
+                "Radius1": "48",
+                "Radius2": "32",
+                "Weight": "134"
+            },
+            "350x8.0": {
+                "Height": "350",
+                "Width": "350",
+                "Thickness": "8",
+                "Radius1": "20",
+                "Radius2": "12",
+                "Weight": "84.2"
+            },
+            "350x10.0": {
+                "Height": "350",
+                "Width": "350",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "104"
+            },
+            "350x12.0": {
+                "Height": "350",
+                "Width": "350",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "123"
+            },
+            "350x12.5": {
+                "Height": "350",
+                "Width": "350",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "127"
+            },
+            "350x16.0": {
+                "Height": "350",
+                "Width": "350",
+                "Thickness": "16",
+                "Radius1": "48",
+                "Radius2": "32",
+                "Weight": "159"
+            },
+            "400x10.0": {
+                "Height": "400",
+                "Width": "400",
+                "Thickness": "10",
+                "Radius1": "25",
+                "Radius2": "15",
+                "Weight": "120"
+            },
+            "400x12.0": {
+                "Height": "400",
+                "Width": "400",
+                "Thickness": "12",
+                "Radius1": "36",
+                "Radius2": "24",
+                "Weight": "141"
+            },
+            "400x12.5": {
+                "Height": "400",
+                "Width": "400",
+                "Thickness": "12.5",
+                "Radius1": "37.5",
+                "Radius2": "25",
+                "Weight": "147"
+            },
+            "400x16.0": {
+                "Height": "400",
+                "Width": "400",
+                "Thickness": "16",
+                "Radius1": "48",
+                "Radius2": "32",
+                "Weight": "184"
+            }
+        }
+    },
+    "Rectangular Hollow": {
+        "norm": "EN 10210/10219",
+        "unit": "mm",
+        "fillet": true,
+        "sizes": {
+            "30x10x1.5": {
+                "Height": "30",
+                "Width": "10",
+                "Thickness": "1.5",
+                "Radius1": "2.25",
+                "Radius2": "0.75",
+                "Weight": "2.00"
+            },
+            "50x25x2.5": {
+                "Height": "50",
+                "Width": "25",
+                "Thickness": "2.5",
+                "Radius1": "3.75",
+                "Radius2": "1.25",
+                "Weight": "2.69"
+            },
+            "50x25x3": {
+                "Height": "50",
+                "Width": "25",
+                "Thickness": "3",
+                "Radius1": "4.5",
+                "Radius2": "1.5",
+                "Weight": "3.17"
+            },
+            "50x30x2.5": {
+                "Height": "50",
+                "Width": "30",
+                "Thickness": "2.5",
+                "Radius1": "3.75",
+                "Radius2": "1.25",
+                "Weight": "2.89"
+            },
+            "50x30x3": {
+                "Height": "50",
+                "Width": "30",
+                "Thickness": "3",
+                "Radius1": "4.5",
+                "Radius2": "1.5",
+                "Weight": "3.41"
+            },
+            "50x30x3.2": {
+                "Height": "50",
+                "Width": "30",
+                "Thickness": "3.2",
+                "Radius1": "4.8",
+                "Radius2": "1.6",
+                "Weight": "3.61"
+            },
+            "50x30x3.6": {
+                "Height": "50",
+                "Width": "30",
+                "Thickness": "3.6",
+                "Radius1": "5.4",
+                "Radius2": "1.8",
+                "Weight": "4.01"
+            },
+            "50x30x4": {
+                "Height": "50",
+                "Width": "30",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "4.39"
+            },
+            "50x30x5": {
+                "Height": "50",
+                "Width": "30",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "5.28"
+            },
+            "60x40x2.5": {
+                "Height": "60",
+                "Width": "40",
+                "Thickness": "2.5",
+                "Radius1": "3.75",
+                "Radius2": "1.25",
+                "Weight": "3.68"
+            },
+            "60x40x3": {
+                "Height": "60",
+                "Width": "40",
+                "Thickness": "3",
+                "Radius1": "4.5",
+                "Radius2": "1.5",
+                "Weight": "4.35"
+            },
+            "60x40x3.2": {
+                "Height": "60",
+                "Width": "40",
+                "Thickness": "3.2",
+                "Radius1": "4.8",
+                "Radius2": "1.6",
+                "Weight": "4.62"
+            },
+            "60x40x3.6": {
+                "Height": "60",
+                "Width": "40",
+                "Thickness": "3.6",
+                "Radius1": "5.4",
+                "Radius2": "1.8",
+                "Weight": "5.14"
+            },
+            "60x40x4": {
+                "Height": "60",
+                "Width": "40",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "5.64"
+            },
+            "60x40x5": {
+                "Height": "60",
+                "Width": "40",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "6.85"
+            },
+            "60x40x6": {
+                "Height": "60",
+                "Width": "40",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "7.99"
+            },
+            "60x40x6.3": {
+                "Height": "60",
+                "Width": "40",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "8.31"
+            },
+            "80x40x3": {
+                "Height": "80",
+                "Width": "40",
+                "Thickness": "3",
+                "Radius1": "4.5",
+                "Radius2": "1.5",
+                "Weight": "5.29"
+            },
+            "80x40x3.2": {
+                "Height": "80",
+                "Width": "40",
+                "Thickness": "3.2",
+                "Radius1": "4.8",
+                "Radius2": "1.6",
+                "Weight": "5.62"
+            },
+            "80x40x3.6": {
+                "Height": "80",
+                "Width": "40",
+                "Thickness": "3.6",
+                "Radius1": "5.4",
+                "Radius2": "1.8",
+                "Weight": "6.27"
+            },
+            "80x40x4": {
+                "Height": "80",
+                "Width": "40",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "6.9"
+            },
+            "80x40x5": {
+                "Height": "80",
+                "Width": "40",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "8.42"
+            },
+            "80x40x6": {
+                "Height": "80",
+                "Width": "40",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "9.87"
+            },
+            "80x40x6.3": {
+                "Height": "80",
+                "Width": "40",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "10.3"
+            },
+            "80x40x8": {
+                "Height": "80",
+                "Width": "40",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "12.5"
+            },
+            "76.2x50.8x3": {
+                "Height": "76.2",
+                "Width": "50.8",
+                "Thickness": "3",
+                "Radius1": "4.5",
+                "Radius2": "1.5",
+                "Weight": "5.62"
+            },
+            "76.2x50.8x3.2": {
+                "Height": "76.2",
+                "Width": "50.8",
+                "Thickness": "3.2",
+                "Radius1": "4.8",
+                "Radius2": "1.6",
+                "Weight": "5.97"
+            },
+            "76.2x50.8x3.6": {
+                "Height": "76.2",
+                "Width": "50.8",
+                "Thickness": "3.6",
+                "Radius1": "5.4",
+                "Radius2": "1.8",
+                "Weight": "6.66"
+            },
+            "76.2x50.8x4": {
+                "Height": "76.2",
+                "Width": "50.8",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "7.34"
+            },
+            "76.2x50.8x5": {
+                "Height": "76.2",
+                "Width": "50.8",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "8.97"
+            },
+            "76.2x50.8x6": {
+                "Height": "76.2",
+                "Width": "50.8",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "10.5"
+            },
+            "76.2x50.8x6.3": {
+                "Height": "76.2",
+                "Width": "50.8",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "11"
+            },
+            "76.2x50.8x8": {
+                "Height": "76.2",
+                "Width": "50.8",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "13.4"
+            },
+            "90x50x3": {
+                "Height": "90",
+                "Width": "50",
+                "Thickness": "3",
+                "Radius1": "4.5",
+                "Radius2": "1.5",
+                "Weight": "6.24"
+            },
+            "90x50x3.2": {
+                "Height": "90",
+                "Width": "50",
+                "Thickness": "3.2",
+                "Radius1": "4.8",
+                "Radius2": "1.6",
+                "Weight": "6.63"
+            },
+            "90x50x3.6": {
+                "Height": "90",
+                "Width": "50",
+                "Thickness": "3.6",
+                "Radius1": "5.4",
+                "Radius2": "1.8",
+                "Weight": "7.4"
+            },
+            "90x50x4": {
+                "Height": "90",
+                "Width": "50",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "8.15"
+            },
+            "90x50x5": {
+                "Height": "90",
+                "Width": "50",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "9.99"
+            },
+            "90x50x6": {
+                "Height": "90",
+                "Width": "50",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "11.8"
+            },
+            "90x50x6.3": {
+                "Height": "90",
+                "Width": "50",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "12.3"
+            },
+            "90x50x8": {
+                "Height": "90",
+                "Width": "50",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "15"
+            },
+            "100x50x3": {
+                "Height": "100",
+                "Width": "50",
+                "Thickness": "3",
+                "Radius1": "4.5",
+                "Radius2": "1.5",
+                "Weight": "6.71"
+            },
+            "100x50x3.2": {
+                "Height": "100",
+                "Width": "50",
+                "Thickness": "3.2",
+                "Radius1": "4.8",
+                "Radius2": "1.6",
+                "Weight": "7.13"
+            },
+            "100x50x3.6": {
+                "Height": "100",
+                "Width": "50",
+                "Thickness": "3.6",
+                "Radius1": "5.4",
+                "Radius2": "1.8",
+                "Weight": "7.96"
+            },
+            "100x50x4": {
+                "Height": "100",
+                "Width": "50",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "8.78"
+            },
+            "100x50x5": {
+                "Height": "100",
+                "Width": "50",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "10.8"
+            },
+            "100x50x6": {
+                "Height": "100",
+                "Width": "50",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "12.7"
+            },
+            "100x50x6.3": {
+                "Height": "100",
+                "Width": "50",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "13.3"
+            },
+            "100x50x8": {
+                "Height": "100",
+                "Width": "50",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "16.3"
+            },
+            "100x60x3": {
+                "Height": "100",
+                "Width": "60",
+                "Thickness": "3",
+                "Radius1": "4.5",
+                "Radius2": "1.5",
+                "Weight": "7.18"
+            },
+            "100x60x3.2": {
+                "Height": "100",
+                "Width": "60",
+                "Thickness": "3.2",
+                "Radius1": "4.8",
+                "Radius2": "1.6",
+                "Weight": "7.63"
+            },
+            "100x60x3.6": {
+                "Height": "100",
+                "Width": "60",
+                "Thickness": "3.6",
+                "Radius1": "5.4",
+                "Radius2": "1.8",
+                "Weight": "8.53"
+            },
+            "100x60x4": {
+                "Height": "100",
+                "Width": "60",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "9.41"
+            },
+            "100x60x5": {
+                "Height": "100",
+                "Width": "60",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "11.6"
+            },
+            "100x60x6": {
+                "Height": "100",
+                "Width": "60",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "13.6"
+            },
+            "100x60x6.3": {
+                "Height": "100",
+                "Width": "60",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "14.2"
+            },
+            "100x60x8": {
+                "Height": "100",
+                "Width": "60",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "17.5"
+            },
+            "120x60x3.6": {
+                "Height": "120",
+                "Width": "60",
+                "Thickness": "3.6",
+                "Radius1": "5.4",
+                "Radius2": "1.8",
+                "Weight": "9.66"
+            },
+            "120x60x4": {
+                "Height": "120",
+                "Width": "60",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "10.7"
+            },
+            "120x60x5": {
+                "Height": "120",
+                "Width": "60",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "13.1"
+            },
+            "120x60x6": {
+                "Height": "120",
+                "Width": "60",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "15.5"
+            },
+            "120x60x6.3": {
+                "Height": "120",
+                "Width": "60",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "16.2"
+            },
+            "120x60x8": {
+                "Height": "120",
+                "Width": "60",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "20.1"
+            },
+            "120x60x10": {
+                "Height": "120",
+                "Width": "60",
+                "Thickness": "10",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "24.6"
+            },
+            "120x80x3.6": {
+                "Height": "120",
+                "Width": "80",
+                "Thickness": "3.6",
+                "Radius1": "5.4",
+                "Radius2": "1.8",
+                "Weight": "10.8"
+            },
+            "120x80x4": {
+                "Height": "120",
+                "Width": "80",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "11.9"
+            },
+            "120x80x5": {
+                "Height": "120",
+                "Width": "80",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "14.7"
+            },
+            "120x80x6": {
+                "Height": "120",
+                "Width": "80",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "17.4"
+            },
+            "120x80x6.3": {
+                "Height": "120",
+                "Width": "80",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "18.2"
+            },
+            "120x80x8": {
+                "Height": "120",
+                "Width": "80",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "22.6"
+            },
+            "120x80x10": {
+                "Height": "120",
+                "Width": "80",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "27.4"
+            },
+            "140x80x4": {
+                "Height": "140",
+                "Width": "80",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "13.2"
+            },
+            "140x80x5": {
+                "Height": "140",
+                "Width": "80",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "16.3"
+            },
+            "140x80x6": {
+                "Height": "140",
+                "Width": "80",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "19.3"
+            },
+            "140x80x6.3": {
+                "Height": "140",
+                "Width": "80",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "20.2"
+            },
+            "140x80x8": {
+                "Height": "140",
+                "Width": "80",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "25.1"
+            },
+            "140x80x10": {
+                "Height": "140",
+                "Width": "80",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "30.6"
+            },
+            "150x100x4": {
+                "Height": "150",
+                "Width": "100",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "15.1"
+            },
+            "150x100x5": {
+                "Height": "150",
+                "Width": "100",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "18.6"
+            },
+            "150x100x6": {
+                "Height": "150",
+                "Width": "100",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "22.1"
+            },
+            "150x100x6.3": {
+                "Height": "150",
+                "Width": "100",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "23.1"
+            },
+            "150x100x8": {
+                "Height": "150",
+                "Width": "100",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "28.9"
+            },
+            "150x100x10": {
+                "Height": "150",
+                "Width": "100",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "35.3"
+            },
+            "150x100x12": {
+                "Height": "150",
+                "Width": "100",
+                "Thickness": "12",
+                "Radius1": "18",
+                "Radius2": "6",
+                "Weight": "41.4"
+            },
+            "150x100x12.5": {
+                "Height": "150",
+                "Width": "100",
+                "Thickness": "12.5",
+                "Radius1": "18.75",
+                "Radius2": "6.25",
+                "Weight": "42.8"
+            },
+            "160x80x4": {
+                "Height": "160",
+                "Width": "80",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "14.4"
+            },
+            "160x80x5": {
+                "Height": "160",
+                "Width": "80",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "17.8"
+            },
+            "160x80x6": {
+                "Height": "160",
+                "Width": "80",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "21.2"
+            },
+            "160x80x6.3": {
+                "Height": "160",
+                "Width": "80",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "22.2"
+            },
+            "160x80x8": {
+                "Height": "160",
+                "Width": "80",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "27.6"
+            },
+            "160x80x10": {
+                "Height": "160",
+                "Width": "80",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "33.7"
+            },
+            "160x80x12": {
+                "Height": "160",
+                "Width": "80",
+                "Thickness": "12",
+                "Radius1": "18",
+                "Radius2": "6",
+                "Weight": "39.5"
+            },
+            "160x80x12.5": {
+                "Height": "160",
+                "Width": "80",
+                "Thickness": "12.5",
+                "Radius1": "18.75",
+                "Radius2": "6.25",
+                "Weight": "40.9"
+            },
+            "180x100x4": {
+                "Height": "180",
+                "Width": "100",
+                "Thickness": "4",
+                "Radius1": "6",
+                "Radius2": "2",
+                "Weight": "16.9"
+            },
+            "180x100x5": {
+                "Height": "180",
+                "Width": "100",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "21"
+            },
+            "180x100x6": {
+                "Height": "180",
+                "Width": "100",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "24.9"
+            },
+            "180x100x6.3": {
+                "Height": "180",
+                "Width": "100",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "26.1"
+            },
+            "180x100x8": {
+                "Height": "180",
+                "Width": "100",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "32.6"
+            },
+            "180x100x10": {
+                "Height": "180",
+                "Width": "100",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "40"
+            },
+            "180x100x12": {
+                "Height": "180",
+                "Width": "100",
+                "Thickness": "12",
+                "Radius1": "18",
+                "Radius2": "6",
+                "Weight": "47"
+            },
+            "180x100x12.5": {
+                "Height": "180",
+                "Width": "100",
+                "Thickness": "12.5",
+                "Radius1": "18.75",
+                "Radius2": "6.25",
+                "Weight": "48.7"
+            },
+            "200x100x4": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "4",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "18.1"
+            },
+            "200x100x5": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "22.6"
+            },
+            "200x100x6": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "26.8"
+            },
+            "200x100x6.3": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "28.1"
+            },
+            "200x100x8": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "35.1"
+            },
+            "200x100x10": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "43.1"
+            },
+            "200x100x12": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "12",
+                "Radius1": "18",
+                "Radius2": "6",
+                "Weight": "50.8"
+            },
+            "200x100x12.5": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "12.5",
+                "Radius1": "18.75",
+                "Radius2": "6.25",
+                "Weight": "52.7"
+            },
+            "200x100x16": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "16",
+                "Radius1": "24",
+                "Radius2": "8",
+                "Weight": "65.2"
+            },
+            "200x120x6": {
+                "Height": "200",
+                "Width": "120",
+                "Thickness": "6",
+                "Radius1": "9.45",
+                "Radius2": "3.45",
+                "Weight": "28.7"
+            },
+            "200x120x6.3": {
+                "Height": "200",
+                "Width": "120",
+                "Thickness": "6.3",
+                "Radius1": "12",
+                "Radius2": "5.7",
+                "Weight": "29.9"
+            },
+            "200x120x8": {
+                "Height": "200",
+                "Width": "120",
+                "Thickness": "8",
+                "Radius1": "15",
+                "Radius2": "7",
+                "Weight": "37.3"
+            },
+            "200x120x10": {
+                "Height": "200",
+                "Width": "120",
+                "Thickness": "10",
+                "Radius1": "18",
+                "Radius2": "8",
+                "Weight": "45.9"
+            },
+            "200x120x12": {
+                "Height": "200",
+                "Width": "120",
+                "Thickness": "12",
+                "Radius1": "18.75",
+                "Radius2": "6.75",
+                "Weight": "54.5"
+            },
+            "200x120x12.5": {
+                "Height": "200",
+                "Width": "120",
+                "Thickness": "12.5",
+                "Radius1": "24",
+                "Radius2": "12.5",
+                "Weight": "55.7"
+            },
+            "250x150x5": {
+                "Height": "250",
+                "Width": "150",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "30.4"
+            },
+            "250x150x6": {
+                "Height": "250",
+                "Width": "150",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "36.2"
+            },
+            "250x150x6.3": {
+                "Height": "250",
+                "Width": "150",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "38"
+            },
+            "250x150x8": {
+                "Height": "250",
+                "Width": "150",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "47.7"
+            },
+            "250x150x10": {
+                "Height": "250",
+                "Width": "150",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "58.8"
+            },
+            "250x150x12": {
+                "Height": "250",
+                "Width": "150",
+                "Thickness": "12",
+                "Radius1": "18",
+                "Radius2": "6",
+                "Weight": "69.6"
+            },
+            "250x150x12.5": {
+                "Height": "250",
+                "Width": "150",
+                "Thickness": "12.5",
+                "Radius1": "18.75",
+                "Radius2": "6.25",
+                "Weight": "72.3"
+            },
+            "250x150x16": {
+                "Height": "250",
+                "Width": "150",
+                "Thickness": "16",
+                "Radius1": "24",
+                "Radius2": "8",
+                "Weight": "90.3"
+            },
+            "260x180x6": {
+                "Height": "260",
+                "Width": "180",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "40"
+            },
+            "260x180x6.3": {
+                "Height": "260",
+                "Width": "180",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "41.9"
+            },
+            "260x180x8": {
+                "Height": "260",
+                "Width": "180",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "52.7"
+            },
+            "260x180x10": {
+                "Height": "260",
+                "Width": "180",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "65.1"
+            },
+            "260x180x12": {
+                "Height": "260",
+                "Width": "180",
+                "Thickness": "12",
+                "Radius1": "18",
+                "Radius2": "6",
+                "Weight": "77.2"
+            },
+            "260x180x12.5": {
+                "Height": "260",
+                "Width": "180",
+                "Thickness": "12.5",
+                "Radius1": "18.75",
+                "Radius2": "6.25",
+                "Weight": "80.1"
+            },
+            "260x180x16": {
+                "Height": "260",
+                "Width": "180",
+                "Thickness": "16",
+                "Radius1": "24",
+                "Radius2": "8",
+                "Weight": "100"
+            },
+            "300x200x5": {
+                "Height": "300",
+                "Width": "200",
+                "Thickness": "5",
+                "Radius1": "7.5",
+                "Radius2": "2.5",
+                "Weight": "38.3"
+            },
+            "300x200x6": {
+                "Height": "300",
+                "Width": "200",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "45.7"
+            },
+            "300x200x6.3": {
+                "Height": "300",
+                "Width": "200",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "47.9"
+            },
+            "300x200x8": {
+                "Height": "300",
+                "Width": "200",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "60.3"
+            },
+            "300x200x10": {
+                "Height": "300",
+                "Width": "200",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "74.5"
+            },
+            "300x200x12": {
+                "Height": "300",
+                "Width": "200",
+                "Thickness": "12",
+                "Radius1": "18",
+                "Radius2": "6",
+                "Weight": "88.5"
+            },
+            "300x200x12.5": {
+                "Height": "300",
+                "Width": "200",
+                "Thickness": "12.5",
+                "Radius1": "18.75",
+                "Radius2": "6.25",
+                "Weight": "91.9"
+            },
+            "300x200x16": {
+                "Height": "300",
+                "Width": "200",
+                "Thickness": "16",
+                "Radius1": "24",
+                "Radius2": "8",
+                "Weight": "115"
+            },
+            "350x250x6": {
+                "Height": "350",
+                "Width": "250",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "55.1"
+            },
+            "350x250x6.3": {
+                "Height": "350",
+                "Width": "250",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "57.8"
+            },
+            "350x250x8": {
+                "Height": "350",
+                "Width": "250",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "72.8"
+            },
+            "350x250x10": {
+                "Height": "350",
+                "Width": "250",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "90.2"
+            },
+            "350x250x12": {
+                "Height": "350",
+                "Width": "250",
+                "Thickness": "12",
+                "Radius1": "18",
+                "Radius2": "6",
+                "Weight": "107"
+            },
+            "350x250x12.5": {
+                "Height": "350",
+                "Width": "250",
+                "Thickness": "12.5",
+                "Radius1": "18.75",
+                "Radius2": "6.25",
+                "Weight": "112"
+            },
+            "350x250x16": {
+                "Height": "350",
+                "Width": "250",
+                "Thickness": "16",
+                "Radius1": "24",
+                "Radius2": "8",
+                "Weight": "141"
+            },
+            "400x200x6": {
+                "Height": "400",
+                "Width": "200",
+                "Thickness": "6",
+                "Radius1": "9",
+                "Radius2": "3",
+                "Weight": "55.1"
+            },
+            "400x200x6.3": {
+                "Height": "400",
+                "Width": "200",
+                "Thickness": "6.3",
+                "Radius1": "9.45",
+                "Radius2": "3.15",
+                "Weight": "57.8"
+            },
+            "400x200x8": {
+                "Height": "400",
+                "Width": "200",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "72.8"
+            },
+            "400x200x10": {
+                "Height": "400",
+                "Width": "200",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "90.2"
+            },
+            "400x200x12": {
+                "Height": "400",
+                "Width": "200",
+                "Thickness": "12",
+                "Radius1": "18",
+                "Radius2": "6",
+                "Weight": "107"
+            },
+            "400x200x12.5": {
+                "Height": "400",
+                "Width": "200",
+                "Thickness": "12.5",
+                "Radius1": "18.75",
+                "Radius2": "6.25",
+                "Weight": "112"
+            },
+            "400x200x16": {
+                "Height": "400",
+                "Width": "200",
+                "Thickness": "16",
+                "Radius1": "24",
+                "Radius2": "8",
+                "Weight": "141"
+            },
+            "450x250x8": {
+                "Height": "450",
+                "Width": "250",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "85.4"
+            },
+            "450x250x10": {
+                "Height": "450",
+                "Width": "250",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "106"
+            },
+            "450x250x12": {
+                "Height": "450",
+                "Width": "250",
+                "Thickness": "12",
+                "Radius1": "18",
+                "Radius2": "6",
+                "Weight": "126"
+            },
+            "450x250x12.5": {
+                "Height": "450",
+                "Width": "250",
+                "Thickness": "12.5",
+                "Radius1": "18.75",
+                "Radius2": "6.25",
+                "Weight": "131"
+            },
+            "450x250x16": {
+                "Height": "450",
+                "Width": "250",
+                "Thickness": "16",
+                "Radius1": "24",
+                "Radius2": "8",
+                "Weight": "166"
+            },
+            "500x300x8": {
+                "Height": "500",
+                "Width": "300",
+                "Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "4",
+                "Weight": "97.9"
+            },
+            "500x300x10": {
+                "Height": "500",
+                "Width": "300",
+                "Thickness": "10",
+                "Radius1": "15",
+                "Radius2": "5",
+                "Weight": "122"
+            },
+            "500x300x12": {
+                "Height": "500",
+                "Width": "300",
+                "Thickness": "12",
+                "Radius1": "18",
+                "Radius2": "6",
+                "Weight": "145"
+            },
+            "500x300x12.5": {
+                "Height": "500",
+                "Width": "300",
+                "Thickness": "12.5",
+                "Radius1": "18.75",
+                "Radius2": "6.25",
+                "Weight": "151"
+            },
+            "500x300x16": {
+                "Height": "500",
+                "Width": "300",
+                "Thickness": "16",
+                "Radius1": "24",
+                "Radius2": "8",
+                "Weight": "191"
+            },
+            "500x300x20": {
+                "Height": "500",
+                "Width": "300",
+                "Thickness": "20",
+                "Radius1": "30",
+                "Radius2": "10",
+                "Weight": "235"
+            }
+        }
+    },
+    "UPE": {
+        "norm": "EN24-62 DIN1025",
+        "unit": "mm",
+        "fillet": true,
+        "sizes": {
+            "80": {
+                "Width": "80",
+                "Height": "50",
+                "Thickness": "4",
+                "Flange Thickness": "7",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "7.90"
+            },
+            "100": {
+                "Width": "100",
+                "Height": "55",
+                "Thickness": "4.5",
+                "Flange Thickness": "7.5",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "9.82"
+            },
+            "120": {
+                "Width": "120",
+                "Height": "60",
+                "Thickness": "5",
+                "Flange Thickness": "8",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "12.1"
+            },
+            "140": {
+                "Width": "140",
+                "Height": "65",
+                "Thickness": "5",
+                "Flange Thickness": "9",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "14.5"
+            },
+            "160": {
+                "Width": "160",
+                "Height": "70",
+                "Thickness": "5.5",
+                "Flange Thickness": "9.5",
+                "Radius1": "12",
+                "Radius2": "6",
+                "Weight": "17.0"
+            },
+            "180": {
+                "Width": "180",
+                "Height": "75",
+                "Thickness": "5.5",
+                "Flange Thickness": "10.5",
+                "Radius1": "13",
+                "Radius2": "6.5",
+                "Weight": "19.7"
+            },
+            "200": {
+                "Width": "200",
+                "Height": "80",
+                "Thickness": "6",
+                "Flange Thickness": "11",
+                "Radius1": "13",
+                "Radius2": "6.5",
+                "Weight": "22.8"
+            },
+            "220": {
+                "Width": "220",
+                "Height": "85",
+                "Thickness": "6.5",
+                "Flange Thickness": "12",
+                "Radius1": "13",
+                "Radius2": "6.5",
+                "Weight": "26.6"
+            },
+            "240": {
+                "Width": "240",
+                "Height": "90",
+                "Thickness": "7",
+                "Flange Thickness": "12.5",
+                "Radius1": "15",
+                "Radius2": "7.5",
+                "Weight": "30.2"
+            },
+            "270": {
+                "Width": "270",
+                "Height": "95",
+                "Thickness": "7.5",
+                "Flange Thickness": "13.5",
+                "Radius1": "15",
+                "Radius2": "7.5",
+                "Weight": "35.2"
+            },
+            "300": {
+                "Width": "300",
+                "Height": "100",
+                "Thickness": "9.5",
+                "Flange Thickness": "15",
+                "Radius1": "15",
+                "Radius2": "7.5",
+                "Weight": "44.4"
+            },
+            "330": {
+                "Width": "330",
+                "Height": "105",
+                "Thickness": "11",
+                "Flange Thickness": "16",
+                "Radius1": "18",
+                "Radius2": "9",
+                "Weight": "53.2"
+            },
+            "360": {
+                "Width": "360",
+                "Height": "110",
+                "Thickness": "12",
+                "Flange Thickness": "17",
+                "Radius1": "18",
+                "Radius2": "9",
+                "Weight": "61.2"
+            },
+            "400": {
+                "Width": "400",
+                "Height": "115",
+                "Thickness": "13.5",
+                "Flange Thickness": "18",
+                "Radius1": "18",
+                "Radius2": "9",
+                "Weight": "72.2"
+            }
+        }
+    },
+    "UPN": {
+        "norm": "EN24-62 DIN1025",
+        "unit": "mm",
+        "fillet": true,
+        "sizes": {
+            "50x25": {
+                "Width": "50",
+                "Height": "25",
+                "Thickness": "5",
+                "Flange Thickness": "6",
+                "Radius1": "6",
+                "Radius2": "3",
+                "Weight": "3.86"
+            },
+            "50x38": {
+                "Width": "50",
+                "Height": "38",
+                "Thickness": "5",
+                "Flange Thickness": "7",
+                "Radius1": "7",
+                "Radius2": "3.5",
+                "Weight": "5.59"
+            },
+            "60": {
+                "Width": "60",
+                "Height": "30",
+                "Thickness": "6",
+                "Flange Thickness": "6",
+                "Radius1": "7",
+                "Radius2": "3",
+                "Weight": "5.07"
+            },
+            "65": {
+                "Width": "65",
+                "Height": "42",
+                "Thickness": "5.5",
+                "Flange Thickness": "7.5",
+                "Radius1": "7.5",
+                "Radius2": "3.25",
+                "Weight": "7.09"
+            },
+            "80": {
+                "Width": "80",
+                "Height": "45",
+                "Thickness": "6",
+                "Flange Thickness": "8",
+                "Radius1": "8",
+                "Radius2": "4",
+                "Weight": "8.64"
+            },
+            "100": {
+                "Width": "100",
+                "Height": "50",
+                "Thickness": "6",
+                "Flange Thickness": "8.5",
+                "Radius1": "8.5",
+                "Radius2": "4.25",
+                "Weight": "10.6"
+            },
+            "120": {
+                "Width": "120",
+                "Height": "55",
+                "Thickness": "7",
+                "Flange Thickness": "9",
+                "Radius1": "9",
+                "Radius2": "4.5",
+                "Weight": "13.4"
+            },
+            "140": {
+                "Width": "140",
+                "Height": "60",
+                "Thickness": "7",
+                "Flange Thickness": "10",
+                "Radius1": "10",
+                "Radius2": "5",
+                "Weight": "16.0"
+            },
+            "160": {
+                "Width": "160",
+                "Height": "65",
+                "Thickness": "7.5",
+                "Flange Thickness": "10.5",
+                "Radius1": "10.5",
+                "Radius2": "5.25",
+                "Weight": "18.8"
+            },
+            "180": {
+                "Width": "180",
+                "Height": "70",
+                "Thickness": "8",
+                "Flange Thickness": "11",
+                "Radius1": "11",
+                "Radius2": "5.5",
+                "Weight": "22.0"
+            },
+            "200": {
+                "Width": "200",
+                "Height": "75",
+                "Thickness": "8.5",
+                "Flange Thickness": "11.5",
+                "Radius1": "11.5",
+                "Radius2": "5.25",
+                "Weight": "25.3"
+            },
+            "220": {
+                "Width": "220",
+                "Height": "80",
+                "Thickness": "9",
+                "Flange Thickness": "12.5",
+                "Radius1": "12.5",
+                "Radius2": "6.25",
+                "Weight": "29.4"
+            },
+            "240": {
+                "Width": "240",
+                "Height": "85",
+                "Thickness": "9.5",
+                "Flange Thickness": "13",
+                "Radius1": "13",
+                "Radius2": "6.5",
+                "Weight": "33.2"
+            },
+            "260": {
+                "Width": "260",
+                "Height": "90",
+                "Thickness": "10",
+                "Flange Thickness": "14",
+                "Radius1": "14",
+                "Radius2": "7",
+                "Weight": "37.9"
+            },
+            "280": {
+                "Width": "280",
+                "Height": "95",
+                "Thickness": "10",
+                "Flange Thickness": "15",
+                "Radius1": "15",
+                "Radius2": "7.5",
+                "Weight": "41.8"
+            },
+            "300": {
+                "Width": "300",
+                "Height": "100",
+                "Thickness": "10",
+                "Flange Thickness": "16",
+                "Radius1": "16",
+                "Radius2": "8",
+                "Weight": "43.2"
+            },
+            "350": {
+                "Width": "350",
+                "Height": "100",
+                "Thickness": "14",
+                "Flange Thickness": "16",
+                "Radius1": "16",
+                "Radius2": "8",
+                "Weight": "60.6"
+            }
+        }
+    },
+    "HEA": {
+        "norm": "EN53-62 DIN1025",
+        "unit": "mm",
+        "fillet": true,
+        "sizes": {
+            "100": {
+                "Width": "96",
+                "Height": "100",
+                "Thickness": "5",
+                "Flange Thickness": "8",
+                "Radius1": "12",
+                "Weight": "16.7"
+            },
+            "120": {
+                "Width": "114",
+                "Height": "120",
+                "Thickness": "5",
+                "Flange Thickness": "8",
+                "Radius1": "12",
+                "Weight": "19.9"
+            },
+            "140": {
+                "Width": "133",
+                "Height": "140",
+                "Thickness": "5.5",
+                "Flange Thickness": "8.5",
+                "Radius1": "12",
+                "Weight": "24.7"
+            },
+            "160": {
+                "Width": "152",
+                "Height": "160",
+                "Thickness": "6",
+                "Flange Thickness": "9",
+                "Radius1": "15",
+                "Weight": "30.4"
+            },
+            "180": {
+                "Width": "171",
+                "Height": "180",
+                "Thickness": "6",
+                "Flange Thickness": "9.5",
+                "Radius1": "15",
+                "Weight": "35.5"
+            },
+            "200": {
+                "Width": "190",
+                "Height": "200",
+                "Thickness": "6.5",
+                "Flange Thickness": "10",
+                "Radius1": "18",
+                "Weight": "42.3"
+            },
+            "220": {
+                "Width": "210",
+                "Height": "220",
+                "Thickness": "7",
+                "Flange Thickness": "11",
+                "Radius1": "18",
+                "Weight": "50.5"
+            },
+            "240": {
+                "Width": "230",
+                "Height": "240",
+                "Thickness": "7.5",
+                "Flange Thickness": "12",
+                "Radius1": "21",
+                "Weight": "60.3"
+            },
+            "260": {
+                "Width": "250",
+                "Height": "260",
+                "Thickness": "7.5",
+                "Flange Thickness": "12.5",
+                "Radius1": "24",
+                "Weight": "68.2"
+            },
+            "280": {
+                "Width": "270",
+                "Height": "280",
+                "Thickness": "8",
+                "Flange Thickness": "13",
+                "Radius1": "24",
+                "Weight": "76.4"
+            },
+            "300": {
+                "Width": "290",
+                "Height": "300",
+                "Thickness": "8.5",
+                "Flange Thickness": "14",
+                "Radius1": "27",
+                "Weight": "88.3"
+            },
+            "320": {
+                "Width": "310",
+                "Height": "300",
+                "Thickness": "9",
+                "Flange Thickness": "15.5",
+                "Radius1": "27",
+                "Weight": "97.6"
+            },
+            "340": {
+                "Width": "330",
+                "Height": "300",
+                "Thickness": "9.5",
+                "Flange Thickness": "16.5",
+                "Radius1": "27",
+                "Weight": "105"
+            },
+            "360": {
+                "Width": "350",
+                "Height": "300",
+                "Thickness": "10",
+                "Flange Thickness": "17.5",
+                "Radius1": "27",
+                "Weight": "112"
+            },
+            "400": {
+                "Width": "390",
+                "Height": "300",
+                "Thickness": "11",
+                "Flange Thickness": "19",
+                "Radius1": "27",
+                "Weight": "125"
+            },
+            "450": {
+                "Width": "440",
+                "Height": "300",
+                "Thickness": "11.5",
+                "Flange Thickness": "21",
+                "Radius1": "27",
+                "Weight": "140"
+            },
+            "500": {
+                "Width": "490",
+                "Height": "300",
+                "Thickness": "12",
+                "Flange Thickness": "23",
+                "Radius1": "27",
+                "Weight": "155"
+            },
+            "550": {
+                "Width": "540",
+                "Height": "300",
+                "Thickness": "12.5",
+                "Flange Thickness": "24",
+                "Radius1": "27",
+                "Weight": "166"
+            },
+            "600": {
+                "Width": "590",
+                "Height": "300",
+                "Thickness": "13",
+                "Flange Thickness": "25",
+                "Radius1": "27",
+                "Weight": "178"
+            },
+            "650": {
+                "Width": "640",
+                "Height": "300",
+                "Thickness": "13.5",
+                "Flange Thickness": "26",
+                "Radius1": "27",
+                "Weight": "190"
+            },
+            "700": {
+                "Width": "690",
+                "Height": "300",
+                "Thickness": "14.5",
+                "Flange Thickness": "27",
+                "Radius1": "27",
+                "Weight": "204"
+            },
+            "800": {
+                "Width": "790",
+                "Height": "300",
+                "Thickness": "15",
+                "Flange Thickness": "28",
+                "Radius1": "30",
+                "Weight": "224"
+            },
+            "900": {
+                "Width": "890",
+                "Height": "300",
+                "Thickness": "16",
+                "Flange Thickness": "30",
+                "Radius1": "30",
+                "Weight": "252"
+            },
+            "1000": {
+                "Width": "990",
+                "Height": "300",
+                "Thickness": "16.5",
+                "Flange Thickness": "31",
+                "Radius1": "30",
+                "Weight": "272"
+            }
+        }
+    },
+    "HEB": {
+        "norm": "EN53-62 DIN1025",
+        "unit": "mm",
+        "fillet": true,
+        "sizes": {
+            "100": {
+                "Width": "100",
+                "Height": "100",
+                "Thickness": "6",
+                "Flange Thickness": "10",
+                "Radius1": "12",
+                "Weight": "20.4"
+            },
+            "120": {
+                "Width": "120",
+                "Height": "120",
+                "Thickness": "6.5",
+                "Flange Thickness": "11",
+                "Radius1": "12",
+                "Weight": "26.7"
+            },
+            "140": {
+                "Width": "140",
+                "Height": "140",
+                "Thickness": "7",
+                "Flange Thickness": "12",
+                "Radius1": "12",
+                "Weight": "33.7"
+            },
+            "160": {
+                "Width": "160",
+                "Height": "160",
+                "Thickness": "8",
+                "Flange Thickness": "13",
+                "Radius1": "15",
+                "Weight": "42.6"
+            },
+            "180": {
+                "Width": "180",
+                "Height": "180",
+                "Thickness": "8.5",
+                "Flange Thickness": "14",
+                "Radius1": "15",
+                "Weight": "51.2"
+            },
+            "200": {
+                "Width": "200",
+                "Height": "200",
+                "Thickness": "9",
+                "Flange Thickness": "15",
+                "Radius1": "18",
+                "Weight": "61.3"
+            },
+            "220": {
+                "Width": "220",
+                "Height": "220",
+                "Thickness": "9.5",
+                "Flange Thickness": "16",
+                "Radius1": "18",
+                "Weight": "71.5"
+            },
+            "240": {
+                "Width": "240",
+                "Height": "240",
+                "Thickness": "10",
+                "Flange Thickness": "17",
+                "Radius1": "21",
+                "Weight": "83.2"
+            },
+            "260": {
+                "Width": "260",
+                "Height": "260",
+                "Thickness": "10",
+                "Flange Thickness": "17.5",
+                "Radius1": "24",
+                "Weight": "93.0"
+            },
+            "280": {
+                "Width": "280",
+                "Height": "280",
+                "Thickness": "10.5",
+                "Flange Thickness": "18",
+                "Radius1": "24",
+                "Weight": "103"
+            },
+            "300": {
+                "Width": "300",
+                "Height": "300",
+                "Thickness": "11",
+                "Flange Thickness": "19",
+                "Radius1": "27",
+                "Weight": "117"
+            },
+            "320": {
+                "Width": "320",
+                "Height": "300",
+                "Thickness": "11.5",
+                "Flange Thickness": "20.5",
+                "Radius1": "27",
+                "Weight": "127"
+            },
+            "340": {
+                "Width": "340",
+                "Height": "300",
+                "Thickness": "12",
+                "Flange Thickness": "21.5",
+                "Radius1": "27",
+                "Weight": "134"
+            },
+            "360": {
+                "Width": "360",
+                "Height": "300",
+                "Thickness": "12.5",
+                "Flange Thickness": "22.5",
+                "Radius1": "27",
+                "Weight": "142"
+            },
+            "400": {
+                "Width": "400",
+                "Height": "300",
+                "Thickness": "13.5",
+                "Flange Thickness": "24",
+                "Radius1": "27",
+                "Weight": "155"
+            },
+            "450": {
+                "Width": "450",
+                "Height": "300",
+                "Thickness": "14",
+                "Flange Thickness": "26",
+                "Radius1": "27",
+                "Weight": "171"
+            },
+            "500": {
+                "Width": "500",
+                "Height": "300",
+                "Thickness": "14.5",
+                "Flange Thickness": "28",
+                "Radius1": "27",
+                "Weight": "187"
+            },
+            "550": {
+                "Width": "550",
+                "Height": "300",
+                "Thickness": "15",
+                "Flange Thickness": "29",
+                "Radius1": "27",
+                "Weight": "199"
+            },
+            "600": {
+                "Width": "600",
+                "Height": "300",
+                "Thickness": "15.5",
+                "Flange Thickness": "30",
+                "Radius1": "27",
+                "Weight": "212"
+            },
+            "650": {
+                "Width": "650",
+                "Height": "300",
+                "Thickness": "16",
+                "Flange Thickness": "31",
+                "Radius1": "27",
+                "Weight": "225"
+            },
+            "700": {
+                "Width": "700",
+                "Height": "300",
+                "Thickness": "17",
+                "Flange Thickness": "32",
+                "Radius1": "27",
+                "Weight": "241"
+            },
+            "800": {
+                "Width": "800",
+                "Height": "300",
+                "Thickness": "17.5",
+                "Flange Thickness": "33",
+                "Radius1": "30",
+                "Weight": "262"
+            },
+            "900": {
+                "Width": "900",
+                "Height": "300",
+                "Thickness": "18.5",
+                "Flange Thickness": "35",
+                "Radius1": "30",
+                "Weight": "291"
+            },
+            "1000": {
+                "Width": "1000",
+                "Height": "300",
+                "Thickness": "19",
+                "Flange Thickness": "36",
+                "Radius1": "30",
+                "Weight": "314"
+            }
+        }
+    },
+    "HEM": {
+        "norm": "EN53-62 DIN1025",
+        "unit": "mm",
+        "fillet": true,
+        "sizes": {
+            "100": {
+                "Width": "120",
+                "Height": "106",
+                "Thickness": "12",
+                "Flange Thickness": "20",
+                "Radius1": "12",
+                "Weight": "41.8"
+            },
+            "120": {
+                "Width": "140",
+                "Height": "126",
+                "Thickness": "12.5",
+                "Flange Thickness": "21",
+                "Radius1": "12",
+                "Weight": "52.1"
+            },
+            "140": {
+                "Width": "160",
+                "Height": "146",
+                "Thickness": "13",
+                "Flange Thickness": "22",
+                "Radius1": "12",
+                "Weight": "63.2"
+            },
+            "160": {
+                "Width": "180",
+                "Height": "166",
+                "Thickness": "14",
+                "Flange Thickness": "23",
+                "Radius1": "15",
+                "Weight": "76.2"
+            },
+            "180": {
+                "Width": "200",
+                "Height": "186",
+                "Thickness": "14.5",
+                "Flange Thickness": "24",
+                "Radius1": "15",
+                "Weight": "88.9"
+            },
+            "200": {
+                "Width": "220",
+                "Height": "206",
+                "Thickness": "15",
+                "Flange Thickness": "25",
+                "Radius1": "18",
+                "Weight": "103"
+            },
+            "220": {
+                "Width": "240",
+                "Height": "226",
+                "Thickness": "15.5",
+                "Flange Thickness": "26",
+                "Radius1": "18",
+                "Weight": "117"
+            },
+            "240": {
+                "Width": "270",
+                "Height": "248",
+                "Thickness": "18",
+                "Flange Thickness": "32",
+                "Radius1": "21",
+                "Weight": "157"
+            },
+            "260": {
+                "Width": "290",
+                "Height": "268",
+                "Thickness": "18",
+                "Flange Thickness": "32.5",
+                "Radius1": "24",
+                "Weight": "172"
+            },
+            "280": {
+                "Width": "310",
+                "Height": "288",
+                "Thickness": "18.5",
+                "Flange Thickness": "33",
+                "Radius1": "24",
+                "Weight": "189"
+            },
+            "300": {
+                "Width": "340",
+                "Height": "310",
+                "Thickness": "21",
+                "Flange Thickness": "39",
+                "Radius1": "27",
+                "Weight": "238"
+            },
+            "320": {
+                "Width": "359",
+                "Height": "309",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "27",
+                "Weight": "245"
+            },
+            "340": {
+                "Width": "377",
+                "Height": "309",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "27",
+                "Weight": "248"
+            },
+            "360": {
+                "Width": "395",
+                "Height": "308",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "27",
+                "Weight": "250"
+            },
+            "400": {
+                "Width": "432",
+                "Height": "307",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "27",
+                "Weight": "256"
+            },
+            "450": {
+                "Width": "478",
+                "Height": "307",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "27",
+                "Weight": "263"
+            },
+            "500": {
+                "Width": "524",
+                "Height": "306",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "27",
+                "Weight": "270"
+            },
+            "550": {
+                "Width": "572",
+                "Height": "306",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "27",
+                "Weight": "278"
+            },
+            "600": {
+                "Width": "620",
+                "Height": "305",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "27",
+                "Weight": "285"
+            },
+            "650": {
+                "Width": "668",
+                "Height": "305",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "27",
+                "Weight": "293"
+            },
+            "700": {
+                "Width": "716",
+                "Height": "304",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "27",
+                "Weight": "301"
+            },
+            "800": {
+                "Width": "814",
+                "Height": "303",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "30",
+                "Weight": "317"
+            },
+            "900": {
+                "Width": "910",
+                "Height": "302",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "30",
+                "Weight": "333"
+            },
+            "1000": {
+                "Width": "1008",
+                "Height": "302",
+                "Thickness": "21",
+                "Flange Thickness": "40",
+                "Radius1": "30",
+                "Weight": "349"
+            }
+        }
+    },
+    "IPE": {
+        "norm": "EN 19-57 DIN 1025",
+        "unit": "mm",
+        "fillet": true,
+        "sizes": {
+            "80": {
+                "Height": "80",
+                "Width": "46",
+                "Thickness": "3.8",
+                "Flange Thickness": "5.2",
+                "Radius1": "5",
+                "Weight": "6.0"
+            },
+            "100": {
+                "Height": "100",
+                "Width": "55",
+                "Thickness": "4.1",
+                "Flange Thickness": "5.7",
+                "Radius1": "7",
+                "Weight": "8.1"
+            },
+            "120": {
+                "Height": "120",
+                "Width": "64",
+                "Thickness": "4.4",
+                "Flange Thickness": "6.3",
+                "Radius1": "7",
+                "Weight": "10.4"
+            },
+            "140": {
+                "Height": "140",
+                "Width": "73",
+                "Thickness": "4.7",
+                "Flange Thickness": "6.9",
+                "Radius1": "7",
+                "Weight": "12.9"
+            },
+            "160": {
+                "Height": "160",
+                "Width": "82",
+                "Thickness": "5",
+                "Flange Thickness": "7.7",
+                "Radius1": "9",
+                "Weight": "15.8"
+            },
+            "180": {
+                "Height": "180",
+                "Width": "91",
+                "Thickness": "5.3",
+                "Flange Thickness": "8",
+                "Radius1": "9",
+                "Weight": "18.8"
+            },
+            "200": {
+                "Height": "200",
+                "Width": "100",
+                "Thickness": "5.6",
+                "Flange Thickness": "8.5",
+                "Radius1": "12",
+                "Weight": "22.4"
+            },
+            "220": {
+                "Height": "220",
+                "Width": "110",
+                "Thickness": "5.9",
+                "Flange Thickness": "9.2",
+                "Radius1": "12",
+                "Weight": "26.2"
+            },
+            "240": {
+                "Height": "240",
+                "Width": "120",
+                "Thickness": "6.2",
+                "Flange Thickness": "9.8",
+                "Radius1": "15",
+                "Weight": "30.7"
+            },
+            "270": {
+                "Height": "270",
+                "Width": "135",
+                "Thickness": "6.6",
+                "Flange Thickness": "10.2",
+                "Radius1": "15",
+                "Weight": "36.1"
+            },
+            "300": {
+                "Height": "300",
+                "Width": "150",
+                "Thickness": "7.1",
+                "Flange Thickness": "10.7",
+                "Radius1": "15",
+                "Weight": "42.2"
+            },
+            "330": {
+                "Height": "330",
+                "Width": "160",
+                "Thickness": "7.5",
+                "Flange Thickness": "11.5",
+                "Radius1": "18",
+                "Weight": "49.1"
+            },
+            "360": {
+                "Height": "360",
+                "Width": "170",
+                "Thickness": "8",
+                "Flange Thickness": "12.7",
+                "Radius1": "18",
+                "Weight": "57.1"
+            },
+            "400": {
+                "Height": "400",
+                "Width": "180",
+                "Thickness": "8.6",
+                "Flange Thickness": "13.5",
+                "Radius1": "21",
+                "Weight": "66.3"
+            },
+            "450": {
+                "Height": "450",
+                "Width": "190",
+                "Thickness": "9.4",
+                "Flange Thickness": "14.6",
+                "Radius1": "21",
+                "Weight": "77.6"
+            },
+            "500": {
+                "Height": "500",
+                "Width": "200",
+                "Thickness": "10.2",
+                "Flange Thickness": "16",
+                "Radius1": "21",
+                "Weight": "90.7"
+            },
+            "550": {
+                "Height": "550",
+                "Width": "210",
+                "Thickness": "11.1",
+                "Flange Thickness": "17.2",
+                "Radius1": "24",
+                "Weight": "106"
+            },
+            "600": {
+                "Height": "600",
+                "Width": "220",
+                "Thickness": "12",
+                "Flange Thickness": "19",
+                "Radius1": "24",
+                "Weight": "122"
+            }
+        }
+    },
+    "IPN": {
+        "norm": "EN24-62 DIN1026",
+        "unit": "mm",
+        "fillet": true,
+        "sizes": {
+            "80": {
+                "Height": "80",
+                "Width": "42",
+                "Thickness": "3.9",
+                "Flange Thickness": "5.9",
+                "Radius1": "3.9",
+                "Radius2": "2.3",
+                "Weight": "5.94"
+            },
+            "100": {
+                "Height": "100",
+                "Width": "50",
+                "Thickness": "4.5",
+                "Flange Thickness": "6.8",
+                "Radius1": "4.5",
+                "Radius2": "2.7",
+                "Weight": "8.32"
+            },
+            "120": {
+                "Height": "120",
+                "Width": "58",
+                "Thickness": "5.1",
+                "Flange Thickness": "7.7",
+                "Radius1": "5.1",
+                "Radius2": "3.1",
+                "Weight": "11.2"
+            },
+            "140": {
+                "Height": "140",
+                "Width": "66",
+                "Thickness": "5.7",
+                "Flange Thickness": "8.6",
+                "Radius1": "5.7",
+                "Radius2": "3.4",
+                "Weight": "14.4"
+            },
+            "160": {
+                "Height": "160",
+                "Width": "74",
+                "Thickness": "6.3",
+                "Flange Thickness": "9.5",
+                "Radius1": "6.3",
+                "Radius2": "3.8",
+                "Weight": "17.9"
+            },
+            "180": {
+                "Height": "180",
+                "Width": "82",
+                "Thickness": "6.9",
+                "Flange Thickness": "10.5",
+                "Radius1": "6.9",
+                "Radius2": "4.1",
+                "Weight": "21.9"
+            },
+            "200": {
+                "Height": "200",
+                "Width": "90",
+                "Thickness": "7.5",
+                "Flange Thickness": "11.3",
+                "Radius1": "7.5",
+                "Radius2": "4.5",
+                "Weight": "26.3"
+            },
+            "220": {
+                "Height": "220",
+                "Width": "98",
+                "Thickness": "8.1",
+                "Flange Thickness": "12.2",
+                "Radius1": "8.1",
+                "Radius2": "4.9",
+                "Weight": "31.1"
+            },
+            "240": {
+                "Height": "240",
+                "Width": "106",
+                "Thickness": "8.7",
+                "Flange Thickness": "13.1",
+                "Radius1": "8.7",
+                "Radius2": "5.2",
+                "Weight": "36.2"
+            },
+            "250": {
+                "Height": "250",
+                "Width": "110",
+                "Thickness": "9",
+                "Flange Thickness": "13.6",
+                "Radius1": "9",
+                "Radius2": "5.4",
+                "Weight": "39.0"
+            },
+            "260": {
+                "Height": "260",
+                "Width": "113",
+                "Thickness": "9.4",
+                "Flange Thickness": "14.1",
+                "Radius1": "9.4",
+                "Radius2": "5.6",
+                "Weight": "41.9"
+            },
+            "280": {
+                "Height": "280",
+                "Width": "119",
+                "Thickness": "10.1",
+                "Flange Thickness": "15.2",
+                "Radius1": "10.1",
+                "Radius2": "6.1",
+                "Weight": "48.0"
+            },
+            "300": {
+                "Height": "300",
+                "Width": "125",
+                "Thickness": "10.8",
+                "Flange Thickness": "16.2",
+                "Radius1": "10.8",
+                "Radius2": "6.5",
+                "Weight": "54.2"
+            },
+            "320": {
+                "Height": "320",
+                "Width": "131",
+                "Thickness": "11.5",
+                "Flange Thickness": "17.3",
+                "Radius1": "11.5",
+                "Radius2": "6.9",
+                "Weight": "61.1"
+            },
+            "340": {
+                "Height": "340",
+                "Width": "137",
+                "Thickness": "12.2",
+                "Flange Thickness": "18.3",
+                "Radius1": "12.2",
+                "Radius2": "7.3",
+                "Weight": "68.1"
+            },
+            "360": {
+                "Height": "360",
+                "Width": "143",
+                "Thickness": "13",
+                "Flange Thickness": "19.5",
+                "Radius1": "13",
+                "Radius2": "7.8",
+                "Weight": "76.2"
+            },
+            "380": {
+                "Height": "380",
+                "Width": "149",
+                "Thickness": "13.7",
+                "Flange Thickness": "20.5",
+                "Radius1": "13.7",
+                "Radius2": "8.2",
+                "Weight": "84.0"
+            },
+            "400": {
+                "Height": "400",
+                "Width": "155",
+                "Thickness": "14.4",
+                "Flange Thickness": "21.6",
+                "Radius1": "14.4",
+                "Radius2": "8.6",
+                "Weight": "92.6"
+            },
+            "425": {
+                "Height": "425",
+                "Width": "163",
+                "Thickness": "15.3",
+                "Flange Thickness": "23",
+                "Radius1": "15.3",
+                "Radius2": "9.2",
+                "Weight": "104"
+            },
+            "450": {
+                "Height": "450",
+                "Width": "170",
+                "Thickness": "16.2",
+                "Flange Thickness": "24.3",
+                "Radius1": "16.2",
+                "Radius2": "9.7",
+                "Weight": "115"
+            },
+            "475": {
+                "Height": "475",
+                "Width": "178",
+                "Thickness": "17.1",
+                "Flange Thickness": "25.6",
+                "Radius1": "17.1",
+                "Radius2": "10.3",
+                "Weight": "128"
+            },
+            "500": {
+                "Height": "500",
+                "Width": "185",
+                "Thickness": "18",
+                "Flange Thickness": "27",
+                "Radius1": "18",
+                "Radius2": "10.8",
+                "Weight": "141"
+            },
+            "550": {
+                "Height": "550",
+                "Width": "200",
+                "Thickness": "19",
+                "Flange Thickness": "30",
+                "Radius1": "19",
+                "Radius2": "11.9",
+                "Weight": "167"
+            },
+            "600": {
+                "Height": "600",
+                "Width": "215",
+                "Thickness": "21.6",
+                "Flange Thickness": "32.4",
+                "Radius1": "21.6",
+                "Radius2": "13",
+                "Weight": "199"
+            }
+        }
+    },
+    "Round Bar": {
+        "norm": "NFA 45003",
+        "unit": "Metric Unit",
+        "fillet": false,
+        "sizes": {
+            "5.5": {
+                "Height": "5.5",
+                "Weight": "0.19"
+            },
+            "6": {
+                "Height": "6",
+                "Weight": "0.22"
+            },
+            "7": {
+                "Height": "7",
+                "Weight": "0.30"
+            },
+            "8": {
+                "Height": "8",
+                "Weight": "0.39"
+            },
+            "9": {
+                "Height": "9",
+                "Weight": "0.50"
+            },
+            "10": {
+                "Height": "10",
+                "Weight": "0.62"
+            },
+            "11": {
+                "Height": "11",
+                "Weight": "0.75"
+            },
+            "12": {
+                "Height": "12",
+                "Weight": "0.89"
+            },
+            "13": {
+                "Height": "13",
+                "Weight": "1.04"
+            },
+            "14": {
+                "Height": "14",
+                "Weight": "1.21"
+            },
+            "15": {
+                "Height": "15",
+                "Weight": "1.39"
+            },
+            "16": {
+                "Height": "16",
+                "Weight": "1.58"
+            },
+            "17": {
+                "Height": "17",
+                "Weight": "1.78"
+            },
+            "18": {
+                "Height": "18",
+                "Weight": "2.00"
+            },
+            "19": {
+                "Height": "19",
+                "Weight": "2.23"
+            },
+            "20": {
+                "Height": "20",
+                "Weight": "2.47"
+            },
+            "21": {
+                "Height": "21",
+                "Weight": "2.72"
+            },
+            "22": {
+                "Height": "22",
+                "Weight": "2.98"
+            },
+            "24": {
+                "Height": "24",
+                "Weight": "3.55"
+            },
+            "25": {
+                "Height": "25",
+                "Weight": "3.85"
+            },
+            "27": {
+                "Height": "27",
+                "Weight": "4.49"
+            },
+            "28": {
+                "Height": "28",
+                "Weight": "4.83"
+            },
+            "30": {
+                "Height": "30",
+                "Weight": "5.55"
+            },
+            "32": {
+                "Height": "32",
+                "Weight": "6.31"
+            },
+            "34": {
+                "Height": "34",
+                "Weight": "7.13"
+            },
+            "35": {
+                "Height": "35",
+                "Weight": "7.55"
+            },
+            "36": {
+                "Height": "36",
+                "Weight": "7.99"
+            },
+            "37": {
+                "Height": "37",
+                "Weight": "8.44"
+            },
+            "38": {
+                "Height": "38",
+                "Weight": "8.90"
+            },
+            "40": {
+                "Height": "40",
+                "Weight": "9.86"
+            },
+            "42": {
+                "Height": "42",
+                "Weight": "10.90"
+            },
+            "44": {
+                "Height": "44",
+                "Weight": "11.90"
+            },
+            "45": {
+                "Height": "45",
+                "Weight": "12.50"
+            },
+            "47": {
+                "Height": "47",
+                "Weight": "13.60"
+            },
+            "50": {
+                "Height": "50",
+                "Weight": "15.40"
+            },
+            "52": {
+                "Height": "52",
+                "Weight": "16.70"
+            },
+            "54": {
+                "Height": "54",
+                "Weight": "18.00"
+            },
+            "56": {
+                "Height": "56",
+                "Weight": "19.30"
+            },
+            "58": {
+                "Height": "58",
+                "Weight": "20.70"
+            },
+            "60": {
+                "Height": "60",
+                "Weight": "22.20"
+            },
+            "63": {
+                "Height": "63",
+                "Weight": "24.50"
+            },
+            "65": {
+                "Height": "65",
+                "Weight": "26.00"
+            },
+            "68": {
+                "Height": "68",
+                "Weight": "28.50"
+            },
+            "70": {
+                "Height": "70",
+                "Weight": "30.20"
+            },
+            "73": {
+                "Height": "73",
+                "Weight": "32.90"
+            },
+            "75": {
+                "Height": "75",
+                "Weight": "34.70"
+            },
+            "78": {
+                "Height": "78",
+                "Weight": "37.50"
+            },
+            "80": {
+                "Height": "80",
+                "Weight": "39.50"
+            },
+            "83": {
+                "Height": "83",
+                "Weight": "47.70"
+            },
+            "90": {
+                "Height": "90",
+                "Weight": "49.90"
+            },
+            "95": {
+                "Height": "95",
+                "Weight": "55.60"
+            },
+            "100": {
+                "Height": "100",
+                "Weight": "61.70"
+            },
+            "105": {
+                "Height": "105",
+                "Weight": "68.00"
+            },
+            "110": {
+                "Height": "110",
+                "Weight": "74.60"
+            },
+            "115": {
+                "Height": "115",
+                "Weight": "81.50"
+            },
+            "120": {
+                "Height": "120",
+                "Weight": "88.80"
+            },
+            "125": {
+                "Height": "125",
+                "Weight": "96.30"
+            },
+            "130": {
+                "Height": "130",
+                "Weight": "104.00"
+            },
+            "135": {
+                "Height": "135",
+                "Weight": "112.00"
+            },
+            "140": {
+                "Height": "140",
+                "Weight": "121.00"
+            },
+            "145": {
+                "Height": "145",
+                "Weight": "130.00"
+            },
+            "150": {
+                "Height": "150",
+                "Weight": "139.00"
+            },
+            "155": {
+                "Height": "155",
+                "Weight": "148.00"
+            },
+            "160": {
+                "Height": "160",
+                "Weight": "158.00"
+            },
+            "170": {
+                "Height": "170",
+                "Weight": "178.00"
+            },
+            "180": {
+                "Height": "180",
+                "Weight": "200.00"
+            },
+            "190": {
+                "Height": "190",
+                "Weight": "223.00"
+            },
+            "200": {
+                "Height": "200",
+                "Weight": "247.00"
+            },
+            "210": {
+                "Height": "210",
+                "Weight": "346.00"
+            },
+            "220": {
+                "Height": "220",
+                "Weight": "380.00"
+            }
+        }
+    },
+    "Pipe": {
+        "norm": "NFA A 49.115/145",
+        "unit": "Metric Unit",
+        "fillet": false,
+        "sizes": {
+            "8x13 1/4": {
+                "Height": "13.5",
+                "Thickness": "2.00",
+                "Weight": "0.57"
+            },
+            "12x17 3/8": {
+                "Height": "17.2",
+                "Thickness": "2.00",
+                "Weight": "0.74"
+            },
+            "15x21 1/2": {
+                "Height": "21.3",
+                "Thickness": "2.35",
+                "Weight": "1.10"
+            },
+            "20x27 3/4": {
+                "Height": "26.9",
+                "Thickness": "2.35",
+                "Weight": "1.41"
+            },
+            "26x34 1'": {
+                "Height": "33.7",
+                "Thickness": "2.90",
+                "Weight": "2.21"
+            },
+            "33x42 1'1/4": {
+                "Height": "42.4",
+                "Thickness": "2.90",
+                "Weight": "2.84"
+            },
+            "40x49 1'1/2": {
+                "Height": "48.3",
+                "Thickness": "3.25",
+                "Weight": "3.26"
+            },
+            "50x60 2'": {
+                "Height": "60.3",
+                "Thickness": "3.25",
+                "Weight": "4.56"
+            },
+            "60x70 2'1/4": {
+                "Height": "70.0",
+                "Thickness": "3.25",
+                "Weight": "5.35"
+            },
+            "66x76 2'1/2": {
+                "Height": "76.1",
+                "Thickness": "3.25",
+                "Weight": "5.80"
+            },
+            "80x90 3'": {
+                "Height": "88.9",
+                "Thickness": "3.25",
+                "Weight": "6.81"
+            },
+            "90x102 3'1/2": {
+                "Height": "101.6",
+                "Thickness": "3.65",
+                "Weight": "8.74"
+            },
+            "102x114 4'": {
+                "Height": "114.3",
+                "Thickness": "3.65",
+                "Weight": "9.89"
+            }
+        }
+    }
+}
