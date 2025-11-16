@@ -2,7 +2,7 @@ set(Namespace_SRCS
         freecad/frameforge/resources/icons/corner.svg
         freecad/frameforge/resources/icons/splitcurve.svg
         freecad/frameforge/resources/icons/warehouse_profiles.svg
-        freecad/frameforge/resources/icons/custom_profiles.svg
+        freecad/frameforge/resources/icons/warehouse_custom_profiles.svg
         freecad/frameforge/resources/icons/trim_extend.svg
         freecad/frameforge/resources/icons/metalwb.svg
         freecad/frameforge/resources/icons/line.svg
