@@ -9,6 +9,7 @@
   <tag>Beam</tag>
   <tag>Extrusion</tag>
   <tag>Miter cut</tag>
+  <tag>Miter-joint</tag>
   <tag>Trim Cut</tag>
   <version>0.1.5</version>
   <date>2025-09-23</date>
