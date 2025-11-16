@@ -8,7 +8,7 @@ from PySide import QtCore, QtGui
 
 from freecad.frameforge import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
 from freecad.frameforge._ui_utils import FormProxy
-from freecad.frameforge.profile import Profile, ViewProviderProfile
+from freecad.frameforge.profile import Profile, ViewProviderCustomProfile
 from freecad.frameforge.translate_utils import translate
 
 
@@ -108,7 +108,7 @@ class CreateCustomProfileTaskPanel:
             sk_parent.addObject(obj)
 
         # Create a ViewObject in current GUI
-        ViewProviderProfile(obj.ViewObject)
+        ViewProviderCustomProfile(obj.ViewObject)
 
         if sketch is not None and edge is not None:
             # Tuple assignment for edge
@@ -217,7 +217,7 @@ class CreateCustomProfilesCommand:
 
     def GetResources(self):
         return {
-            "Pixmap": os.path.join(ICONPATH, "custom_profiles.svg"),
+            "Pixmap": os.path.join(ICONPATH, "warehouse_custom_profiles.svg"),
             "Accel": "Shift+C",  # a default shortcut (optional)
             "MenuText": "Create Custom Profile",
             "ToolTip": "Create new custom profiles from Edges",
