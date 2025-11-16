@@ -2,6 +2,7 @@ set(Namespace_SRCS
         freecad/frameforge/resources/icons/corner.svg
         freecad/frameforge/resources/icons/splitcurve.svg
         freecad/frameforge/resources/icons/warehouse_profiles.svg
+        freecad/frameforge/resources/icons/custom_profiles.svg
         freecad/frameforge/resources/icons/trim_extend.svg
         freecad/frameforge/resources/icons/metalwb.svg
         freecad/frameforge/resources/icons/line.svg
@@ -51,6 +52,7 @@ set(Namespace_SRCS
 
         freecad/frameforge/resources/ui/create_trimmed_profiles.ui
         freecad/frameforge/resources/ui/create_profiles.ui
+        freecad/frameforge/resources/ui/create_custom_profiles.ui
 
         freecad/frameforge/resources/profiles/metal.json
 
@@ -66,6 +68,7 @@ set(Namespace_SRCS
         freecad/frameforge/trimmed_profile.py
         freecad/frameforge/init_gui.py
         freecad/frameforge/create_profiles_tool.py
+        freecad/frameforge/create_custom_profiles_tool.py
 )
 
 SOURCE_GROUP("" FILES ${Namespace_SRCS})
