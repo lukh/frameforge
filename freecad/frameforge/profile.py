@@ -5,9 +5,17 @@ import FreeCADGui as Gui
 import Part
 
 import freecad.frameforge
-
-from freecad.frameforge.extrusions import vslot20x20, vslot20x40, vslot20x60, vslot20x80
-from freecad.frameforge.extrusions import tslot20x20, tslot20x20_three_slot, tslot20x20_two_slot, tslot20x20_two_slot_opp, tslot20x20_one_slot
+from freecad.frameforge.extrusions import (
+    tslot20x20,
+    tslot20x20_one_slot,
+    tslot20x20_three_slot,
+    tslot20x20_two_slot,
+    tslot20x20_two_slot_opp,
+    vslot20x20,
+    vslot20x40,
+    vslot20x60,
+    vslot20x80,
+)
 
 # Global variable for a 3D float vector (used in Profile class)
 vec = App.Base.Vector
@@ -925,7 +933,7 @@ class Profile:
         if obj.Family == "T-Slot 3-Slots":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_three_slot()
-                
+
         if obj.Family == "T-Slot 2-Slots":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_two_slot()
@@ -937,7 +945,6 @@ class Profile:
         if obj.Family == "T-Slot 1-Slot":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_one_slot()
-
 
         if L:
             ProfileFull = p.extrude(vec(0, 0, L))

@@ -24,8 +24,8 @@
 import math
 
 import Part
-from FreeCAD import Vector
 from DraftGeomUtils import fillet as draft_fillet
+from FreeCAD import Vector
 
 
 # ************************************************************************************************
@@ -52,6 +52,7 @@ def vslot20x20():
     face = vslot(symmetry, vertices, fillets, corner_offset, circle_offsets)
 
     return face
+
 
 # ************************************************************************************************
 def vslot20x40():
@@ -152,6 +153,7 @@ def vslot20x80():
 
     face = vslot(symmetry, vertices, fillets, corner_offset, circle_offsets)
     return face
+
 
 # ************************************************************************************************
 def tslot20x20():
@@ -269,13 +271,7 @@ def tslot20x20_two_slot_opp():
         (0, 0, True, False, False, True),
     ]
 
-    vertices = (
-        [tslot_outline]
-        + 2 * [tslot_closed]
-        + 2 * [tslot_outline]
-        + 2 * [tslot_closed]
-        + [tslot_outline]
-    )
+    vertices = [tslot_outline] + 2 * [tslot_closed] + 2 * [tslot_outline] + 2 * [tslot_closed] + [tslot_outline]
     fillets = [5, 7, 19, 21]
 
     closed_symmetry = [
@@ -327,25 +323,13 @@ def tslot20x20_one_slot():
     corner_offset = 0
     circle_offsets = [0]
 
-    face = tslot(
-        symmetry,
-        vertices,
-        fillets,
-        closed_symmetry,
-        closed_vertices,
-        corner_offset,
-        circle_offsets
-    )
+    face = tslot(symmetry, vertices, fillets, closed_symmetry, closed_vertices, corner_offset, circle_offsets)
     return face
 
 
 # ************************************************************************************************
 # helper
-def fillet(
-    lines,
-    indices,
-    radius
-):
+def fillet(lines, indices, radius):
     """
     fillets the corner between the segments and their successors in lines indicated by indices
     """
@@ -362,11 +346,7 @@ def fillet(
     return lines
 
 
-def assemble(
-    symmetry,
-    vertices,
-    offset_global=(0, 0)
-):
+def assemble(symmetry, vertices, offset_global=(0, 0)):
     """
     Assemble a wire from a list of symmetry information and a list of list of vertices
 
@@ -428,14 +408,14 @@ vslot_outline = [
     (0.5 * w - 1.8, 0.5 * w - 1.8 - 1.64 - 1.5 / math.sqrt(2), 0),
     (0.5 * w - 1.8, 0.5 * 5.68, 0),
     (0.5 * w, 0.5 * 5.68 + 1.8, 0),
-    (0.5 * w, 0.5 * w, 0)
+    (0.5 * w, 0.5 * w, 0),
 ]
 
 space_symmetry = [
     (0, 0, False, False, True, False),
     (-w, 0, True, False, False, False),
     (-w, 0, False, False, False, True),
-    (0, 0, True, False, True, True)
+    (0, 0, True, False, True, True),
 ]
 
 # big spaces
@@ -452,17 +432,11 @@ vslot_cornerhole = [
     (0.5 * w - 1.8, 0.5 * w - 1.8 - 1.64 - 1.5 / math.sqrt(2) + 1.07, 0),
     (0.5 * w - 1.8, 0.5 * w - 1.8, 0),
     (0.5 * w - 1.8 - 1.64 - 1.5 / math.sqrt(2) + 1.07, 0.5 * w - 1.8, 0),
-    (0.5 * w - 1.8, 0.5 * w - 1.8 - 1.64 - 1.5 / math.sqrt(2) + 1.07, 0)
+    (0.5 * w - 1.8, 0.5 * w - 1.8 - 1.64 - 1.5 / math.sqrt(2) + 1.07, 0),
 ]
 
 
-def vslot(
-    symmetry,
-    vertices,
-    fillets,
-    corner_offset,
-    circle_offsets
-):
+def vslot(symmetry, vertices, fillets, corner_offset, circle_offsets):
     outline = assemble(symmetry, vertices)
     outline = fillet(outline, fillets, 1.5)
     outline = Part.Wire(outline)
@@ -542,15 +516,7 @@ tslot_space = [
 ]
 
 
-def tslot(
-    symmetry,
-    vertices,
-    fillets,
-    closed_symmetry,
-    closed_vertices,
-    corner_offset,
-    circle_offsets
-):
+def tslot(symmetry, vertices, fillets, closed_symmetry, closed_vertices, corner_offset, circle_offsets):
     outline = assemble(symmetry, vertices)
     outline = fillet(outline, fillets, 1.5)
     outline = Part.Wire(outline)
