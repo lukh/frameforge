@@ -37,9 +37,8 @@ class CreateProfileTaskPanel:
 
     def initialize_ui(self):
         def execute_if_has_bool(key, func):
-            if key in[k for t,k,v in param.GetContents()]:
+            if key in [k for t, k, v in param.GetContents()]:
                 func(param.GetBool(key))
-
 
         self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, "Warehouse.png")))
 
@@ -53,7 +52,9 @@ class CreateProfileTaskPanel:
 
         param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
         if not param.IsEmpty():
-            default_material_index = self.form_proxy.combo_material.findText(param.GetString("Default Profile Material"))
+            default_material_index = self.form_proxy.combo_material.findText(
+                param.GetString("Default Profile Material")
+            )
             if default_material_index > -1:
                 self.form_proxy.combo_material.setCurrentIndex(default_material_index)
 
@@ -227,7 +228,7 @@ class CreateProfileTaskPanel:
             p_name += sketch_sel.Object.Name + "_"
 
         if self.form_proxy.cb_family_in_name.isChecked():
-            p_name +=  self.form_proxy.combo_family.currentText().replace(" ", "_") + "_"
+            p_name += self.form_proxy.combo_family.currentText().replace(" ", "_") + "_"
 
         if self.form_proxy.cb_size_in_name.isChecked():
             p_name += self.form_proxy.combo_size.currentText() + "_"
