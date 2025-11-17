@@ -14,6 +14,7 @@ class FrameForgeException(BaseException):
     pass
 
 
+from .create_custom_profiles_tool import *
 from .create_end_miter_tool import *
 from .create_extruded_cutout_tool import *
 from .create_profiles_tool import *
