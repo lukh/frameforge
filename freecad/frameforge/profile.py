@@ -30,7 +30,7 @@ class Profile:
         size_name,
         bevels_combined,
         link_sub=None,
-        custom_profile=None
+        custom_profile=None,
     ):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
@@ -169,7 +169,9 @@ class Profile:
             obj.setExpression(".AttachmentOffset.Base.z", "-OffsetA")
 
         if custom_profile:
-            obj.addProperty("App::PropertyLink", "CustomProfile", "Base", "Target profile").CustomProfile = custom_profile
+            obj.addProperty("App::PropertyLink", "CustomProfile", "Base", "Target profile").CustomProfile = (
+                custom_profile
+            )
             obj.Family = "Custom Profile"
 
         self.WM = init_wg
@@ -910,7 +912,6 @@ class Profile:
             p2 = Part.Face(wire2)
             p = p1.cut(p2)
 
-
         if obj.Family == "Custom Profile":
             custom_prof = obj.CustomProfile
             if isinstance(custom_prof.Shape, Part.Wire):
@@ -1075,8 +1076,6 @@ class ViewProviderProfile:
 
     def edit(self):
         FreeCADGui.ActiveDocument.setEdit(self.Object, 0)
-
-
 
 
 class ViewProviderCustomProfile:

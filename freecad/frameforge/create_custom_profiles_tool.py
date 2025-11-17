@@ -126,35 +126,32 @@ class CreateCustomProfileTaskPanel:
 
         obj.MapPathParameter = 1
 
-
         Profile(
             obj,
-            0.0, # self.form.sb_width.value(),
-            0.0, # self.form.sb_height.value(),
-            0.0, # self.form.sb_main_thickness.value(),
-            0.0, # self.form.sb_flange_thickness.value(),
-            0.0, # self.form.sb_radius1.value(),
-            0.0, # self.form.sb_radius2.value(),
+            0.0,  # self.form.sb_width.value(),
+            0.0,  # self.form.sb_height.value(),
+            0.0,  # self.form.sb_main_thickness.value(),
+            0.0,  # self.form.sb_flange_thickness.value(),
+            0.0,  # self.form.sb_radius1.value(),
+            0.0,  # self.form.sb_radius2.value(),
             self.form.sb_length.value(),
             self.form.sb_weight.value(),
-            False, # self.form.cb_make_fillet.isChecked(),  # and self.form.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
-            False, # self.form.cb_height_centered.isChecked(),
-            False, # self.form.cb_width_centered.isChecked(),
-            self.form.le_material.text(), # self.form.combo_material.currentText(),
-            "Custom Profile", # self.form.combo_family.currentText(),
-            "None", # self.form.combo_size.currentText(),
-            False, # self.form.cb_combined_bevel.isChecked(),
+            False,  # self.form.cb_make_fillet.isChecked(),  # and self.form.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
+            False,  # self.form.cb_height_centered.isChecked(),
+            False,  # self.form.cb_width_centered.isChecked(),
+            self.form.le_material.text(),  # self.form.combo_material.currentText(),
+            "Custom Profile",  # self.form.combo_family.currentText(),
+            "None",  # self.form.combo_size.currentText(),
+            False,  # self.form.cb_combined_bevel.isChecked(),
             link_sub,
-            self.custom_profile
+            self.custom_profile,
         )
-
 
     def select_profile(self):
         if not self.select_profile_flag:
             self.select_profile_flag = True
             self.form.pb_selectprofile.setEnabled(False)
             self.form.pb_selectprofile.setText("Select a Profile")
-
 
     def addSelection(self, doc, obj, sub, other):
         if self.select_profile_flag:
@@ -171,7 +168,6 @@ class CreateCustomProfileTaskPanel:
         self.select_profile_flag = False
         self.form.pb_selectprofile.setEnabled(True)
 
-
         selection_list = Gui.Selection.getSelectionEx()
         if len(selection_list) == 1:
             profile_sel = selection_list[0]
@@ -183,7 +179,6 @@ class CreateCustomProfileTaskPanel:
         else:
             self.custom_profile = None
             self.form.pb_selectprofile.setText("Select Profile")
-
 
     def update_selection(self):
         # update internal list
