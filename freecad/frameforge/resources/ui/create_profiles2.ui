@@ -311,6 +311,16 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QCheckBox" name="cb_prefix_profile_in_name">
+          <property name="text">
+           <string>&quot;Profile&quot; prefix in profile name</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
