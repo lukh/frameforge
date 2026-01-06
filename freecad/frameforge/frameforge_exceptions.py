@@ -1,0 +1,4 @@
+
+class FrameForgeException(BaseException):
+    pass
+

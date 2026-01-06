@@ -9,8 +9,8 @@ import FreeCADGui as Gui
 import Part
 from PySide import QtCore, QtGui
 
-from freecad.frameforge import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
-from freecad.frameforge.translate_utils import translate
+from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
+from freecad.frameforge.ff_tools import translate
 from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
 
 

@@ -4,8 +4,6 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import Part
 
-import freecad.frameforge
-
 # Global variable for a 3D float vector (used in Profile class)
 vec = App.Base.Vector
 
