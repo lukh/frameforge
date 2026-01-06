@@ -28,6 +28,7 @@ class Profile:
         size_name,
         bevels_combined,
         link_sub=None,
+        custom_profile=None,
     ):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
@@ -164,6 +165,12 @@ class Profile:
         if link_sub:
             obj.addProperty("App::PropertyLinkSub", "Target", "Base", "Target face").Target = link_sub
             obj.setExpression(".AttachmentOffset.Base.z", "-OffsetA")
+
+        if custom_profile:
+            obj.addProperty("App::PropertyLink", "CustomProfile", "Base", "Target profile").CustomProfile = (
+                custom_profile
+            )
+            obj.Family = "Custom Profile"
 
         self.WM = init_wg
 
@@ -903,6 +910,15 @@ class Profile:
             p2 = Part.Face(wire2)
             p = p1.cut(p2)
 
+        if obj.Family == "Custom Profile":
+            custom_prof = obj.CustomProfile
+            if isinstance(custom_prof.Shape, Part.Wire):
+                p = Part.Face(custom_prof.Shape)
+            elif isinstance(custom_prof.Shape, Part.Face):
+                p = custom_prof.Shape
+            else:
+                raise ValueError("Custom profile must be a Face or Sketch")
+
         if L:
             ProfileFull = p.extrude(vec(0, 0, L))
             obj.Shape = ProfileFull
@@ -1058,3 +1074,136 @@ class ViewProviderProfile:
 
     def edit(self):
         FreeCADGui.ActiveDocument.setEdit(self.Object, 0)
+
+
+class ViewProviderCustomProfile:
+    def __init__(self, obj):
+        """Set this object to the proxy object of the actual view provider"""
+        obj.Proxy = self
+
+    def attach(self, vobj):
+        """Setup the scene sub-graph of the view provider, this method is mandatory"""
+        self.ViewObject = vobj
+        self.Object = vobj.Object
+        return
+
+    def updateData(self, fp, prop):
+        """If a property of the handled feature has changed we have the chance to handle this here"""
+        return
+
+    def getDisplayModes(self, obj):
+        """Return a list of display modes."""
+        modes = []
+        return modes
+
+    def getDefaultDisplayMode(self):
+        """Return the name of the default display mode. It must be defined in getDisplayModes."""
+        return "FlatLines"
+
+    def setDisplayMode(self, mode):
+        """Map the display mode defined in attach with those defined in getDisplayModes.
+        Since they have the same names nothing needs to be done. This method is optional.
+        """
+        return mode
+
+    def claimChildren(self):
+        return []
+
+    def onChanged(self, vp, prop):
+        """Print the name of the property that has changed"""
+        # App.Console.PrintMessage("Change {} property: {}\n".format(str(vp), str(prop)))
+        pass
+
+    def onDelete(self, fp, sub):
+        return True
+
+    def getIcon(self):
+        """Return the icon in XMP format which will appear in the tree view. This method is optional
+        and if not defined a default icon is shown.
+        """
+        return """
+            /* XPM */
+            static char * custom_profile_xpm[] = {
+            "16 16 44 1",
+            " 	c None",
+            ".	c #3463A1",
+            "+	c #3465A4",
+            "@	c #3464A1",
+            "#	c #836628",
+            "$	c #FBBC00",
+            "%	c #304461",
+            "&	c #335C92",
+            "*	c #BC8D00",
+            "=	c #FFBF00",
+            "-	c #324C72",
+            ";	c #32619D",
+            ">	c #3364A2",
+            ",	c #335888",
+            "'	c #CF9B00",
+            ")	c #B88A00",
+            "!	c #1F6267",
+            "~	c #27557E",
+            "{	c #335889",
+            "]	c #CE9B00",
+            "^	c #3362A0",
+            "/	c #2D578E",
+            "(	c #06AE25",
+            "_	c #0E9739",
+            ":	c #2E5A93",
+            "<	c #32619E",
+            "[	c #3465A3",
+            "}	c #335D93",
+            "|	c #BA8C00",
+            "1	c #274C7B",
+            "2	c #088D24",
+            "3	c #03BB1F",
+            "4	c #00D61E",
+            "5	c #00D41E",
+            "6	c #03BC1F",
+            "7	c #0A7D27",
+            "8	c #3464A2",
+            "9	c #7E632C",
+            "0	c #FABB00",
+            "a	c #03C01F",
+            "b	c #00D81E",
+            "c	c #05AB20",
+            "d	c #01D21E",
+            "e	c #01D31E",
+            "                ",
+            "                ",
+            "                ",
+            "                ",
+            "                ",
+            "  .++++++++@#$  ",
+            " %+++++++++&*=  ",
+            " -+++;>++++,'=) ",
+            " -+++!~++++{]=) ",
+            "  +^/(_:<[+}|=  ",
+            "  1234567/+890  ",
+            "    abb         ",
+            "    cde         ",
+            "                ",
+            "                ",
+            "                "};
+        	"""
+
+    def dumps(self):
+        """
+        Called during document saving.
+        """
+        return None
+
+    def loads(self, state):
+        """
+        Called during document restore.
+        """
+        return None
+
+    def setEdit(self, vobj, mode):
+        return None
+
+    def unsetEdit(self, vobj, mode):
+        return None
+
+    def edit(self):
+        pass
