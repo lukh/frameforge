@@ -3,13 +3,24 @@
 
   <name>FrameForge</name>
   <description>FrameForge is dedicated for creating Frames and Beams, and apply operations (miter cuts, trim cuts) on these profiles.</description>
+  <tag>Welded frame</tag>
+  <tag>Metal</tag>
+  <tag>Frame</tag>
+  <tag>Beam</tag>
+  <tag>Extrusion</tag>
+  <tag>Miter cut</tag>
+  <tag>Miter-joint</tag>
+  <tag>Trim Cut</tag>
   <version>0.1.5</version>
   <date>2025-09-23</date>
   <maintainer email="vivien.henry@inductivebrain.fr">Vivien Henry</maintainer>
-  <license file="LICENSE">LGPLv3</license>
+  <license file="LICENSE">LGPL-3.0-only</license>
+  <url type="repository" branch="main">https://github.com/lukh/frameforge</url> 
   <url branch="main" type="repository">https://github.com/lukh/frameforge.git</url>
   <url type="readme">https://github.com/lukh/frameforge/blob/main/README.md</url>
   <icon>freecad/frameforge/resources/icons/metalwb.svg</icon>
+
+  <freecadmin>0.21.0</freecadmin>
 
   <content>
     <workbench>

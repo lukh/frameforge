@@ -9,9 +9,7 @@ import FreeCADGui as Gui
 import Part
 from PySide import QtCore, QtGui
 
-import freecad.frameforge
-from freecad.frameforge import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
-from freecad.frameforge.translate_utils import translate
+from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 
 
 class TrimmedProfile:

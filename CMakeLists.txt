@@ -57,13 +57,12 @@ set(Namespace_SRCS
         freecad/frameforge/resources/profiles/metal.json
 
         freecad/frameforge/version.py
-        freecad/frameforge/translate_utils.py
+        freecad/frameforge/ff_tools.py
         freecad/frameforge/create_trimmed_profiles_tool.py
         freecad/frameforge/edit_profile_tool.py
         freecad/frameforge/profile.py
         freecad/frameforge/_utils.py
         freecad/frameforge/parametric_line.py
-        freecad/frameforge/__init__.py
         freecad/frameforge/create_end_miter_tool.py
         freecad/frameforge/trimmed_profile.py
         freecad/frameforge/init_gui.py
