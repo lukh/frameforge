@@ -1,7 +1,10 @@
 ## Changelog
 
-*v0.1.6
+* v0.1.6
   - Fix #67
+  - Merge Alu extrusions
+  - Merge Custom Profile
+  - Save checkbox values and add a way to remove prefix "Profile"
 
 * v0.1.5
   - Add ExtrudedCutout
