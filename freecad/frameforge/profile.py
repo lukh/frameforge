@@ -4,7 +4,6 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import Part
 
-import freecad.frameforge
 from freecad.frameforge.extrusions import (
     tslot20x20,
     tslot20x20_one_slot,
