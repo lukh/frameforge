@@ -3,7 +3,6 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 
-from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
 from freecad.frameforge.create_bom import (
     is_extrudedcutout,
     is_fusion,
@@ -13,7 +12,7 @@ from freecad.frameforge.create_bom import (
     is_trimmedbody,
     make_bom,
 )
-from freecad.frameforge.ff_tools import translate
+from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
 
 

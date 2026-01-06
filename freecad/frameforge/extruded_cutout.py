@@ -7,9 +7,8 @@ import FreeCADGui as Gui
 import Part
 from PySide import QtCore, QtGui
 
-from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
+from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.frameforge_exceptions import FrameForgeException
-from freecad.frameforge.ff_tools import translate
 
 
 class ExtrudedCutout:

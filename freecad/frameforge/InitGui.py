@@ -3,8 +3,7 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 
-from freecad.frameforge.ff_tools import TRANSLATIONSPATH
-from freecad.frameforge.ff_tools import translate
+from freecad.frameforge.ff_tools import TRANSLATIONSPATH, translate
 
 # Add translations path
 Gui.addLanguagePath(TRANSLATIONSPATH)
@@ -202,7 +201,6 @@ class FrameForge(Gui.Workbench):
         This function is called at the first activation of the workbench.
         here is the place to import all the commands
         """
-        from freecad.frameforge.ff_tools import translate
         from freecad.frameforge import (
             create_bom_tool,
             create_end_miter_tool,
@@ -212,6 +210,7 @@ class FrameForge(Gui.Workbench):
             edit_profile_tool,
             parametric_line,
         )
+        from freecad.frameforge.ff_tools import translate
 
         App.Console.PrintMessage(translate("frameforge", "Switching to frameforge") + "\n")
 

@@ -6,11 +6,9 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore, QtGui
 
-from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
-from freecad.frameforge.frameforge_exceptions import FrameForgeException
-from freecad.frameforge.ff_tools import FormProxy
 from freecad.frameforge.extruded_cutout import ExtrudedCutout, ViewProviderExtrudedCutout
-from freecad.frameforge.ff_tools import translate
+from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, FormProxy, translate
+from freecad.frameforge.frameforge_exceptions import FrameForgeException
 
 
 class CreateExtrudedCutoutTaskPanel:

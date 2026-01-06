@@ -13,7 +13,6 @@ if App.GuiUp:
     import FreeCADGui as Gui
 
 from freecad.frameforge import _utils
-
 from freecad.frameforge.ff_tools import ICONPATH
 
 TOOL_ICON = os.path.join(ICONPATH, "line.svg")
