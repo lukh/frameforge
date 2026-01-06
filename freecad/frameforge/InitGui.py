@@ -204,10 +204,10 @@ class FrameForge(Gui.Workbench):
         """
         from freecad.frameforge import (
             create_bom_tool,
+            create_custom_profiles_tool,
             create_end_miter_tool,
             create_extruded_cutout_tool,
             create_profiles_tool,
-            create_custom_profiles_tool,
             create_trimmed_profiles_tool,
             edit_profile_tool,
             parametric_line,
