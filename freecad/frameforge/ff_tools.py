@@ -1,5 +1,7 @@
 import os
 
+import FreeCAD
+
 RESSOURCESPATH = os.path.join(os.path.dirname(__file__), "resources")
 
 PROFILESPATH = os.path.join(RESSOURCESPATH, "profiles")
@@ -10,16 +12,15 @@ UIPATH = os.path.join(RESSOURCESPATH, "ui")
 TRANSLATIONSPATH = os.path.join(RESSOURCESPATH, "translations")
 
 
-class FrameForgeException(BaseException):
-    pass
+translate = FreeCAD.Qt.translate
 
 
-from .create_end_miter_tool import *
-from .create_extruded_cutout_tool import *
-from .create_profiles_tool import *
-from .create_trimmed_profiles_tool import *
-from .edit_profile_tool import *
-from .extruded_cutout import *
-from .parametric_line import *
-from .profile import *
-from .trimmed_profile import *
+class FormProxy(object):
+    def __init__(self, form):
+        self.members = {o: f for f in form for o in vars(f)}
+
+    def __getattr__(self, name):
+        if name not in self.members:
+            raise ValueError(f"{name} not a member of one of the forms")
+
+        return getattr(self.members[name], name)

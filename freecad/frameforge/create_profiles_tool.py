@@ -6,10 +6,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore, QtGui
 
-from freecad.frameforge import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH
-from freecad.frameforge._ui_utils import FormProxy
+from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, FormProxy, translate
 from freecad.frameforge.profile import Profile, ViewProviderProfile
-from freecad.frameforge.translate_utils import translate
 
 
 class CreateProfileTaskPanel:
