@@ -10,6 +10,7 @@ from freecad.frameforge.ff_tools import translate
 Gui.addLanguagePath(TRANSLATIONSPATH)
 Gui.updateLocale()
 
+
 class FrameForge(Gui.Workbench):
     """
     class which gets initiated at startup of the gui
@@ -234,6 +235,7 @@ class FrameForge(Gui.Workbench):
         code which should be computed when a user switch to this workbench
         """
         from freecad.frameforge.ff_tools import translate
+
         App.Console.PrintMessage(translate("frameforge", "Workbench frameforge activated.") + "\n")
 
     def Deactivated(self):
@@ -241,6 +243,7 @@ class FrameForge(Gui.Workbench):
         code which should be computed when this workbench is deactivated
         """
         from freecad.frameforge.ff_tools import translate
+
         App.Console.PrintMessage(translate("frameforge", "Workbench frameforge de-activated.") + "\n")
 
 

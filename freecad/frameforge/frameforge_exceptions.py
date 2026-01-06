@@ -1,4 +1,2 @@
-
 class FrameForgeException(BaseException):
     pass
-
