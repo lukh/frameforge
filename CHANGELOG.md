@@ -1,5 +1,8 @@
 ## Changelog
 
+*v0.1.6
+  - Fix #67
+
 * v0.1.5
   - Add ExtrudedCutout
   - Add BOM
