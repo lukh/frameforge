@@ -8,6 +8,13 @@ __doc__ = "Curves workbench utilities common to all tools."
 import FreeCAD
 import Part
 
+def getRootObject(obj):
+    if obj.isDerivedFrom("PartDesign::Feature"):
+        body = obj.getParentGeoFeatureGroup()
+        if body:
+            return body
+
+    return obj
 
 def getSubShape(shape, shape_type, n):
     if shape_type == "Vertex" and len(shape.Vertexes) >= n:
