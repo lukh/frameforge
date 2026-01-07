@@ -31,11 +31,13 @@ class LinkCommand:
         if not sel:
             return
 
+        App.ActiveDocument.openTransaction("Create Links")
         roots = set()
         for obj in sel:
             roots.add(getRootObject(obj))
 
         for root in roots:
             makeLink(root)
+        App.ActiveDocument.commitTransaction()
 
 Gui.addCommand("FrameForge_Link", LinkCommand())
