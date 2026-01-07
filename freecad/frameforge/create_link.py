@@ -1,6 +1,9 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 
+import AttachmentEditor.TaskAttachmentEditor as TaskAttachmentEditor
+
+
 from freecad.frameforge._utils import getRootObject
 
 def makeLink(source):
@@ -37,7 +40,8 @@ class LinkCommand:
             roots.add(getRootObject(obj))
 
         for root in roots:
-            makeLink(root)
+            link = makeLink(root)
+            Gui.Control.showDialog(TaskAttachmentEditor.AttachmentEditorTaskPanel(link))
         App.ActiveDocument.commitTransaction()
 
 Gui.addCommand("FrameForge_Link", LinkCommand())
