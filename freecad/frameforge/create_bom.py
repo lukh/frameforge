@@ -50,7 +50,6 @@ def get_profile_from_trimmedbody(obj):
     else:
         return obj
 
-
 def get_profile_from_extrudedcutout(obj):
     if is_extrudedcutout(obj):
         bo = obj.baseObject[0]
@@ -78,6 +77,7 @@ def get_trimmedprofile_from_extrudedcutout(obj):
             return None
     else:
         raise Exception("Not an extruded cutout")
+
 
 
 def get_all_cutting_angles(trimmed_profile):
@@ -114,6 +114,9 @@ def get_all_cutting_angles(trimmed_profile):
     if hasattr(trimmed_profile.TrimmedBody, "TrimmedProfileType"):
         parent_profile = trimmed_profile.TrimmedBody
         angles.extend(get_all_cutting_angles(parent_profile))
+
+    else:
+        angles.append("?")
 
     return angles
 
@@ -159,13 +162,13 @@ def traverse_assembly(data, obj, parent=""):
         for child in obj.Shapes:
             traverse_assembly(data, child, parent=obj.Label)
 
-    if is_group(obj):
+    elif is_group(obj):
         for child in obj.Group:
             traverse_assembly(data, child, parent=obj.Label)
 
-    if is_part(obj):
-        for child in obj.OutList:
-            if child.InList == [obj]:
+    elif is_part(obj):
+        for child in obj.Group:
+            if child.ViewObject.Visibility: # TODO: fix this access...
                 traverse_assembly(data, child, parent=obj.Label)
 
     elif is_profile(obj):
@@ -179,13 +182,14 @@ def traverse_assembly(data, obj, parent=""):
         d["bevel_start_cut_2"] = str(getattr(obj, "BevelStartCut2", "N/A"))
         d["bevel_end_cut_1"] = str(getattr(obj, "BevelEndCut1", "N/A"))
         d["bevel_end_cut_2"] = str(getattr(obj, "BevelEndCut2", "N/A"))
+        d['trim_end_1'] = "N/A"
+        d['trim_end_2'] = "N/A"
         d["approx_weight"] = str(getattr(obj, "ApproxWeight", "N/A"))
         d["quantity"] = getattr(obj, "Quantity", "1")
 
         data.append(d)
 
     elif is_trimmedbody(obj) or is_extrudedcutout(obj):
-        print(obj.Label)
         if is_trimmedbody(obj):
             prof = get_profile_from_trimmedbody(obj)
             trim_prof = obj
@@ -204,10 +208,12 @@ def traverse_assembly(data, obj, parent=""):
         d["size_name"] = getattr(prof, "SizeName", "N/A")
         d["material"] = getattr(prof, "Material", "N/A")
         d["length"] = str(length_along_normal(trim_prof if trim_prof else prof))
-        d["bevel_start_cut_1"] = str(angles[0])
-        d["bevel_start_cut_2"] = "N/A"
-        d["bevel_end_cut_1"] = str(angles[1])
-        d["bevel_end_cut_2"] = "N/A"
+        d["bevel_start_cut_1"] = str(getattr(prof, "BevelStartCut1", "N/A"))
+        d["bevel_start_cut_2"] = str(getattr(prof, "BevelStartCut2", "N/A"))
+        d["bevel_end_cut_1"] = str(getattr(prof, "BevelEndCut1", "N/A"))
+        d["bevel_end_cut_2"] = str(getattr(prof, "BevelEndCut2", "N/A"))
+        d['trim_end_1'] = str(angles[0])
+        d['trim_end_2'] = str(angles[1])
         d["approx_weight"] = str(getattr(prof, "ApproxWeight", "N/A"))
         d["quantity"] = "1"
 
@@ -225,6 +231,8 @@ def sort_profiles(profiles_data):
         round(float(x["length"]), 1),
         x["material"],
         x["size_name"],
+        x['trim_end_1'],
+        x['trim_end_2']
     )
 
     profiles_data_sorted = sorted(profiles_data, key=key_func)
@@ -246,6 +254,8 @@ def sort_profiles(profiles_data):
         d["bevel_start_cut_2"] = g["bevel_start_cut_2"]
         d["bevel_end_cut_1"] = g["bevel_end_cut_1"]
         d["bevel_end_cut_2"] = g["bevel_end_cut_2"]
+        d["trim_end_1"] = g["trim_end_1"]
+        d["trim_end_2"] = g["trim_end_2"]
         d["approx_weight"] = g["approx_weight"]
         d["quantity"] = len(group)
 
@@ -268,8 +278,10 @@ def make_bom(objects, bom_name="BOM", group_profiles=False):
     spreadsheet.set("H1", "BevelStartCut2")
     spreadsheet.set("I1", "BevelEndCut1")
     spreadsheet.set("J1", "BevelEndCut2")
-    spreadsheet.set("K1", "ApproxWeight")
-    spreadsheet.set("L1", "Quantity")
+    spreadsheet.set("K1", "TrimCut1")
+    spreadsheet.set("L1", "TrimCut2")
+    spreadsheet.set("M1", "ApproxWeight")
+    spreadsheet.set("N1", "Quantity")
 
     row = 2
 
@@ -291,7 +303,11 @@ def make_bom(objects, bom_name="BOM", group_profiles=False):
         spreadsheet.set("H" + str(row), prof["bevel_start_cut_2"])
         spreadsheet.set("I" + str(row), prof["bevel_end_cut_1"])
         spreadsheet.set("J" + str(row), prof["bevel_end_cut_2"])
-        spreadsheet.set("K" + str(row), prof["approx_weight"])
-        spreadsheet.set("L" + str(row), str(prof["quantity"]))
+        spreadsheet.set("K" + str(row), prof["trim_end_1"])
+        spreadsheet.set("L" + str(row), prof["trim_end_2"])
+        spreadsheet.set("M" + str(row), prof["approx_weight"])
+        spreadsheet.set("N" + str(row), str(prof["quantity"]))
 
         row += 1
+
+
