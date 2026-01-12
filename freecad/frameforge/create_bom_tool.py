@@ -58,6 +58,21 @@ def make_cut_list(sorted_stocks, cutlist_name="CutList"):
 
         row += 1
 
+    row +=1
+    spreadsheet.set("A" + str(row), "Stock statistics")
+    spreadsheet.set("B" + str(row), "Length Used")
+    spreadsheet.set("C" + str(row), "Stock Used")
+    spreadsheet.set("D" + str(row), "Stock Count")
+    row +=1
+    for stocks in sorted_stocks:
+        spreadsheet.set("A" + str(row), stocks)
+        spreadsheet.set("B" + str(row), f"{sum([s.used for s in sorted_stocks[stocks]])}")
+        spreadsheet.set("C" + str(row), f"{sum([s.length for s in sorted_stocks[stocks]])}")
+        spreadsheet.set("D" + str(row), f"{len(sorted_stocks[stocks])}")
+
+        row +=1
+
+
     row += 1
     spreadsheet.set("A" + str(row), "Legend")
     spreadsheet.set("A" + str(row+1), "*")
