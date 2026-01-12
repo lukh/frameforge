@@ -36,13 +36,10 @@ def make_cut_list(sorted_stocks, cutlist_name="CutList"):
     row = 2
 
     for stocks in sorted_stocks:
-        print(stocks)
         stock_idx = 0
         for stock in sorted_stocks[stocks]:
-            print("   ", stock_idx, stock)
             cut_part_idx = 0
             for cut_part in stock.parts:
-                print("         ", cut_part)
                 prof = cut_part.obj
                 if cut_part_idx == 0:
                     spreadsheet.set("A" + str(row), stocks + f" / used = {stock.used:.2f}, left = {stock.left:.2f}")
@@ -137,7 +134,6 @@ class CreateBOMTaskPanel:
 
                     sorted_stocks[f"{k[1]}_{k[0]}_{k[2]}"] = best_fit_decreasing(self.form.stock_length_sb.value(), parts)
 
-                print(sorted_stocks)
                 make_cut_list(sorted_stocks, bom_name + "_CutList")
 
 
