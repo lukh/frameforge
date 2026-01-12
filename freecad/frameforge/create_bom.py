@@ -163,24 +163,25 @@ def get_readable_cutting_angles(bsc1, bsc2, bec1, bec2, *trim_cuts):
         if all([b == 0 for b in all_bevels]):
             return ("0.0", "0.0")
         elif bsc1 == bec1 == 0.0:
-            return (f"{bsc2}", f"{bec2}")
+            return (f"{bsc2:.2f}", f"{bec2:.2f}")
         elif bsc2 == bec2 == 0.0:
-            return (f"{bsc1}", f"{bec1}")
+            return (f"{bsc1:.2f}", f"{bec1:.2f}")
         elif (bsc1 == 0.0 and bec2 == 0.0) ^ (bsc2 == 0.0 and bec1 == 0.0):
-            return (f"{bsc1 + bsc2}", f'* {bec1+bec2}')
+            return (f"{(bsc1 + bsc2):.2f}", f'* {(bec1+bec2):.2f}')
         else:
-            return (f"'{bsc1} / {bsc2}", f"'{bec1} / {bec2}")
+            return (f"{bsc1:.2f} / {bsc2:.2f}", f"{bec1:.2f} / {bec2:.2f}")
 
     elif len(trim_cuts) == 2:
         return (f"~ {trim_cuts[0]:.2f}", f"~ {trim_cuts[1]:.2f}")
 
     elif len(trim_cuts) == 1:
         if all([b == 0.0 for b in all_bevels]):
-            return ("0.0", f"{trim_cuts[0]}")
+            return ("0.0", f"{trim_cuts[0]:.2f}")
         elif len([b != 0.0 for b in all_bevels]) == 1:
-            return (f"{sum(all_bevels)}", f"{trim_cuts[0]}")
+            return (f"{sum(all_bevels):.2f}", f"{trim_cuts[0]:.2f}")
 
     return ("?", "?")
+
 
 
 
@@ -297,7 +298,7 @@ def sort_profiles(profiles_data):
     return profiles_data_grouped
 
 
-def make_bom(objects, bom_name="BOM", group_profiles=False):
+def make_bom(profiles_data, bom_name="BOM"):
     doc = FreeCAD.ActiveDocument
     spreadsheet = doc.addObject("Spreadsheet::Sheet", bom_name)
 
@@ -314,13 +315,6 @@ def make_bom(objects, bom_name="BOM", group_profiles=False):
 
     row = 2
 
-    profiles_data = []
-    for obj in objects:
-        traverse_assembly(profiles_data, obj)
-
-    if group_profiles:
-        profiles_data = sort_profiles(profiles_data)
-
     for prof in profiles_data:
         spreadsheet.set("A" + str(row), prof["parent"])
         spreadsheet.set("B" + str(row), prof["label"])
@@ -328,11 +322,22 @@ def make_bom(objects, bom_name="BOM", group_profiles=False):
         spreadsheet.set("D" + str(row), prof["size_name"])
         spreadsheet.set("E" + str(row), prof["material"])
         spreadsheet.set("F" + str(row), prof["length"])
-        spreadsheet.set("G" + str(row), str(prof["cut_angle_1"]))
-        spreadsheet.set("H" + str(row), str(prof["cut_angle_2"]))
+        spreadsheet.set("G" + str(row), "'" + str(prof["cut_angle_1"]))
+        spreadsheet.set("H" + str(row), "'" + str(prof["cut_angle_2"]))
         spreadsheet.set("I" + str(row), prof["approx_weight"])
         spreadsheet.set("J" + str(row), str(prof["quantity"]))
 
         row += 1
+
+    row += 1
+    spreadsheet.set("A" + str(row), "Legend")
+    spreadsheet.set("A" + str(row+1), "*")
+    spreadsheet.set("B" + str(row+1), "Angles 1 and 2 are rotated 90° along the edge")
+    spreadsheet.set("A" + str(row+2), "-")
+    spreadsheet.set("B" + str(row+2), "Angles 1 and 2 are cut in the same direction (no need to rotate the stock 180° when cutting)")
+    spreadsheet.set("A" + str(row+3), "~")
+    spreadsheet.set("B" + str(row+3), "Angle is calculated from a TrimmedProfile -> be careful to check length, angles and cut direction")
+    spreadsheet.set("A" + str(row+4), "?")
+    spreadsheet.set("B" + str(row+4), "Can't compute the angle, do it yourself !")
 
 

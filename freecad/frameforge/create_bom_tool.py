@@ -1,4 +1,5 @@
 import os
+from itertools import groupby
 
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -10,10 +11,68 @@ from freecad.frameforge.create_bom import (
     is_part,
     is_profile,
     is_trimmedbody,
+    traverse_assembly,
+    sort_profiles,
     make_bom,
 )
+from freecad.frameforge.best_fit import CutPart, Stock, best_fit_decreasing
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
+
+
+
+def make_cut_list(sorted_stocks, cutlist_name="CutList"):
+    doc = App.ActiveDocument
+    spreadsheet = doc.addObject("Spreadsheet::Sheet", cutlist_name)
+
+    spreadsheet.set("A1", "Material")
+    spreadsheet.set("B1", "Stock")
+    spreadsheet.set("C1", "CutPart")
+    spreadsheet.set("D1", "Length")
+    spreadsheet.set("E1", "CutAngle1")
+    spreadsheet.set("F1", "CutAngle2")
+    spreadsheet.set("G1", "Quantity")
+
+    row = 2
+
+    for stocks in sorted_stocks:
+        print(stocks)
+        stock_idx = 0
+        for stock in sorted_stocks[stocks]:
+            print("   ", stock_idx, stock)
+            cut_part_idx = 0
+            for cut_part in stock.parts:
+                print("         ", cut_part)
+                prof = cut_part.obj
+                if cut_part_idx == 0:
+                    spreadsheet.set("A" + str(row), stocks + f" / used = {stock.used:.2f}, left = {stock.left:.2f}")
+
+                spreadsheet.set("B" + str(row), str(stock_idx))
+                spreadsheet.set("C" + str(row), prof["label"])
+                spreadsheet.set("D" + str(row), str(prof["length"]))
+                spreadsheet.set("E" + str(row), "'" + str(prof["cut_angle_1"]))
+                spreadsheet.set("F" + str(row), "'" + str(prof["cut_angle_2"]))
+                spreadsheet.set("G" + str(row), str(prof["quantity"]))
+
+                row += 1
+                cut_part_idx += 1
+
+            stock_idx += 1
+
+
+        row += 1
+
+    row += 1
+    spreadsheet.set("A" + str(row), "Legend")
+    spreadsheet.set("A" + str(row+1), "*")
+    spreadsheet.set("B" + str(row+1), "Angles 1 and 2 are rotated 90° along the edge")
+    spreadsheet.set("A" + str(row+2), "-")
+    spreadsheet.set("B" + str(row+2), "Angles 1 and 2 are cut in the same direction (no need to rotate the stock 180° when cutting)")
+    spreadsheet.set("A" + str(row+3), "~")
+    spreadsheet.set("B" + str(row+3), "Angle is calculated from a TrimmedProfile -> be careful to check length, angles and cut direction")
+    spreadsheet.set("A" + str(row+4), "?")
+    spreadsheet.set("B" + str(row+4), "Can't compute the angle, do it yourself !")
+    
 
 
 class CreateBOMTaskPanel:
@@ -51,7 +110,36 @@ class CreateBOMTaskPanel:
             ]
         ):
             bom_name = self.form.bom_name_te.text() if self.form.bom_name_te.text() != "" else "BOM"
-            make_bom(sel, bom_name=bom_name, group_profiles=self.form.group_profiles_cb.isChecked())
+
+            profiles_data = []
+            for obj in sel:
+                traverse_assembly(profiles_data, obj)
+
+            if self.form.group_profiles_cb.isChecked():
+                bom_data = sort_profiles(profiles_data)
+            else:
+                bom_data = profiles_data
+
+            # BOM
+            make_bom(bom_data, bom_name=bom_name)
+
+            # Cut List
+            if self.form.cut_list_cb.isChecked():
+                key_func = lambda x: (
+                        x["family"],
+                        x["material"],
+                        x["size_name"],
+                    )
+
+                sorted_stocks = {}
+                for k, group in groupby(profiles_data, key=key_func):
+                    parts = [CutPart(p['label'], float(p['length']), self.form.kerf_sb.value(), p) for p in list(group)]
+
+                    sorted_stocks[f"{k[1]}_{k[0]}_{k[2]}"] = best_fit_decreasing(self.form.stock_length_sb.value(), parts)
+
+                print(sorted_stocks)
+                make_cut_list(sorted_stocks, bom_name + "_CutList")
+
 
             App.ActiveDocument.commitTransaction()
             App.ActiveDocument.recompute()

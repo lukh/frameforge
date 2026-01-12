@@ -13,22 +13,78 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>BOM Name</string>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>BOM</string>
      </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>BOM Name</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="bom_name_te"/>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="group_profiles_cb">
+        <property name="text">
+         <string>Group Profiles</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="bom_name_te"/>
-   </item>
-   <item>
-    <widget class="QCheckBox" name="group_profiles_cb">
-     <property name="text">
-      <string>Group Profiles</string>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Cut List</string>
      </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QCheckBox" name="cut_list_cb">
+        <property name="text">
+         <string>Generate Cut List</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Stock Material Length</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="stock_length_sb">
+        <property name="maximum">
+         <number>999999999</number>
+        </property>
+        <property name="value">
+         <number>6000</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Kerf</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="kerf_sb">
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
