@@ -1,3 +1,5 @@
+import os
+
 import FreeCAD as App
 import FreeCADGui as Gui
 
@@ -5,6 +7,7 @@ import AttachmentEditor.TaskAttachmentEditor as TaskAttachmentEditor
 
 
 from freecad.frameforge._utils import getRootObject
+from freecad.frameforge.ff_tools import ICONPATH
 
 def makeLink(source):
     doc = App.ActiveDocument
@@ -22,6 +25,7 @@ def makeLink(source):
 class LinkCommand:
     def GetResources(self):
         return {
+            "Pixmap": os.path.join(ICONPATH, "link.svg"),
             "MenuText": "Attached Link",
             "ToolTip": "Create a link with Attachment"
         }
