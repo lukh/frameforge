@@ -90,6 +90,14 @@ class CreateBOMTaskPanel:
     def __init__(self):
         self.form = Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_bom.ui"))
 
+        param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
+        if not param.IsEmpty():
+            self.form.group_profiles_cb.setChecked(param.GetBool("Group BOM Items by Material/Size/Family", False))
+            self.form.cut_list_cb.setChecked(param.GetBool("Generate Cut List", False))
+            self.form.stock_length_sb.setValue(param.GetFloat("Stock Length", 6000.0))
+            self.form.kerf_sb.setValue(param.GetFloat("Kerf", 1.0))
+
+
     def open(self):
         App.Console.PrintMessage(translate("frameforge", "Opening CreateBOM\n"))
 
@@ -120,6 +128,13 @@ class CreateBOMTaskPanel:
                 for s in sel
             ]
         ):
+            param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
+            param.SetBool("Group BOM Items by Material/Size/Family", self.form.group_profiles_cb.isChecked())
+            param.SetBool("Generate Cut List", self.form.cut_list_cb.isChecked())
+            param.SetFloat("Stock Length", self.form.stock_length_sb.value())
+            param.SetFloat("Kerf", self.form.kerf_sb.value())
+
+
             bom_name = self.form.bom_name_te.text() if self.form.bom_name_te.text() != "" else "BOM"
 
             profiles_data = []
