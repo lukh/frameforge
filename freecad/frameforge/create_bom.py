@@ -161,13 +161,13 @@ def get_readable_cutting_angles(bsc1, bsc2, bec1, bec2, *trim_cuts):
     if len(trim_cuts) == 0:
         # a real profile
         if all([b == 0 for b in all_bevels]):
-            return (0.0, 0.0)
+            return ("0.0", "0.0")
         elif bsc1 == bec1 == 0.0:
-            return (bsc2, bec2)
+            return (f"{bsc2}", f"{bec2}")
         elif bsc2 == bec2 == 0.0:
-            return (bsc1, bec1)
+            return (f"{bsc1}", f"{bec1}")
         elif (bsc1 == 0.0 and bec2 == 0.0) ^ (bsc2 == 0.0 and bec1 == 0.0):
-            return (bsc1 + bsc2, f'* {bec1+bec2}')
+            return (f"{bsc1 + bsc2}", f'* {bec1+bec2}')
         else:
             return (f"'{bsc1} / {bsc2}", f"'{bec1} / {bec2}")
 
@@ -176,9 +176,9 @@ def get_readable_cutting_angles(bsc1, bsc2, bec1, bec2, *trim_cuts):
 
     elif len(trim_cuts) == 1:
         if all([b == 0.0 for b in all_bevels]):
-            return (0.0, trim_cuts[0])
+            return ("0.0", f"{trim_cuts[0]}")
         elif len([b != 0.0 for b in all_bevels]) == 1:
-            return (sum(all_bevels), trim_cuts[0])
+            return (f"{sum(all_bevels)}", f"{trim_cuts[0]}")
 
     return ("?", "?")
 
