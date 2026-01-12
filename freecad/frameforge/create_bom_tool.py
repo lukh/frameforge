@@ -1,6 +1,5 @@
 import os
-from itertools import groupby
-
+from collections import defaultdict
 import FreeCAD as App
 import FreeCADGui as Gui
 
@@ -122,14 +121,13 @@ class CreateBOMTaskPanel:
 
             # Cut List
             if self.form.cut_list_cb.isChecked():
-                key_func = lambda x: (
-                        x["family"],
-                        x["material"],
-                        x["size_name"],
-                    )
+                grouped_profiles = defaultdict(list)
+                for p in profiles_data:
+                    key = (p["family"], p["material"], p["size_name"])
+                    grouped_profiles[key].append(p)
 
                 sorted_stocks = {}
-                for k, group in groupby(profiles_data, key=key_func):
+                for k, group in grouped_profiles.items():
                     parts = [CutPart(p['label'], float(p['length']), self.form.kerf_sb.value(), p) for p in list(group)]
 
                     sorted_stocks[f"{k[1]}_{k[0]}_{k[2]}"] = best_fit_decreasing(self.form.stock_length_sb.value(), parts)
