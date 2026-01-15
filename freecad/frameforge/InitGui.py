@@ -190,7 +190,7 @@ class FrameForge(Gui.Workbench):
 
     toolbox_group = ["Std_Group", "Std_Part"]
 
-    toolbox_part = ["Part_Fuse", "Part_Cut", "PartDesign_Body"]
+    toolbox_part = ["FrameForge_Link", "Part_Fuse", "Part_Cut", "PartDesign_Body"]
 
     toolbox_output = ["FrameForge_CreateBOM"]
 
@@ -207,6 +207,7 @@ class FrameForge(Gui.Workbench):
             create_custom_profiles_tool,
             create_end_miter_tool,
             create_extruded_cutout_tool,
+            create_link,
             create_profiles_tool,
             create_trimmed_profiles_tool,
             edit_profile_tool,
