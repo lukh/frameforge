@@ -201,12 +201,10 @@ def traverse_assembly(data, obj, parent=""):
     d = {}
     if is_fusion(obj):
         for child in obj.Shapes:
-            print("    " + child.Label)
             traverse_assembly(data, child, parent=obj.Label)
 
     elif is_group(obj):
         for child in obj.Group:
-            print("    " + child.Label)
             traverse_assembly(data, child, parent=obj.Label)
 
     elif is_part(obj):
