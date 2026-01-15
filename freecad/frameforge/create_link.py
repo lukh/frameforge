@@ -12,7 +12,7 @@ from freecad.frameforge.ff_tools import ICONPATH
 def makeLink(source):
     doc = App.ActiveDocument
 
-    link = doc.addObject("App::Link", source.Name + "_Link")
+    link = doc.addObject("App::Link", source.Label + "_Link")
     link.LinkedObject = source
 
     link.addExtension("Part::AttachExtensionPython")
