@@ -229,6 +229,7 @@ def traverse_assembly(data, obj, parent=""):
         d["length"] = str(length_along_normal(obj))
         d['cut_angle_1'] = cut_angles[0]
         d['cut_angle_2'] = cut_angles[1]
+        d['cutout'] = ""
         d["approx_weight"] = str(getattr(obj, "ApproxWeight", "N/A"))
         d["quantity"] = getattr(obj, "Quantity", "1")
 
@@ -240,12 +241,14 @@ def traverse_assembly(data, obj, parent=""):
             trim_prof = obj
 
             angles = get_all_cutting_angles(obj)
+            has_cutout = False
 
         elif is_extrudedcutout(obj):
             prof = get_profile_from_extrudedcutout(obj)
             trim_prof = get_trimmedprofile_from_extrudedcutout(obj)
 
             angles = get_all_cutting_angles(trim_prof)
+            has_cutout = True
 
         cut_angles = get_readable_cutting_angles(
             getattr(prof, "BevelStartCut1", "N/A"),
@@ -264,6 +267,7 @@ def traverse_assembly(data, obj, parent=""):
         d["length"] = str(length_along_normal(trim_prof if trim_prof else prof))
         d['cut_angle_1'] = cut_angles[0]
         d['cut_angle_2'] = cut_angles[1]
+        d['cutout'] = "Yes" if has_cutout else ""
         d["approx_weight"] = str(getattr(prof, "ApproxWeight", "N/A"))
         d["quantity"] = "1"
 
@@ -278,7 +282,8 @@ def sort_profiles(profiles_data):
         x["material"],
         x["size_name"],
         x['cut_angle_1'],
-        x['cut_angle_2']
+        x['cut_angle_2'],
+        x['cutout']
     )
 
     profiles_data_sorted = sorted(profiles_data, key=key_func)
@@ -298,6 +303,7 @@ def sort_profiles(profiles_data):
         d["length"] = g["length"]
         d["cut_angle_1"] = g["cut_angle_1"]
         d["cut_angle_2"] = g["cut_angle_2"]
+        d["cutout"] = g["cutout"]
         d["approx_weight"] = g["approx_weight"]
         d["quantity"] = len(group)
 
@@ -318,8 +324,9 @@ def make_bom(profiles_data, bom_name="BOM"):
     spreadsheet.set("F1", "Length")
     spreadsheet.set("G1", "CutAngle1")
     spreadsheet.set("H1", "CutAngle2")
-    spreadsheet.set("I1", "ApproxWeight")
-    spreadsheet.set("J1", "Quantity")
+    spreadsheet.set("I1", "Drill/Cutout")
+    spreadsheet.set("J1", "ApproxWeight")
+    spreadsheet.set("K1", "Quantity")
 
     row = 2
 
@@ -332,8 +339,9 @@ def make_bom(profiles_data, bom_name="BOM"):
         spreadsheet.set("F" + str(row), prof["length"])
         spreadsheet.set("G" + str(row), "'" + str(prof["cut_angle_1"]))
         spreadsheet.set("H" + str(row), "'" + str(prof["cut_angle_2"]))
-        spreadsheet.set("I" + str(row), prof["approx_weight"])
-        spreadsheet.set("J" + str(row), str(prof["quantity"]))
+        spreadsheet.set("I" + str(row), "'" + str(prof["cutout"]))
+        spreadsheet.set("J" + str(row), prof["approx_weight"])
+        spreadsheet.set("K" + str(row), str(prof["quantity"]))
 
         row += 1
 
