@@ -931,6 +931,8 @@ class Profile:
             else:
                 raise ValueError("Custom profile must be a Face or Sketch")
 
+            W, H = p.BoundBox.XLength, p.BoundBox.YLength
+
         if obj.Family == "V-Slot":
             if H == 20.0 and W == 20.0:
                 p = vslot20x20()
