@@ -107,7 +107,7 @@ def get_all_cutting_angles(trimmed_profile):
                     if angle > 90:
                         angle = 180 - angle
 
-                    angles.append(90 - (angle / angle_div))
+                    angles.append(angle / angle_div)
     else:
         angles = ["?", "?"]
 
