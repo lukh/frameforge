@@ -41,7 +41,7 @@ def make_cut_list(sorted_stocks, cutlist_name="CutList"):
             for cut_part in stock.parts:
                 prof = cut_part.obj
                 if cut_part_idx == 0:
-                    spreadsheet.set("A" + str(row), stocks + f" / used = {stock.used:.2f}, left = {stock.left:.2f}")
+                    spreadsheet.set("A" + str(row), stocks + f" / used = {stock.used:.1f}, left = {stock.left:.1f}")
 
                 spreadsheet.set("B" + str(row), str(stock_idx))
                 spreadsheet.set("C" + str(row), prof["label"])

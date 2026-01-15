@@ -162,23 +162,33 @@ def get_readable_cutting_angles(bsc1, bsc2, bec1, bec2, *trim_cuts):
         # a real profile
         if all([b == 0 for b in all_bevels]):
             return ("0.0", "0.0")
+
         elif bsc1 == bec1 == 0.0:
-            return (f"{bsc2:.2f}", f"{bec2:.2f}")
+            angles = (bsc2, bec2)
+            angles = angles if (angles[0] * angles[1] <= 0)  else (abs(angles[0]), abs(angles[1]))
+            return (f"{angles[0]:.1f}", f"{angles[1]:.1f}")
+
         elif bsc2 == bec2 == 0.0:
-            return (f"{bsc1:.2f}", f"{bec1:.2f}")
+            angles = (bsc1, bec1)
+            angles = angles if (angles[0] * angles[1] <= 0)  else (abs(angles[0]), abs(angles[1]))
+            return (f"{angles[0]:.1f}", f"{angles[1]:.1f}")
+
         elif (bsc1 == 0.0 and bec2 == 0.0) ^ (bsc2 == 0.0 and bec1 == 0.0):
-            return (f"{(bsc1 + bsc2):.2f}", f'* {(bec1+bec2):.2f}')
+            return (f"{(bsc1 + bsc2):.1f}", f'* {(bec1+bec2):.1f}')
+
         else:
-            return (f"{bsc1:.2f} / {bsc2:.2f}", f"{bec1:.2f} / {bec2:.2f}")
+            return (f"{bsc1:.1f} / {bsc2:.1f}", f"{bec1:.1f} / {bec2:.1f}")
 
     elif len(trim_cuts) == 2:
-        return (f"~ {trim_cuts[0]:.2f}", f"~ {trim_cuts[1]:.2f}")
+        return (f"@ {trim_cuts[0]:.1f}", f"@ {trim_cuts[1]:.1f}")
 
     elif len(trim_cuts) == 1:
-        if all([b == 0.0 for b in all_bevels]):
-            return ("0.0", f"{trim_cuts[0]:.2f}")
-        elif len([b != 0.0 for b in all_bevels]) == 1:
-            return (f"{sum(all_bevels):.2f}", f"{trim_cuts[0]:.2f}")
+        bevels_not_zero = [b for b in all_bevels if b != 0]
+        if len(bevels_not_zero) == 0:
+            return ("0.0", f"@ {trim_cuts[0]:.1f}")
+
+        elif len(bevels_not_zero) == 1:
+            return (f"{bevels_not_zero[0]:.1f}", f"@ {trim_cuts[0]:.1f}")
 
     return ("?", "?")
 
@@ -335,7 +345,7 @@ def make_bom(profiles_data, bom_name="BOM"):
     spreadsheet.set("B" + str(row+1), "Angles 1 and 2 are rotated 90° along the edge")
     spreadsheet.set("A" + str(row+2), "-")
     spreadsheet.set("B" + str(row+2), "Angles 1 and 2 are cut in the same direction (no need to rotate the stock 180° when cutting)")
-    spreadsheet.set("A" + str(row+3), "~")
+    spreadsheet.set("A" + str(row+3), "@")
     spreadsheet.set("B" + str(row+3), "Angle is calculated from a TrimmedProfile -> be careful to check length, angles and cut direction")
     spreadsheet.set("A" + str(row+4), "?")
     spreadsheet.set("B" + str(row+4), "Can't compute the angle, do it yourself !")
