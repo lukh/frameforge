@@ -11,7 +11,8 @@ from freecad.frameforge.create_bom import (
     is_profile,
     is_trimmedbody,
     traverse_assembly,
-    sort_profiles,
+    group_profiles,
+    group_links,
     make_bom,
 )
 from freecad.frameforge.best_fit import CutPart, Stock, best_fit_decreasing
@@ -138,16 +139,18 @@ class CreateBOMTaskPanel:
             bom_name = self.form.bom_name_te.text() if self.form.bom_name_te.text() != "" else "BOM"
 
             profiles_data = []
+            links_data = []
             for obj in sel:
-                traverse_assembly(profiles_data, obj)
+                traverse_assembly(profiles_data, links_data, obj)
 
             if self.form.group_profiles_cb.isChecked():
-                bom_data = sort_profiles(profiles_data)
+                bom_data = group_profiles(profiles_data)
+                links_data = group_links(links_data)
             else:
                 bom_data = profiles_data
 
             # BOM
-            make_bom(bom_data, bom_name=bom_name)
+            make_bom(bom_data, links_data, bom_name=bom_name)
 
             # Cut List
             if self.form.cut_list_cb.isChecked():

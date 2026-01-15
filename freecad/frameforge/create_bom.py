@@ -1,5 +1,6 @@
 import math
 from itertools import groupby
+from collections import defaultdict
 
 import Assembly
 import FreeCAD
@@ -42,6 +43,9 @@ def is_extrudedcutout(obj):
         if hasattr(obj, "baseObject"):
             return True
     return False
+
+def is_link(obj):
+    return obj.TypeId == "App::Link"
 
 
 def get_profile_from_trimmedbody(obj):
@@ -197,20 +201,20 @@ def get_readable_cutting_angles(bsc1, bsc2, bec1, bec2, *trim_cuts):
 
 
 
-def traverse_assembly(data, obj, parent=""):
-    d = {}
+def traverse_assembly(profiles_data, links_data, obj, parent=""):
+    p = {}
     if is_fusion(obj):
         for child in obj.Shapes:
-            traverse_assembly(data, child, parent=obj.Label)
+            traverse_assembly(profiles_data, links_data, child, parent=obj.Label)
 
     elif is_group(obj):
         for child in obj.Group:
-            traverse_assembly(data, child, parent=obj.Label)
+            traverse_assembly(profiles_data, links_data, child, parent=obj.Label)
 
     elif is_part(obj):
         for child in obj.Group:
             if child.ViewObject.Visibility: # TODO: fix this access...
-                traverse_assembly(data, child, parent=obj.Label)
+                traverse_assembly(profiles_data, links_data, child, parent=obj.Label)
 
 
     elif is_profile(obj):
@@ -221,19 +225,19 @@ def traverse_assembly(data, obj, parent=""):
             getattr(obj, "BevelEndCut2", "N/A")
         )
 
-        d["parent"] = parent
-        d["label"] = obj.Label
-        d["family"] = getattr(obj, "Family", "N/A")
-        d["size_name"] = getattr(obj, "SizeName", "N/A")
-        d["material"] = getattr(obj, "Material", "N/A")
-        d["length"] = str(length_along_normal(obj))
-        d['cut_angle_1'] = cut_angles[0]
-        d['cut_angle_2'] = cut_angles[1]
-        d['cutout'] = ""
-        d["approx_weight"] = str(getattr(obj, "ApproxWeight", "N/A"))
-        d["quantity"] = getattr(obj, "Quantity", "1")
+        p["parent"] = parent
+        p["label"] = obj.Label
+        p["family"] = getattr(obj, "Family", "N/A")
+        p["size_name"] = getattr(obj, "SizeName", "N/A")
+        p["material"] = getattr(obj, "Material", "N/A")
+        p["length"] = str(length_along_normal(obj))
+        p['cut_angle_1'] = cut_angles[0]
+        p['cut_angle_2'] = cut_angles[1]
+        p['cutout'] = ""
+        p["approx_weight"] = str(getattr(obj, "ApproxWeight", "N/A"))
+        p["quantity"] = getattr(obj, "Quantity", "1")
 
-        data.append(d)
+        profiles_data.append(p)
 
     elif is_trimmedbody(obj) or is_extrudedcutout(obj):
         if is_trimmedbody(obj):
@@ -259,22 +263,26 @@ def traverse_assembly(data, obj, parent=""):
         )
 
 
-        d["parent"] = parent
-        d["label"] = trim_prof.Label
-        d["family"] = getattr(prof, "Family", "N/A")
-        d["size_name"] = getattr(prof, "SizeName", "N/A")
-        d["material"] = getattr(prof, "Material", "N/A")
-        d["length"] = str(length_along_normal(trim_prof if trim_prof else prof))
-        d['cut_angle_1'] = cut_angles[0]
-        d['cut_angle_2'] = cut_angles[1]
-        d['cutout'] = "Yes" if has_cutout else ""
-        d["approx_weight"] = str(getattr(prof, "ApproxWeight", "N/A"))
-        d["quantity"] = "1"
+        p["parent"] = parent
+        p["label"] = trim_prof.Label
+        p["family"] = getattr(prof, "Family", "N/A")
+        p["size_name"] = getattr(prof, "SizeName", "N/A")
+        p["material"] = getattr(prof, "Material", "N/A")
+        p["length"] = str(length_along_normal(trim_prof if trim_prof else prof))
+        p['cut_angle_1'] = cut_angles[0]
+        p['cut_angle_2'] = cut_angles[1]
+        p['cutout'] = "Yes" if has_cutout else ""
+        p["approx_weight"] = str(getattr(prof, "ApproxWeight", "N/A"))
+        p["quantity"] = "1"
 
-        data.append(d)
+        profiles_data.append(p)
+
+    elif is_link(obj):
+        links_data.append({"parent": parent, "label":obj.Label, "part":obj.LinkedObject.Label, "quantity":"1"})
 
 
-def sort_profiles(profiles_data):
+
+def group_profiles(profiles_data):
     key_func = lambda x: (
         x["parent"],
         x["family"],
@@ -312,23 +320,47 @@ def sort_profiles(profiles_data):
     return profiles_data_grouped
 
 
-def make_bom(profiles_data, bom_name="BOM"):
+def group_links(links_data):
+    out_list = []
+    links_data_grouped = defaultdict(list)
+
+    for lnk in links_data:
+        key = (lnk["parent"], lnk['part'])
+        links_data_grouped[key].append(lnk)
+
+    for k, group in links_data_grouped.items():
+        ol = {}
+        ol["parent"] = k[0]
+        ol["label"] = ", ".join([g["label"] for g in group])
+        ol["part"] = k[1]
+        ol['quantity'] = len(group)
+
+        out_list.append(ol)
+
+    return out_list
+
+
+
+
+def make_bom(profiles_data, links_data, bom_name="BOM"):
     doc = FreeCAD.ActiveDocument
     spreadsheet = doc.addObject("Spreadsheet::Sheet", bom_name)
 
-    spreadsheet.set("A1", "Parent")
-    spreadsheet.set("B1", "Name")
-    spreadsheet.set("C1", "Family")
-    spreadsheet.set("D1", "SizeName")
-    spreadsheet.set("E1", "Material")
-    spreadsheet.set("F1", "Length")
-    spreadsheet.set("G1", "CutAngle1")
-    spreadsheet.set("H1", "CutAngle2")
-    spreadsheet.set("I1", "Drill/Cutout")
-    spreadsheet.set("J1", "ApproxWeight")
-    spreadsheet.set("K1", "Quantity")
+    spreadsheet.set("A1", "Profiles")
 
-    row = 2
+    spreadsheet.set("A2", "Parent")
+    spreadsheet.set("B2", "Name")
+    spreadsheet.set("C2", "Family")
+    spreadsheet.set("D2", "SizeName")
+    spreadsheet.set("E2", "Material")
+    spreadsheet.set("F2", "Length")
+    spreadsheet.set("G2", "CutAngle1")
+    spreadsheet.set("H2", "CutAngle2")
+    spreadsheet.set("I2", "Drill/Cutout")
+    spreadsheet.set("J2", "ApproxWeight")
+    spreadsheet.set("K2", "Quantity")
+
+    row = 3
 
     for prof in profiles_data:
         spreadsheet.set("A" + str(row), prof["parent"])
@@ -346,6 +378,23 @@ def make_bom(profiles_data, bom_name="BOM"):
         row += 1
 
     row += 1
+    spreadsheet.set("A" + str(row), "Parts")
+    row += 1
+    spreadsheet.set("A" + str(row), "Parent")
+    spreadsheet.set("B" + str(row), "Name")
+    spreadsheet.set("C" + str(row), "Part/Type")
+    spreadsheet.set("D" + str(row), "Quantity")
+    row += 1
+
+    for lnk in links_data:
+        spreadsheet.set("A" + str(row), lnk["parent"])
+        spreadsheet.set("B" + str(row), lnk["label"])
+        spreadsheet.set("C" + str(row), lnk["part"])
+        spreadsheet.set("D" + str(row), str(lnk["quantity"]))
+
+        row += 1
+
+    row += 2
     spreadsheet.set("A" + str(row), "Legend")
     spreadsheet.set("A" + str(row+1), "*")
     spreadsheet.set("B" + str(row+1), "Angles 1 and 2 are rotated 90° along the edge")
