@@ -1,6 +1,6 @@
 [project]
 name = "frameforge"
-version = "0.1.6"
+version = "0.1.7"
 description = "FrameForge is dedicated for creating Frames and Beams, and apply operations (miter cuts, trim cuts) on these profiles."
 authors = [
     {name = "Vivien HENRY", email = "vivien.henry@inductivebrain.fr"}

@@ -1,5 +1,13 @@
 ## Changelog
 
+* v0.1.7
+  - Fix BOM Generation
+  - Implement CutList
+  - Add Other object (parts, body) Links 
+  - Fix Custom Profile BoundingBox
+  - use cut angle for trimmedprofile in BOM
+  - add cutout info in BOM
+
 * v0.1.6
   - Fix #67
   - Merge Alu extrusions
