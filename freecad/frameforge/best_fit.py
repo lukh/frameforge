@@ -1,6 +1,3 @@
-
-
-
 class CutPart:
     def __init__(self, name, length, kerf, obj=None):
         self.name = name
@@ -13,17 +10,19 @@ class CutPart:
         return self.length + self.kerf
 
     def __str__(self):
-        return f'CutPart<{self.name}>={self.length}'
+        return f"CutPart<{self.name}>={self.length}"
+
     def __repr__(self):
         return self.__str__()
+
 
 class Stock:
     def __init__(self, length):
         self.length = length
         self._parts = []
-    
+
     def __str__(self):
-        return f'Stock<{self.length}, used={self.used}, left={self.left}> = {self._parts}'
+        return f"Stock<{self.length}, used={self.used}, left={self.left}> = {self._parts}"
 
     def __repr__(self):
         return self.__str__()
@@ -45,7 +44,6 @@ class Stock:
     @property
     def parts(self):
         return self._parts
-
 
 
 def best_fit_decreasing(l_stock, parts):

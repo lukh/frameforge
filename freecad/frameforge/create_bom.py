@@ -44,11 +44,13 @@ def is_extrudedcutout(obj):
             return True
     return False
 
+
 def is_link(obj):
     return obj.TypeId == "App::Link"
 
+
 def is_part_or_part_design(obj):
-    return obj.TypeId.startswith(('Part::', "PartDesign::"))
+    return obj.TypeId.startswith(("Part::", "PartDesign::"))
 
 
 def get_profile_from_trimmedbody(obj):
@@ -56,6 +58,7 @@ def get_profile_from_trimmedbody(obj):
         return get_profile_from_trimmedbody(obj.TrimmedBody)
     else:
         return obj
+
 
 def get_profile_from_extrudedcutout(obj):
     if is_extrudedcutout(obj):
@@ -84,7 +87,6 @@ def get_trimmedprofile_from_extrudedcutout(obj):
             return None
     else:
         raise Exception("Not an extruded cutout")
-
 
 
 def get_all_cutting_angles(trimmed_profile):
@@ -172,16 +174,16 @@ def get_readable_cutting_angles(bsc1, bsc2, bec1, bec2, *trim_cuts):
 
         elif bsc1 == bec1 == 0.0:
             angles = (bsc2, bec2)
-            angles = angles if (angles[0] * angles[1] <= 0)  else (abs(angles[0]), abs(angles[1]))
+            angles = angles if (angles[0] * angles[1] <= 0) else (abs(angles[0]), abs(angles[1]))
             return (f"{angles[0]:.1f}", f"{angles[1]:.1f}")
 
         elif bsc2 == bec2 == 0.0:
             angles = (bsc1, bec1)
-            angles = angles if (angles[0] * angles[1] <= 0)  else (abs(angles[0]), abs(angles[1]))
+            angles = angles if (angles[0] * angles[1] <= 0) else (abs(angles[0]), abs(angles[1]))
             return (f"{angles[0]:.1f}", f"{angles[1]:.1f}")
 
         elif (bsc1 == 0.0 and bec2 == 0.0) ^ (bsc2 == 0.0 and bec1 == 0.0):
-            return (f"{(bsc1 + bsc2):.1f}", f'* {(bec1+bec2):.1f}')
+            return (f"{(bsc1 + bsc2):.1f}", f"* {(bec1+bec2):.1f}")
 
         else:
             return (f"{bsc1:.1f} / {bsc2:.1f}", f"{bec1:.1f} / {bec2:.1f}")
@@ -200,43 +202,60 @@ def get_readable_cutting_angles(bsc1, bsc2, bec1, bec2, *trim_cuts):
     return ("?", "?")
 
 
-
-
-
-
 def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_path=False):
     p = {}
     if is_fusion(obj):
         for child in obj.Shapes:
-            traverse_assembly(profiles_data, links_data, child, parent=(f"{parent} / " if full_parent_path else "") + obj.Label, full_parent_path=full_parent_path)
+            traverse_assembly(
+                profiles_data,
+                links_data,
+                child,
+                parent=(f"{parent} / " if full_parent_path else "") + obj.Label,
+                full_parent_path=full_parent_path,
+            )
 
     elif is_group(obj):
         for child in obj.Group:
-            traverse_assembly(profiles_data, links_data, child, parent=(f"{parent} / " if full_parent_path else "") + obj.Label, full_parent_path=full_parent_path)
+            traverse_assembly(
+                profiles_data,
+                links_data,
+                child,
+                parent=(f"{parent} / " if full_parent_path else "") + obj.Label,
+                full_parent_path=full_parent_path,
+            )
 
     elif is_part(obj):
         for child in obj.OutList:
-            if child.InList == [obj]: 
-                traverse_assembly(profiles_data, links_data, child, parent=(f"{parent} / " if full_parent_path else "") + obj.Label, full_parent_path=full_parent_path)
-
+            if child.InList == [obj]:
+                traverse_assembly(
+                    profiles_data,
+                    links_data,
+                    child,
+                    parent=(f"{parent} / " if full_parent_path else "") + obj.Label,
+                    full_parent_path=full_parent_path,
+                )
 
     elif is_profile(obj):
         cut_angles = get_readable_cutting_angles(
             getattr(obj, "BevelStartCut1", "N/A"),
             getattr(obj, "BevelStartCut2", "N/A"),
             getattr(obj, "BevelEndCut1", "N/A"),
-            getattr(obj, "BevelEndCut2", "N/A")
+            getattr(obj, "BevelEndCut2", "N/A"),
         )
 
         p["parent"] = parent
         p["label"] = obj.Label
-        p["family"] = getattr(getattr(obj, "CustomProfile"), "Label", "Custom Profile") if hasattr(obj, "CustomProfile") else getattr(obj, "Family", "N/A")
+        p["family"] = (
+            getattr(getattr(obj, "CustomProfile"), "Label", "Custom Profile")
+            if hasattr(obj, "CustomProfile")
+            else getattr(obj, "Family", "N/A")
+        )
         p["size_name"] = getattr(obj, "SizeName", "N/A")
         p["material"] = getattr(obj, "Material", "N/A")
         p["length"] = str(length_along_normal(obj))
-        p['cut_angle_1'] = cut_angles[0]
-        p['cut_angle_2'] = cut_angles[1]
-        p['cutout'] = ""
+        p["cut_angle_1"] = cut_angles[0]
+        p["cut_angle_2"] = cut_angles[1]
+        p["cutout"] = ""
         p["approx_weight"] = str(getattr(obj, "ApproxWeight", "N/A"))
         p["quantity"] = getattr(obj, "Quantity", "1")
 
@@ -262,30 +281,32 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
             getattr(prof, "BevelStartCut2", "N/A"),
             getattr(prof, "BevelEndCut1", "N/A"),
             getattr(prof, "BevelEndCut2", "N/A"),
-            *angles
+            *angles,
         )
-
 
         p["parent"] = parent
         p["label"] = trim_prof.Label
-        p["family"] = getattr(getattr(prof, "CustomProfile"), "Label", "Custom Profile") if hasattr(prof, "CustomProfile") else getattr(prof, "Family", "N/A")
+        p["family"] = (
+            getattr(getattr(prof, "CustomProfile"), "Label", "Custom Profile")
+            if hasattr(prof, "CustomProfile")
+            else getattr(prof, "Family", "N/A")
+        )
         p["size_name"] = getattr(prof, "SizeName", "N/A")
         p["material"] = getattr(prof, "Material", "N/A")
         p["length"] = str(length_along_normal(trim_prof if trim_prof else prof))
-        p['cut_angle_1'] = cut_angles[0]
-        p['cut_angle_2'] = cut_angles[1]
-        p['cutout'] = "Yes" if has_cutout else ""
+        p["cut_angle_1"] = cut_angles[0]
+        p["cut_angle_2"] = cut_angles[1]
+        p["cutout"] = "Yes" if has_cutout else ""
         p["approx_weight"] = str(getattr(prof, "ApproxWeight", "N/A"))
         p["quantity"] = "1"
 
         profiles_data.append(p)
 
     elif is_link(obj):
-        links_data.append({"parent": parent, "label":obj.Label, "part":obj.LinkedObject.Label, "quantity":"1"})
+        links_data.append({"parent": parent, "label": obj.Label, "part": obj.LinkedObject.Label, "quantity": "1"})
 
     elif is_part_or_part_design(obj):
-        links_data.append({"parent": parent, "label":obj.Label, "part":obj.Label, "quantity":"1"})
-
+        links_data.append({"parent": parent, "label": obj.Label, "part": obj.Label, "quantity": "1"})
 
 
 def group_profiles(profiles_data):
@@ -295,9 +316,9 @@ def group_profiles(profiles_data):
         round(float(x["length"]), 1),
         x["material"],
         x["size_name"],
-        x['cut_angle_1'],
-        x['cut_angle_2'],
-        x['cutout']
+        x["cut_angle_1"],
+        x["cut_angle_2"],
+        x["cutout"],
     )
 
     profiles_data_sorted = sorted(profiles_data, key=key_func)
@@ -331,7 +352,7 @@ def group_links(links_data):
     links_data_grouped = defaultdict(list)
 
     for lnk in links_data:
-        key = (lnk["parent"], lnk['part'])
+        key = (lnk["parent"], lnk["part"])
         links_data_grouped[key].append(lnk)
 
     for k, group in links_data_grouped.items():
@@ -339,13 +360,11 @@ def group_links(links_data):
         ol["parent"] = k[0]
         ol["label"] = ", ".join([g["label"] for g in group])
         ol["part"] = k[1]
-        ol['quantity'] = len(group)
+        ol["quantity"] = len(group)
 
         out_list.append(ol)
 
     return out_list
-
-
 
 
 def make_bom(profiles_data, links_data, bom_name="BOM"):
@@ -403,13 +422,17 @@ def make_bom(profiles_data, links_data, bom_name="BOM"):
 
     row += 2
     spreadsheet.set("A" + str(row), "Legend")
-    spreadsheet.set("A" + str(row+1), "*")
-    spreadsheet.set("B" + str(row+1), "Angles 1 and 2 are rotated 90° along the edge")
-    spreadsheet.set("A" + str(row+2), "-")
-    spreadsheet.set("B" + str(row+2), "Angles 1 and 2 are cut in the same direction (no need to rotate the stock 180° when cutting)")
-    spreadsheet.set("A" + str(row+3), "@")
-    spreadsheet.set("B" + str(row+3), "Angle is calculated from a TrimmedProfile -> be careful to check length, angles and cut direction")
-    spreadsheet.set("A" + str(row+4), "?")
-    spreadsheet.set("B" + str(row+4), "Can't compute the angle, do it yourself !")
-
-
+    spreadsheet.set("A" + str(row + 1), "*")
+    spreadsheet.set("B" + str(row + 1), "Angles 1 and 2 are rotated 90° along the edge")
+    spreadsheet.set("A" + str(row + 2), "-")
+    spreadsheet.set(
+        "B" + str(row + 2),
+        "Angles 1 and 2 are cut in the same direction (no need to rotate the stock 180° when cutting)",
+    )
+    spreadsheet.set("A" + str(row + 3), "@")
+    spreadsheet.set(
+        "B" + str(row + 3),
+        "Angle is calculated from a TrimmedProfile -> be careful to check length, angles and cut direction",
+    )
+    spreadsheet.set("A" + str(row + 4), "?")
+    spreadsheet.set("B" + str(row + 4), "Can't compute the angle, do it yourself !")

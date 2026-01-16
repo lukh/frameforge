@@ -9,6 +9,7 @@ import AttachmentEditor.TaskAttachmentEditor as TaskAttachmentEditor
 from freecad.frameforge._utils import getRootObject
 from freecad.frameforge.ff_tools import ICONPATH
 
+
 def makeLink(source):
     doc = App.ActiveDocument
 
@@ -27,7 +28,7 @@ class LinkCommand:
         return {
             "Pixmap": os.path.join(ICONPATH, "link.svg"),
             "MenuText": "Attached Link",
-            "ToolTip": "Create a link with Attachment"
+            "ToolTip": "Create a link with Attachment",
         }
 
     def IsActive(self):
@@ -47,5 +48,6 @@ class LinkCommand:
             link = makeLink(root)
             Gui.Control.showDialog(TaskAttachmentEditor.AttachmentEditorTaskPanel(link))
         App.ActiveDocument.commitTransaction()
+
 
 Gui.addCommand("FrameForge_Link", LinkCommand())

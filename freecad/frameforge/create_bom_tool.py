@@ -20,7 +20,6 @@ from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPA
 from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
 
 
-
 def make_cut_list(sorted_stocks, cutlist_name="CutList"):
     doc = App.ActiveDocument
     spreadsheet = doc.addObject("Spreadsheet::Sheet", cutlist_name)
@@ -56,35 +55,38 @@ def make_cut_list(sorted_stocks, cutlist_name="CutList"):
 
             stock_idx += 1
 
-
         row += 1
 
-    row +=1
+    row += 1
     spreadsheet.set("A" + str(row), "Stock statistics")
     spreadsheet.set("B" + str(row), "Length Used")
     spreadsheet.set("C" + str(row), "Stock Used")
     spreadsheet.set("D" + str(row), "Stock Count")
-    row +=1
+    row += 1
     for stocks in sorted_stocks:
         spreadsheet.set("A" + str(row), stocks)
         spreadsheet.set("B" + str(row), f"{sum([s.used for s in sorted_stocks[stocks]])}")
         spreadsheet.set("C" + str(row), f"{sum([s.length for s in sorted_stocks[stocks]])}")
         spreadsheet.set("D" + str(row), f"{len(sorted_stocks[stocks])}")
 
-        row +=1
-
+        row += 1
 
     row += 1
     spreadsheet.set("A" + str(row), "Legend")
-    spreadsheet.set("A" + str(row+1), "*")
-    spreadsheet.set("B" + str(row+1), "Angles 1 and 2 are rotated 90° along the edge")
-    spreadsheet.set("A" + str(row+2), "-")
-    spreadsheet.set("B" + str(row+2), "Angles 1 and 2 are cut in the same direction (no need to rotate the stock 180° when cutting)")
-    spreadsheet.set("A" + str(row+3), "~")
-    spreadsheet.set("B" + str(row+3), "Angle is calculated from a TrimmedProfile -> be careful to check length, angles and cut direction")
-    spreadsheet.set("A" + str(row+4), "?")
-    spreadsheet.set("B" + str(row+4), "Can't compute the angle, do it yourself !")
-    
+    spreadsheet.set("A" + str(row + 1), "*")
+    spreadsheet.set("B" + str(row + 1), "Angles 1 and 2 are rotated 90° along the edge")
+    spreadsheet.set("A" + str(row + 2), "-")
+    spreadsheet.set(
+        "B" + str(row + 2),
+        "Angles 1 and 2 are cut in the same direction (no need to rotate the stock 180° when cutting)",
+    )
+    spreadsheet.set("A" + str(row + 3), "~")
+    spreadsheet.set(
+        "B" + str(row + 3),
+        "Angle is calculated from a TrimmedProfile -> be careful to check length, angles and cut direction",
+    )
+    spreadsheet.set("A" + str(row + 4), "?")
+    spreadsheet.set("B" + str(row + 4), "Can't compute the angle, do it yourself !")
 
 
 class CreateBOMTaskPanel:
@@ -99,7 +101,6 @@ class CreateBOMTaskPanel:
             self.form.cut_list_cb.setChecked(param.GetBool("Generate Cut List", False))
             self.form.stock_length_sb.setValue(param.GetFloat("Stock Length", 6000.0))
             self.form.kerf_sb.setValue(param.GetFloat("Kerf", 1.0))
-
 
     def open(self):
         App.Console.PrintMessage(translate("frameforge", "Opening CreateBOM\n"))
@@ -139,7 +140,6 @@ class CreateBOMTaskPanel:
             param.SetFloat("Stock Length", self.form.stock_length_sb.value())
             param.SetFloat("Kerf", self.form.kerf_sb.value())
 
-
             if self.form.bom_name_te.text() != "":
                 bom_name = self.form.bom_name_te.text()
             elif len(sel) == 1:
@@ -150,7 +150,9 @@ class CreateBOMTaskPanel:
             profiles_data = []
             links_data = []
             for obj in sel:
-                traverse_assembly(profiles_data, links_data, obj, full_parent_path=self.form.full_parent_path.isChecked())
+                traverse_assembly(
+                    profiles_data, links_data, obj, full_parent_path=self.form.full_parent_path.isChecked()
+                )
 
             if self.form.group_profiles_cb.isChecked():
                 bom_data = group_profiles(profiles_data)
@@ -173,12 +175,13 @@ class CreateBOMTaskPanel:
 
                 sorted_stocks = {}
                 for k, group in grouped_profiles.items():
-                    parts = [CutPart(p['label'], float(p['length']), self.form.kerf_sb.value(), p) for p in list(group)]
+                    parts = [CutPart(p["label"], float(p["length"]), self.form.kerf_sb.value(), p) for p in list(group)]
 
-                    sorted_stocks[f"{k[1]}_{k[0]}_{k[2]}"] = best_fit_decreasing(self.form.stock_length_sb.value(), parts)
+                    sorted_stocks[f"{k[1]}_{k[0]}_{k[2]}"] = best_fit_decreasing(
+                        self.form.stock_length_sb.value(), parts
+                    )
 
                 make_cut_list(sorted_stocks, bom_name + "_CutList")
-
 
             App.ActiveDocument.commitTransaction()
             App.ActiveDocument.recompute()
