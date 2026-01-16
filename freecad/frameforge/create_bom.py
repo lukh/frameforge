@@ -230,7 +230,7 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
 
         p["parent"] = parent
         p["label"] = obj.Label
-        p["family"] = getattr(obj, "Family", "N/A")
+        p["family"] = getattr(getattr(obj, "CustomProfile"), "Label", "Custom Profile") if hasattr(obj, "CustomProfile") else getattr(obj, "Family", "N/A")
         p["size_name"] = getattr(obj, "SizeName", "N/A")
         p["material"] = getattr(obj, "Material", "N/A")
         p["length"] = str(length_along_normal(obj))
@@ -268,7 +268,7 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
 
         p["parent"] = parent
         p["label"] = trim_prof.Label
-        p["family"] = getattr(prof, "Family", "N/A")
+        p["family"] = getattr(getattr(prof, "CustomProfile"), "Label", "Custom Profile") if hasattr(prof, "CustomProfile") else getattr(prof, "Family", "N/A")
         p["size_name"] = getattr(prof, "SizeName", "N/A")
         p["material"] = getattr(prof, "Material", "N/A")
         p["length"] = str(length_along_normal(trim_prof if trim_prof else prof))
