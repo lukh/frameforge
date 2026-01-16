@@ -212,8 +212,8 @@ def traverse_assembly(profiles_data, links_data, obj, parent=""):
             traverse_assembly(profiles_data, links_data, child, parent=obj.Label)
 
     elif is_part(obj):
-        for child in obj.Group:
-            if child.ViewObject.Visibility: # TODO: fix this access...
+        for child in obj.OutList:
+            if child.InList == [obj]: 
                 traverse_assembly(profiles_data, links_data, child, parent=obj.Label)
 
 
