@@ -47,6 +47,9 @@ def is_extrudedcutout(obj):
 def is_link(obj):
     return obj.TypeId == "App::Link"
 
+def is_part_or_part_design(obj):
+    return obj.TypeId.startswith(('Part::', "PartDesign::"))
+
 
 def get_profile_from_trimmedbody(obj):
     if is_trimmedbody(obj):
@@ -280,6 +283,9 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
     elif is_link(obj):
         links_data.append({"parent": parent, "label":obj.Label, "part":obj.LinkedObject.Label, "quantity":"1"})
 
+    elif is_part_or_part_design(obj):
+        links_data.append({"parent": parent, "label":obj.Label, "part":obj.Label, "quantity":"1"})
+
 
 
 def group_profiles(profiles_data):
@@ -377,22 +383,23 @@ def make_bom(profiles_data, links_data, bom_name="BOM"):
 
         row += 1
 
-    row += 1
-    spreadsheet.set("A" + str(row), "Parts")
-    row += 1
-    spreadsheet.set("A" + str(row), "Parent")
-    spreadsheet.set("B" + str(row), "Name")
-    spreadsheet.set("C" + str(row), "Part/Type")
-    spreadsheet.set("D" + str(row), "Quantity")
-    row += 1
-
-    for lnk in links_data:
-        spreadsheet.set("A" + str(row), lnk["parent"])
-        spreadsheet.set("B" + str(row), lnk["label"])
-        spreadsheet.set("C" + str(row), lnk["part"])
-        spreadsheet.set("D" + str(row), str(lnk["quantity"]))
-
+    if len(links_data) > 0:
         row += 1
+        spreadsheet.set("A" + str(row), "Parts")
+        row += 1
+        spreadsheet.set("A" + str(row), "Parent")
+        spreadsheet.set("B" + str(row), "Name")
+        spreadsheet.set("C" + str(row), "Part/Type")
+        spreadsheet.set("D" + str(row), "Quantity")
+        row += 1
+
+        for lnk in links_data:
+            spreadsheet.set("A" + str(row), lnk["parent"])
+            spreadsheet.set("B" + str(row), lnk["label"])
+            spreadsheet.set("C" + str(row), lnk["part"])
+            spreadsheet.set("D" + str(row), str(lnk["quantity"]))
+
+            row += 1
 
     row += 2
     spreadsheet.set("A" + str(row), "Legend")

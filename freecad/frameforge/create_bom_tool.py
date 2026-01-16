@@ -94,6 +94,7 @@ class CreateBOMTaskPanel:
         param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
         if not param.IsEmpty():
             self.form.full_parent_path.setChecked(param.GetBool("Full Parent Path", False))
+            self.form.include_links_cb.setChecked(param.GetBool("Include Links in BOM", False))
             self.form.group_profiles_cb.setChecked(param.GetBool("Group BOM Items by Material/Size/Family", False))
             self.form.cut_list_cb.setChecked(param.GetBool("Generate Cut List", False))
             self.form.stock_length_sb.setValue(param.GetFloat("Stock Length", 6000.0))
@@ -132,6 +133,7 @@ class CreateBOMTaskPanel:
         ):
             param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
             param.SetBool("Full Parent Path", self.form.full_parent_path.isChecked())
+            param.SetBool("Include Links in BOM", self.form.include_links_cb.isChecked())
             param.SetBool("Group BOM Items by Material/Size/Family", self.form.group_profiles_cb.isChecked())
             param.SetBool("Generate Cut List", self.form.cut_list_cb.isChecked())
             param.SetFloat("Stock Length", self.form.stock_length_sb.value())
@@ -150,6 +152,9 @@ class CreateBOMTaskPanel:
                 links_data = group_links(links_data)
             else:
                 bom_data = profiles_data
+
+            if not self.form.include_links_cb.isChecked():
+                links_data = []
 
             # BOM
             make_bom(bom_data, links_data, bom_name=bom_name)
