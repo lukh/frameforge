@@ -31,9 +31,23 @@
        <widget class="QLineEdit" name="bom_name_te"/>
       </item>
       <item>
+       <widget class="QCheckBox" name="full_parent_path">
+        <property name="text">
+         <string>Full Parent Path</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="include_links_cb">
+        <property name="text">
+         <string>Include Links</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QCheckBox" name="group_profiles_cb">
         <property name="text">
-         <string>Group Profiles</string>
+         <string>Group Profiles / Links</string>
         </property>
        </widget>
       </item>

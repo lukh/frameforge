@@ -93,6 +93,7 @@ class CreateBOMTaskPanel:
 
         param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
         if not param.IsEmpty():
+            self.form.full_parent_path.setChecked(param.GetBool("Full Parent Path", False))
             self.form.group_profiles_cb.setChecked(param.GetBool("Group BOM Items by Material/Size/Family", False))
             self.form.cut_list_cb.setChecked(param.GetBool("Generate Cut List", False))
             self.form.stock_length_sb.setValue(param.GetFloat("Stock Length", 6000.0))
@@ -130,6 +131,7 @@ class CreateBOMTaskPanel:
             ]
         ):
             param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
+            param.SetBool("Full Parent Path", self.form.full_parent_path.isChecked())
             param.SetBool("Group BOM Items by Material/Size/Family", self.form.group_profiles_cb.isChecked())
             param.SetBool("Generate Cut List", self.form.cut_list_cb.isChecked())
             param.SetFloat("Stock Length", self.form.stock_length_sb.value())
@@ -141,7 +143,7 @@ class CreateBOMTaskPanel:
             profiles_data = []
             links_data = []
             for obj in sel:
-                traverse_assembly(profiles_data, links_data, obj)
+                traverse_assembly(profiles_data, links_data, obj, full_parent_path=self.form.full_parent_path.isChecked())
 
             if self.form.group_profiles_cb.isChecked():
                 bom_data = group_profiles(profiles_data)

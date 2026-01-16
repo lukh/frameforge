@@ -201,20 +201,20 @@ def get_readable_cutting_angles(bsc1, bsc2, bec1, bec2, *trim_cuts):
 
 
 
-def traverse_assembly(profiles_data, links_data, obj, parent=""):
+def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_path=False):
     p = {}
     if is_fusion(obj):
         for child in obj.Shapes:
-            traverse_assembly(profiles_data, links_data, child, parent=obj.Label)
+            traverse_assembly(profiles_data, links_data, child, parent=(f"{parent} / " if full_parent_path else "") + obj.Label, full_parent_path=full_parent_path)
 
     elif is_group(obj):
         for child in obj.Group:
-            traverse_assembly(profiles_data, links_data, child, parent=obj.Label)
+            traverse_assembly(profiles_data, links_data, child, parent=(f"{parent} / " if full_parent_path else "") + obj.Label, full_parent_path=full_parent_path)
 
     elif is_part(obj):
         for child in obj.OutList:
             if child.InList == [obj]: 
-                traverse_assembly(profiles_data, links_data, child, parent=obj.Label)
+                traverse_assembly(profiles_data, links_data, child, parent=(f"{parent} / " if full_parent_path else "") + obj.Label, full_parent_path=full_parent_path)
 
 
     elif is_profile(obj):
