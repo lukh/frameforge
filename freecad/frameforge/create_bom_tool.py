@@ -140,7 +140,12 @@ class CreateBOMTaskPanel:
             param.SetFloat("Kerf", self.form.kerf_sb.value())
 
 
-            bom_name = self.form.bom_name_te.text() if self.form.bom_name_te.text() != "" else "BOM"
+            if self.form.bom_name_te.text() != "":
+                bom_name = self.form.bom_name_te.text()
+            elif len(sel) == 1:
+                bom_name = f"{sel[0].Label}_BOM"
+            else:
+                bom_name = "BOM"
 
             profiles_data = []
             links_data = []
