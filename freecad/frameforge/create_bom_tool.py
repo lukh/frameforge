@@ -1,21 +1,22 @@
 import os
 from collections import defaultdict
+
 import FreeCAD as App
 import FreeCADGui as Gui
 
+from freecad.frameforge.best_fit import CutPart, Stock, best_fit_decreasing
 from freecad.frameforge.create_bom import (
+    group_links,
+    group_profiles,
     is_extrudedcutout,
     is_fusion,
     is_group,
     is_part,
     is_profile,
     is_trimmedbody,
-    traverse_assembly,
-    group_profiles,
-    group_links,
     make_bom,
+    traverse_assembly,
 )
-from freecad.frameforge.best_fit import CutPart, Stock, best_fit_decreasing
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
 

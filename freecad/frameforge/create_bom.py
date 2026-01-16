@@ -1,6 +1,6 @@
 import math
-from itertools import groupby
 from collections import defaultdict
+from itertools import groupby
 
 import Assembly
 import FreeCAD
