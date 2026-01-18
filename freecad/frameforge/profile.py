@@ -32,6 +32,7 @@ class Profile:
         init_r2,
         init_len,
         init_wg,
+        init_unit_price,
         init_mf,
         init_hc,
         init_wc,
@@ -132,6 +133,14 @@ class Profile:
         obj.setEditorMode("ApproxWeight", 1)  # user doesn't change !
 
 
+        obj.addProperty("App::PropertyFloat", "UnitPrice", "Base", "Approximate linear price").UnitPrice = (
+            init_unit_price
+        )
+        obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price").Price = (
+            init_unit_price * init_len / 1000
+        )
+        obj.setEditorMode("Price", 1)  # user doesn't change !
+
         obj.addProperty(
             "App::PropertyBool", "CenteredOnHeight", "Profile", "Choose corner or profile centre as origin"
         ).CenteredOnHeight = init_hc
@@ -201,6 +210,7 @@ class Profile:
         init_r2,
         init_len,
         init_wg,
+        init_unit_price,
         init_mf,
         init_hc,
         init_wc,
@@ -245,7 +255,7 @@ class Profile:
         #                     "Rotate the second cut on Profile axle").BevelEndRotate = 0
 
         obj.LinearWeight = init_wg
-        obj.ApproxWeight = obj.LinearWeight * init_len / 1000
+        obj.UnitPrice = init_unit_price
 
         obj.CenteredOnHeight = init_hc
         obj.CenteredOnWidth = init_wc
@@ -304,6 +314,8 @@ class Profile:
             L = obj.ProfileLength + obj.OffsetA + obj.OffsetB
 
         obj.ApproxWeight = obj.LinearWeight * L / 1000
+        obj.Price = obj.UnitPrice * L / 1000
+
         W = obj.ProfileWidth
         H = obj.ProfileHeight
         obj.Height = L
@@ -1020,6 +1032,14 @@ class Profile:
             App.Console.PrintMessage(f"Frameforge::object migration : adding LinearWeight ({self.WM}) to {obj.Label}\n")
             obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = self.WM
             obj.setEditorMode("ApproxWeight", 1)
+
+
+        # add prices
+        if not hasattr(obj, "UnitPrice"):
+            obj.addProperty("App::PropertyFloat", "UnitPrice", "Base", "Approximate linear price").UnitPrice = 0.0
+        if not hasattr(obj, "Price"):
+            obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price").Price = 0.0
+            obj.setEditorMode("Price", 1)
             
 
 class ViewProviderProfile:
