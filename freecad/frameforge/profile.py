@@ -125,9 +125,12 @@ class Profile:
                 "App::PropertyFloat", "BevelEndRotate", "Profile", "Rotate the second cut on Profile axle"
             ).BevelEndRotate = 0
 
+        obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = init_wg
         obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram").ApproxWeight = (
-            init_wg * init_len / 1000
+            obj.LinearWeight * init_len / 1000
         )
+        obj.setEditorMode("ApproxWeight", 1)  # user doesn't change !
+
 
         obj.addProperty(
             "App::PropertyBool", "CenteredOnHeight", "Profile", "Choose corner or profile centre as origin"
@@ -184,8 +187,6 @@ class Profile:
             )
             obj.Family = "Custom Profile"
 
-        self.WM = init_wg
-
         self.bevels_combined = bevels_combined
         obj.Proxy = self
 
@@ -207,6 +208,7 @@ class Profile:
         fam,
         size_name,
     ):
+        self.run_compatibility_migrations(obj)
 
         obj.Material = material
         obj.Family = fam
@@ -242,7 +244,8 @@ class Profile:
         #     obj.BevelEndRotate", "Profile",
         #                     "Rotate the second cut on Profile axle").BevelEndRotate = 0
 
-        obj.ApproxWeight = init_wg * init_len / 1000
+        obj.LinearWeight = init_wg
+        obj.ApproxWeight = obj.LinearWeight * init_len / 1000
 
         obj.CenteredOnHeight = init_hc
         obj.CenteredOnWidth = init_wc
@@ -291,13 +294,7 @@ class Profile:
             self.execute(obj)
 
     def execute(self, obj):
-        if not hasattr(obj, "Family"):  # for compat
-            obj.addProperty(
-                "App::PropertyString",
-                "Family",
-                "Profile",
-                "",
-            ).Family = self.fam
+        self.run_compatibility_migrations(obj)
 
         try:
             L = obj.Target[0].getSubObject(obj.Target[1][0]).Length
@@ -306,7 +303,7 @@ class Profile:
         except:
             L = obj.ProfileLength + obj.OffsetA + obj.OffsetB
 
-        obj.ApproxWeight = self.WM * L / 1000
+        obj.ApproxWeight = obj.LinearWeight * L / 1000
         W = obj.ProfileWidth
         H = obj.ProfileHeight
         obj.Height = L
@@ -999,10 +996,31 @@ class Profile:
 
         else:
             obj.Shape = Part.Face(wire1)
+
         obj.Placement = pl
         obj.positionBySupport()
         obj.recompute()
 
+
+
+    def run_compatibility_migrations(self, obj):
+        # add Family atttribute
+        if not hasattr(obj, "Family"):
+            App.Console.PrintMessage(f"Frameforge::object migration : adding Family to {obj.Label}\n")
+            obj.addProperty(
+                "App::PropertyString",
+                "Family",
+                "Profile",
+                "",
+            ).Family = self.fam
+
+
+        # add LinearWeight attribute (<= 0.1.7)
+        if not hasattr(obj, "LinearWeight"):
+            App.Console.PrintMessage(f"Frameforge::object migration : adding LinearWeight ({self.WM}) to {obj.Label}\n")
+            obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = self.WM
+            obj.setEditorMode("ApproxWeight", 1)
+            
 
 class ViewProviderProfile:
     def __init__(self, obj):
