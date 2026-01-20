@@ -272,8 +272,11 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
         elif is_extrudedcutout(obj):
             prof = get_profile_from_extrudedcutout(obj)
             trim_prof = get_trimmedprofile_from_extrudedcutout(obj)
+            if trim_prof:
+                angles = get_all_cutting_angles(trim_prof)
+            else:
+                angles = ()
 
-            angles = get_all_cutting_angles(trim_prof)
             has_cutout = True
 
         cut_angles = get_readable_cutting_angles(
