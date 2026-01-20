@@ -197,7 +197,7 @@ def get_readable_cutting_angles(bsc1, bsc2, bec1, bec2, *trim_cuts):
             return ("0.0", f"@ {trim_cuts[0]:.1f}")
 
         elif len(bevels_not_zero) == 1:
-            return (f"{bevels_not_zero[0]:.1f}", f"@ {trim_cuts[0]:.1f}")
+            return (f"{abs(bevels_not_zero[0]):.1f}", f"@ {trim_cuts[0]:.1f}")
 
     return ("?", "?")
 
