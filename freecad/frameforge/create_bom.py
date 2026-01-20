@@ -257,6 +257,7 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
         p["cut_angle_2"] = cut_angles[1]
         p["cutout"] = ""
         p["approx_weight"] = str(getattr(obj, "ApproxWeight", "N/A"))
+        p["price"] = str(getattr(obj, "Price", "N/A"))
         p["quantity"] = getattr(obj, "Quantity", "1")
 
         profiles_data.append(p)
@@ -301,15 +302,16 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
         p["cut_angle_2"] = cut_angles[1]
         p["cutout"] = "Yes" if has_cutout else ""
         p["approx_weight"] = str(getattr(prof, "ApproxWeight", "N/A"))
+        p["price"] = str(getattr(prof, "Price", "N/A"))
         p["quantity"] = "1"
 
         profiles_data.append(p)
 
     elif is_link(obj):
-        links_data.append({"parent": parent, "label": obj.Label, "part": obj.LinkedObject.Label, "quantity": "1"})
+        links_data.append({"parent": parent, "label": obj.Label, "part": obj.LinkedObject.Label, "quantity": "1", "price":getattr(obj.LinkedObject, "Price", "N/A")})
 
     elif is_part_or_part_design(obj):
-        links_data.append({"parent": parent, "label": obj.Label, "part": obj.Label, "quantity": "1"})
+        links_data.append({"parent": parent, "label": obj.Label, "part": obj.Label, "quantity": "1", "price":getattr(obj, "Price", "N/A")})
 
 
 def group_profiles(profiles_data):
@@ -319,6 +321,7 @@ def group_profiles(profiles_data):
         round(float(x["length"]), 1),
         x["material"],
         x["size_name"],
+        # round(float(x["price"]), 1), # TODO: Workaround for Lenght problem
         x["cut_angle_1"],
         x["cut_angle_2"],
         x["cutout"],
@@ -343,6 +346,7 @@ def group_profiles(profiles_data):
         d["cut_angle_2"] = g["cut_angle_2"]
         d["cutout"] = g["cutout"]
         d["approx_weight"] = g["approx_weight"]
+        d["price"] = g["price"]
         d["quantity"] = len(group)
 
         profiles_data_grouped.append(d)
@@ -355,7 +359,7 @@ def group_links(links_data):
     links_data_grouped = defaultdict(list)
 
     for lnk in links_data:
-        key = (lnk["parent"], lnk["part"])
+        key = (lnk["parent"], lnk["part"], lnk["price"])
         links_data_grouped[key].append(lnk)
 
     for k, group in links_data_grouped.items():
@@ -363,6 +367,7 @@ def group_links(links_data):
         ol["parent"] = k[0]
         ol["label"] = ", ".join([g["label"] for g in group])
         ol["part"] = k[1]
+        ol["price"] = k[2]
         ol["quantity"] = len(group)
 
         out_list.append(ol)
@@ -386,7 +391,8 @@ def make_bom(profiles_data, links_data, bom_name="BOM"):
     spreadsheet.set("H2", "CutAngle2")
     spreadsheet.set("I2", "Drill/Cutout")
     spreadsheet.set("J2", "ApproxWeight")
-    spreadsheet.set("K2", "Quantity")
+    spreadsheet.set("K2", "Price/U")
+    spreadsheet.set("L2", "Quantity")
 
     row = 3
 
@@ -401,7 +407,8 @@ def make_bom(profiles_data, links_data, bom_name="BOM"):
         spreadsheet.set("H" + str(row), "'" + str(prof["cut_angle_2"]))
         spreadsheet.set("I" + str(row), "'" + str(prof["cutout"]))
         spreadsheet.set("J" + str(row), prof["approx_weight"])
-        spreadsheet.set("K" + str(row), str(prof["quantity"]))
+        spreadsheet.set("K" + str(row), prof["price"])
+        spreadsheet.set("L" + str(row), str(prof["quantity"]))
 
         row += 1
 
@@ -412,14 +419,16 @@ def make_bom(profiles_data, links_data, bom_name="BOM"):
         spreadsheet.set("A" + str(row), "Parent")
         spreadsheet.set("B" + str(row), "Name")
         spreadsheet.set("C" + str(row), "Part/Type")
-        spreadsheet.set("D" + str(row), "Quantity")
+        spreadsheet.set("D" + str(row), "Price/U")
+        spreadsheet.set("E" + str(row), "Quantity")
         row += 1
 
         for lnk in links_data:
             spreadsheet.set("A" + str(row), lnk["parent"])
             spreadsheet.set("B" + str(row), lnk["label"])
             spreadsheet.set("C" + str(row), lnk["part"])
-            spreadsheet.set("D" + str(row), str(lnk["quantity"]))
+            spreadsheet.set("D" + str(row), str(lnk["price"]))
+            spreadsheet.set("E" + str(row), str(lnk["quantity"]))
 
             row += 1
 
