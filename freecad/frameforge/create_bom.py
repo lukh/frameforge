@@ -288,7 +288,7 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
         )
 
         p["parent"] = parent
-        p["label"] = trim_prof.Label
+        p["label"] = obj.Label
         p["family"] = (
             getattr(getattr(prof, "CustomProfile"), "Label", "Custom Profile")
             if hasattr(prof, "CustomProfile")
