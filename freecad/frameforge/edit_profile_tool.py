@@ -30,7 +30,11 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
         self.form_proxy.sb_radius1.setValue(self.profile.RadiusLarge)
         self.form_proxy.sb_radius2.setValue(self.profile.RadiusSmall)
         self.form_proxy.sb_length.setValue(self.profile.ProfileLength)
-        self.form_proxy.sb_weight.setValue(self.profile.ApproxWeight)
+        self.form_proxy.sb_weight.setValue(self.profile.ApproxWeight )
+        try:
+            self.form_proxy.sb_unitprice.setValue(self.profile.UnitPrice)
+        except:
+            App.Console.PrintMessage(f"Frameforge : can't find Unit Price for {self.profile.Label}\n")
         self.form_proxy.cb_make_fillet.setChecked(self.profile.MakeFillet)
         self.form_proxy.cb_height_centered.setChecked(self.profile.CenteredOnHeight)
         self.form_proxy.cb_width_centered.setChecked(self.profile.CenteredOnWidth)
@@ -66,6 +70,7 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
             self.form_proxy.sb_radius2.value(),
             self.form_proxy.sb_length.value(),
             self.form_proxy.sb_weight.value(),
+            self.form_proxy.sb_unitprice.value(),
             self.form_proxy.cb_make_fillet.isChecked(),  # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
             self.form_proxy.cb_height_centered.isChecked(),
             self.form_proxy.cb_width_centered.isChecked(),
