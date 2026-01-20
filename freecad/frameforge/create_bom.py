@@ -252,7 +252,7 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
         )
         p["size_name"] = getattr(obj, "SizeName", "N/A")
         p["material"] = getattr(obj, "Material", "N/A")
-        p["length"] = str(length_along_normal(obj))
+        p["length"] = f"{length_along_normal(obj):.1f}"
         p["cut_angle_1"] = cut_angles[0]
         p["cut_angle_2"] = cut_angles[1]
         p["cutout"] = ""
