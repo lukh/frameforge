@@ -296,7 +296,7 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
         )
         p["size_name"] = getattr(prof, "SizeName", "N/A")
         p["material"] = getattr(prof, "Material", "N/A")
-        p["length"] = str(length_along_normal(trim_prof if trim_prof else prof))
+        p["length"] = f"{length_along_normal(trim_prof if trim_prof else prof):.1f}"
         p["cut_angle_1"] = cut_angles[0]
         p["cut_angle_2"] = cut_angles[1]
         p["cutout"] = "Yes" if has_cutout else ""
