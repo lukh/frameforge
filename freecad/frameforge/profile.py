@@ -17,6 +17,7 @@ from freecad.frameforge.extrusions import (
     vslot20x60,
     vslot20x80,
 )
+from freecad.frameforge.version import __version__ as ff_version
 
 # Global variable for a 3D float vector (used in Profile class)
 vec = App.Base.Vector
@@ -73,6 +74,14 @@ class Profile:
             "Profile",
             "Profile ID",
         ).PID = Profile.get_next_id()
+
+        obj.addProperty(
+            "App::PropertyString",
+            "FrameforgeVersion",
+            "Profile",
+            "Frameforge Version used to create the profile",
+        ).FrameforgeVersion = ff_version
+            
 
         obj.addProperty(
             "App::PropertyString",
@@ -1040,30 +1049,47 @@ class Profile:
 
 
     def run_compatibility_migrations(self, obj):
-        # add Family atttribute
-        if not hasattr(obj, "Family"):
-            App.Console.PrintMessage(f"Frameforge::object migration : adding Family to {obj.Label}\n")
+        if not hasattr(obj, "FrameforgeVersion"):
+            # add Family atttribute
+            if not hasattr(obj, "Family"):
+                App.Console.PrintMessage(f"Frameforge::object migration : adding Family to {obj.Label}\n")
+                obj.addProperty(
+                    "App::PropertyString",
+                    "Family",
+                    "Profile",
+                    "",
+                ).Family = self.fam
+
+
+            # add LinearWeight attribute (<= 0.1.7)
+            if not hasattr(obj, "LinearWeight"):
+                App.Console.PrintMessage(f"Frameforge::object migration : adding LinearWeight ({self.WM}) to {obj.Label}\n")
+                obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = self.WM
+                obj.setEditorMode("ApproxWeight", 1)
+
+
+            # add prices
+            if not hasattr(obj, "UnitPrice"):
+                obj.addProperty("App::PropertyFloat", "UnitPrice", "Base", "Approximate linear price").UnitPrice = 0.0
+            if not hasattr(obj, "Price"):
+                obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price").Price = 0.0
+                obj.setEditorMode("Price", 1)
+
+            # double the thickness if pipe
+            if obj.Family == "Pipe":
+                obj.Thickness = 2*obj.Thickness
+
             obj.addProperty(
                 "App::PropertyString",
-                "Family",
+                "FrameforgeVersion",
                 "Profile",
-                "",
-            ).Family = self.fam
+                "Frameforge Version used to create the profile",
+            ).FrameforgeVersion = ff_version
 
 
-        # add LinearWeight attribute (<= 0.1.7)
-        if not hasattr(obj, "LinearWeight"):
-            App.Console.PrintMessage(f"Frameforge::object migration : adding LinearWeight ({self.WM}) to {obj.Label}\n")
-            obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = self.WM
-            obj.setEditorMode("ApproxWeight", 1)
-
-
-        # add prices
-        if not hasattr(obj, "UnitPrice"):
-            obj.addProperty("App::PropertyFloat", "UnitPrice", "Base", "Approximate linear price").UnitPrice = 0.0
-        if not hasattr(obj, "Price"):
-            obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price").Price = 0.0
-            obj.setEditorMode("Price", 1)
+        else:
+            if obj.FrameforgeVersion == "0.1.8":
+                pass
             
 
 class ViewProviderProfile:
