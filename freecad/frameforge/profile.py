@@ -924,7 +924,7 @@ class Profile:
         if obj.Family == "Pipe":
             c = vec(H / 2 + h, H / 2 + h, 0)
             A1 = Part.makeCircle(H / 2, c, d, 0, 360)
-            A2 = Part.makeCircle((H - TW) / 2, c, d, 0, 360)
+            A2 = Part.makeCircle((H / 2) - TW, c, d, 0, 360)
             wire1 = Part.Wire([A1])
             wire2 = Part.Wire([A2])
             p1 = Part.Face(wire1)
