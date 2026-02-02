@@ -120,6 +120,7 @@ def is_part_or_part_design(obj):
     return obj.TypeId.startswith(("Part::", "PartDesign::"))
 
 
+# TODO move this code into TrimmedProfile ?
 def get_profile_from_trimmedbody(obj):
     if is_trimmedbody(obj):
         return get_profile_from_trimmedbody(obj.TrimmedBody)
@@ -127,6 +128,7 @@ def get_profile_from_trimmedbody(obj):
         return obj
 
 
+# TODO move this code into ExtrudedCutOut ?
 def get_profile_from_extrudedcutout(obj):
     if is_extrudedcutout(obj):
         bo = obj.baseObject[0]
@@ -143,6 +145,7 @@ def get_profile_from_extrudedcutout(obj):
         raise Exception("Not an extruded cutout")
 
 
+# TODO move this code into ExtrudedCutOut ?
 def get_trimmedprofile_from_extrudedcutout(obj):
     if is_extrudedcutout(obj):
         bo = obj.baseObject[0]
@@ -156,7 +159,8 @@ def get_trimmedprofile_from_extrudedcutout(obj):
         raise Exception("Not an extruded cutout")
 
 
-def get_all_cutting_angles(trimmed_profile):
+# TODO move this code into TrimmedProfile ?
+def get_trimmed_profile_all_cutting_angles(trimmed_profile):
     """Retourne récursivement la liste des angles de coupe (en degrés)
     d'un TrimmedProfile, y compris ceux de ses parents/enfants imbriqués."""
     doc = FreeCAD.ActiveDocument
@@ -189,7 +193,7 @@ def get_all_cutting_angles(trimmed_profile):
 
     if hasattr(trimmed_profile.TrimmedBody, "TrimmedProfileType"):
         parent_profile = trimmed_profile.TrimmedBody
-        angles.extend(get_all_cutting_angles(parent_profile))
+        angles.extend(get_trimmed_profile_all_cutting_angles(parent_profile))
 
     return angles
 

@@ -14,7 +14,7 @@ from freecad.frameforge._utils import (
     get_readable_cutting_angles,
     length_along_normal,
     get_profile_from_trimmedbody,
-    get_all_cutting_angles
+    get_trimmed_profile_all_cutting_angles
 )
 
 class TrimmedProfile:
@@ -160,7 +160,7 @@ class TrimmedProfile:
 
     def _update_structure_data(self, obj):
         prof = get_profile_from_trimmedbody(obj)
-        angles = get_all_cutting_angles(obj)
+        angles = get_trimmed_profile_all_cutting_angles(obj)
 
         obj.Width = prof.ProfileWidth
         obj.Height = prof.ProfileHeight

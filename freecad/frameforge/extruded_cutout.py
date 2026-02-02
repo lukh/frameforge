@@ -14,7 +14,7 @@ from freecad.frameforge._utils import (
     length_along_normal,
     get_profile_from_extrudedcutout,
     get_trimmedprofile_from_extrudedcutout,
-    get_all_cutting_angles
+    get_trimmed_profile_all_cutting_angles
 )
 
 class ExtrudedCutout:
@@ -135,7 +135,7 @@ class ExtrudedCutout:
         prof = get_profile_from_extrudedcutout(obj)
         trim_prof = get_trimmedprofile_from_extrudedcutout(obj)
         if trim_prof:
-            angles = get_all_cutting_angles(trim_prof)
+            angles = get_trimmed_profile_all_cutting_angles(trim_prof)
         else:
             angles = ()
 
