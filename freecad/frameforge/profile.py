@@ -4,6 +4,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import Part
 
+from pivy import coin
+
 from freecad.frameforge.extrusions import (
     tslot20x20,
     tslot20x20_one_slot,
@@ -1068,14 +1070,81 @@ class ViewProviderProfile:
         obj.Proxy = self
 
     def attach(self, vobj):
-        """Setup the scene sub-graph of the view provider, this method is mandatory"""
         self.ViewObject = vobj
         self.Object = vobj.Object
-        return
+
+        self.helpersSwitch = coin.SoSwitch()
+        self.helpersSwitch.whichChild = coin.SO_SWITCH_NONE
+
+        # Point 1
+        self.p1_tr = coin.SoTranslation()
+        p1_sep = coin.SoSeparator()
+        p1_sep.addChild(self.p1_tr)
+        p1_sep.addChild(self._makeSphere((1, 0, 0)))  # rouge
+
+        # Point 2
+        self.p2_tr = coin.SoTranslation()
+        p2_sep = coin.SoSeparator()
+        p2_sep.addChild(self.p2_tr)
+        p2_sep.addChild(self._makeSphere((0, 0, 1)))  # bleu
+
+        # Line
+        dir_sep = coin.SoSeparator()
+        self.dir_coords = coin.SoCoordinate3()
+        self.dir_line = coin.SoLineSet()
+        dir_sep.addChild(self.dir_coords)
+        dir_sep.addChild(self.dir_line)
+
+        self.helpersSwitch.addChild(p1_sep)
+        self.helpersSwitch.addChild(p2_sep)
+        self.helpersSwitch.addChild(dir_sep)
+
+        vobj.RootNode.addChild(self.helpersSwitch)
+
+        Gui.Selection.addObserver(self)
+
+    def addSelection(self, doc, obj, sub, pnt):
+        if obj == self.Object.Name:
+            self.helpersSwitch.whichChild = coin.SO_SWITCH_ALL
+
+    def clearSelection(self, other):
+        self.helpersSwitch.whichChild = coin.SO_SWITCH_NONE
+
+    def _makeSphere(self, color):
+        sep = coin.SoSeparator()
+        mat = coin.SoMaterial()
+        mat.diffuseColor = color
+        sep.addChild(mat)
+        sph = coin.SoSphere()
+        sph.radius = 1.5
+        sep.addChild(sph)
+        return sep
+
+    def _updatePoints(self):
+        obj = self.Object
+        if not obj or not obj.Target:
+            return
+
+        edge = obj.Target[0].getSubObject(obj.Target[1][0])
+        p1 = edge.Vertexes[0].Point
+        p2 = edge.Vertexes[1].Point
+
+        inv = obj.Placement.inverse()
+
+        p1l = inv.multVec(p1)
+        p2l = inv.multVec(p2)
+
+        self.p1_tr.translation.setValue(p1l.x, p1l.y, p1l.z)
+        self.p2_tr.translation.setValue(p2l.x, p2l.y, p2l.z)
+
+        self.dir_coords.point.setValues(0, 2, [
+            (p1l.x, p1l.y, p1l.z),
+            (p2l.x, p2l.y, p2l.z)
+        ])
 
     def updateData(self, fp, prop):
-        """If a property of the handled feature has changed we have the chance to handle this here"""
-        return
+        if prop == "Target": 
+            self._updatePoints()
 
     def getDisplayModes(self, obj):
         """Return a list of display modes."""
@@ -1083,8 +1152,7 @@ class ViewProviderProfile:
         return modes
 
     def getDefaultDisplayMode(self):
-        """Return the name of the default display mode. It must be defined in getDisplayModes."""
-        return "FlatLines"
+        return "Flat Lines"
 
     def setDisplayMode(self, mode):
         """Map the display mode defined in attach with those defined in getDisplayModes.
@@ -1101,6 +1169,8 @@ class ViewProviderProfile:
         pass
 
     def onDelete(self, fp, sub):
+        Gui.Selection.removeObserver(self)
+        vobj.RootNode.removeChild(self.helpersSwitch)
         return True
 
     def getIcon(self):
@@ -1160,6 +1230,8 @@ class ViewProviderProfile:
         if mode != 0:
             return None
 
+        # self.helpersSwitch.whichChild = coin.SO_SWITCH_ALL
+
         # TODO: understand why this import is needed for here and not for TrimmedProfile ???
         import freecad.frameforge.edit_profile_tool
 
@@ -1170,6 +1242,8 @@ class ViewProviderProfile:
     def unsetEdit(self, vobj, mode):
         if mode != 0:
             return None
+
+        # self.helpersSwitch.whichChild = coin.SO_SWITCH_NONE
 
         Gui.Control.closeDialog()
         return True
