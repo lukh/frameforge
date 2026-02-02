@@ -51,13 +51,35 @@ class ExtrudedCutout:
         ]
         obj.CutType = "Through All"
 
+
+        # related to Profile
+        obj.addProperty("App::PropertyString", "Family", "Profile", "")
+        obj.setEditorMode("Family", 1)
+
+        obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
+        obj.setEditorMode("CustomProfile", 1)
+
+        obj.addProperty("App::PropertyString", "SizeName", "Profile", "")
+        obj.setEditorMode("SizeName", 1)
+
+        obj.addProperty("App::PropertyString", "Material", "Profile", "")
+        obj.setEditorMode("Material", 1)
+
+        obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram")
+        obj.setEditorMode("ApproxWeight", 1)
+
+        obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
+        obj.setEditorMode("Price", 1)
+
         #structure
         obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
         obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
         obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
+        obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = True
         obj.setEditorMode("Width", 1)  # user doesn't change !
         obj.setEditorMode("Height", 1)
         obj.setEditorMode("Length", 1)
+        obj.setEditorMode("Cutout", 1)
 
         obj.addProperty(
             "App::PropertyString",
@@ -141,6 +163,12 @@ class ExtrudedCutout:
 
         obj.Width = prof.ProfileWidth
         obj.Height = prof.ProfileHeight
+        obj.Family = prof.Family
+        obj.CustomProfile = prof.CustomProfile
+        obj.SizeName = prof.SizeName
+        obj.Material = prof.Material
+        obj.ApproxWeight = prof.ApproxWeight
+        obj.Price = prof.Price
 
         obj.Length = length_along_normal(trim_prof if trim_prof else prof)
 

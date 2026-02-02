@@ -93,7 +93,7 @@ def is_group(obj):
 
 def is_profile(obj):
     if obj.TypeId == "Part::FeaturePython":
-        if hasattr(obj, "Family") or hasattr(obj, "ProfileLength"):
+        if hasattr(obj, "ProfileWidth") and hasattr(obj, "ProfileHeight") and hasattr(obj, "ProfileLength"):
             return True
     return False
 

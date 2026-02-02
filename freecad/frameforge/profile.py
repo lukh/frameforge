@@ -99,6 +99,9 @@ class Profile:
             "Profile",
             "",
         ).Family = fam
+        
+        obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
+        
         obj.addProperty(
             "App::PropertyString",
             "SizeName",
@@ -208,9 +211,12 @@ class Profile:
         obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure",).Length = (
             obj.ProfileLength
         )
+        obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = False
+
         obj.setEditorMode("Width", 1)  # user doesn't change !
         obj.setEditorMode("Height", 1)
         obj.setEditorMode("Length", 1)
+        obj.setEditorMode("Cutout", 1)
 
         obj.addProperty(
             "App::PropertyString",
@@ -240,9 +246,7 @@ class Profile:
             obj.addProperty("App::PropertyLinkSub", "Target", "Base", "Target face").Target = link_sub
 
         if custom_profile:
-            obj.addProperty("App::PropertyLink", "CustomProfile", "Base", "Target profile").CustomProfile = (
-                custom_profile
-            )
+            obj.CustomProfile = custom_profile
             obj.Family = "Custom Profile"
 
         self.bevels_combined = bevels_combined
@@ -1455,6 +1459,7 @@ class ViewProviderProfile:
         # self.helpersSwitch.whichChild = coin.SO_SWITCH_ALL
 
         # TODO: understand why this import is needed for here and not for TrimmedProfile ???
+        # edit: now it is needed on TrimmedProfile. Understand why ?
         import freecad.frameforge.edit_profile_tool
 
         taskd = freecad.frameforge.edit_profile_tool.EditProfileTaskPanel(self.Object)
