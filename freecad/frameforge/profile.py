@@ -17,6 +17,10 @@ from freecad.frameforge.extrusions import (
     vslot20x60,
     vslot20x80,
 )
+from freecad.frameforge._utils import (
+    get_readable_cutting_angles,
+    length_along_normal
+)
 from freecad.frameforge.version import __version__ as ff_version
 
 # Global variable for a 3D float vector (used in Profile class)
@@ -193,21 +197,36 @@ class Profile:
             obj.addProperty("App::PropertyBool", "IPN", "Profile", "IPE/HEA style or IPN style").IPN = True
             obj.addProperty("App::PropertyFloat", "FlangeAngle", "Profile").FlangeAngle = 8
 
+
+        #structure
         obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure").Width = (
             obj.ProfileWidth
-        )  # Property for structure
+        )
         obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure").Height = (
+            obj.ProfileHeight
+        )
+        obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure",).Length = (
             obj.ProfileLength
-        )  # Property for structure
-        obj.addProperty(
-            "App::PropertyLength",
-            "Length",
-            "Structure",
-            "Parameter for structure",
-        ).Length = obj.ProfileHeight  # Property for structure
+        )
         obj.setEditorMode("Width", 1)  # user doesn't change !
         obj.setEditorMode("Height", 1)
         obj.setEditorMode("Length", 1)
+
+        obj.addProperty(
+            "App::PropertyString",
+            "CuttingAngleA",
+            "Structure",
+            "Cutting Angle A",
+        )
+        obj.setEditorMode("CuttingAngleA", 1)
+        obj.addProperty(
+            "App::PropertyString",
+            "CuttingAngleB",
+            "Structure",
+            "Cutting Angle B",
+        )
+        obj.setEditorMode("CuttingAngleB", 1)
+
 
         obj.addProperty("App::PropertyFloat", "OffsetA", "Structure", "Parameter for structure").OffsetA = (
             0.0  # Property for structure
@@ -304,10 +323,6 @@ class Profile:
             obj.IPN = True
             obj.FlangeAngle = 8
 
-        obj.Width = obj.ProfileWidth  # Property for structure
-        obj.Height = obj.ProfileLength  # Property for structure
-        obj.Length = obj.ProfileHeight  # Property for structure
-
         # obj.OffsetA = .0  # Property for structure
         # obj.OffsetB = .0  # Property for structure
 
@@ -348,7 +363,6 @@ class Profile:
 
         W = obj.ProfileWidth
         H = obj.ProfileHeight
-        obj.Height = L
         pl = obj.Placement
         TW = obj.Thickness
         TF = obj.ThicknessFlange
@@ -1042,9 +1056,28 @@ class Profile:
         else:
             obj.Shape = Part.Face(wire1)
 
+        self._update_structure_data(obj)
+
         obj.Placement = pl
         obj.positionBySupport()
         obj.recompute()
+
+
+    def _update_structure_data(self, obj):
+        obj.Width = obj.ProfileWidth
+        obj.Height = obj.ProfileHeight
+
+        
+        obj.Length = length_along_normal(obj)
+        cut_angles = get_readable_cutting_angles(
+            getattr(obj, "BevelStartCut1", "N/A"),
+            getattr(obj, "BevelStartCut2", "N/A"),
+            getattr(obj, "BevelEndCut1", "N/A"),
+            getattr(obj, "BevelEndCut2", "N/A"),
+        )
+
+        obj.CuttingAngleA = cut_angles[0]
+        obj.CuttingAngleB = cut_angles[1]
 
 
 

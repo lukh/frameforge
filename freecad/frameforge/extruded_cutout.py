@@ -9,7 +9,13 @@ from PySide import QtCore, QtGui
 
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.frameforge_exceptions import FrameForgeException
-
+from freecad.frameforge._utils import (
+    get_readable_cutting_angles,
+    length_along_normal,
+    get_profile_from_extrudedcutout,
+    get_trimmedprofile_from_extrudedcutout,
+    get_all_cutting_angles
+)
 
 class ExtrudedCutout:
     def __init__(self, obj, sketch, selected_face):
@@ -44,6 +50,29 @@ class ExtrudedCutout:
             "Distance",
         ]
         obj.CutType = "Through All"
+
+        #structure
+        obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
+        obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
+        obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
+        obj.setEditorMode("Width", 1)  # user doesn't change !
+        obj.setEditorMode("Height", 1)
+        obj.setEditorMode("Length", 1)
+
+        obj.addProperty(
+            "App::PropertyString",
+            "CuttingAngleA",
+            "Structure",
+            "Cutting Angle A",
+        )
+        obj.setEditorMode("CuttingAngleA", 1)
+        obj.addProperty(
+            "App::PropertyString",
+            "CuttingAngleB",
+            "Structure",
+            "Cutting Angle B",
+        )
+        obj.setEditorMode("CuttingAngleB", 1)
 
         obj.Proxy = self
 
@@ -97,8 +126,34 @@ class ExtrudedCutout:
             # Assigne la forme au FeaturePython
             fp.Shape = cut_shape
 
+            self._update_structure_data(fp)
+
         except FrameForgeException as e:
             App.Console.PrintError(f"Error: {e}\n")
+
+    def _update_structure_data(self, obj):
+        prof = get_profile_from_extrudedcutout(obj)
+        trim_prof = get_trimmedprofile_from_extrudedcutout(obj)
+        if trim_prof:
+            angles = get_all_cutting_angles(trim_prof)
+        else:
+            angles = ()
+
+        obj.Width = prof.ProfileWidth
+        obj.Height = prof.ProfileHeight
+
+        obj.Length = length_along_normal(trim_prof if trim_prof else prof)
+
+        cut_angles = get_readable_cutting_angles(
+            getattr(prof, "BevelStartCut1", "N/A"),
+            getattr(prof, "BevelStartCut2", "N/A"),
+            getattr(prof, "BevelEndCut1", "N/A"),
+            getattr(prof, "BevelEndCut2", "N/A"),
+            *angles,
+        )
+
+        obj.CuttingAngleA = cut_angles[0]
+        obj.CuttingAngleB = cut_angles[1]
 
 
 class ViewProviderExtrudedCutout:

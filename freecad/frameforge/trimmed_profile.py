@@ -10,7 +10,12 @@ import Part
 from PySide import QtCore, QtGui
 
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
-
+from freecad.frameforge._utils import (
+    get_readable_cutting_angles,
+    length_along_normal,
+    get_profile_from_trimmedbody,
+    get_all_cutting_angles
+)
 
 class TrimmedProfile:
     def __init__(self, obj):
@@ -36,6 +41,29 @@ class TrimmedProfile:
             "Perfect fit",
             "Simple fit",
         ]
+
+        #structure
+        obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
+        obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
+        obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
+        obj.setEditorMode("Width", 1)  # user doesn't change !
+        obj.setEditorMode("Height", 1)
+        obj.setEditorMode("Length", 1)
+
+        obj.addProperty(
+            "App::PropertyString",
+            "CuttingAngleA",
+            "Structure",
+            "Cutting Angle A",
+        )
+        obj.setEditorMode("CuttingAngleA", 1)
+        obj.addProperty(
+            "App::PropertyString",
+            "CuttingAngleB",
+            "Structure",
+            "Cutting Angle B",
+        )
+        obj.setEditorMode("CuttingAngleB", 1)
 
         obj.Proxy = self
 
@@ -128,6 +156,28 @@ class TrimmedProfile:
                 cut_shape = cut_shape.fuse(sh)
 
         self.makeShape(fp, cut_shape)
+        self._update_structure_data(fp)
+
+    def _update_structure_data(self, obj):
+        prof = get_profile_from_trimmedbody(obj)
+        angles = get_all_cutting_angles(obj)
+
+        obj.Width = prof.ProfileWidth
+        obj.Height = prof.ProfileHeight
+
+        obj.Length = length_along_normal(obj)
+
+        cut_angles = get_readable_cutting_angles(
+            getattr(prof, "BevelStartCut1", "N/A"),
+            getattr(prof, "BevelStartCut2", "N/A"),
+            getattr(prof, "BevelEndCut1", "N/A"),
+            getattr(prof, "BevelEndCut2", "N/A"),
+            *angles,
+        )
+
+        obj.CuttingAngleA = cut_angles[0]
+        obj.CuttingAngleB = cut_angles[1]
+
 
     def getOutsideCV(self, cutplane, shape):
         cv = ArchCommands.getCutVolume(cutplane, shape, clip=False, depth=0.0)
