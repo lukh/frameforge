@@ -1099,6 +1099,22 @@ class ViewProviderProfile:
         self.helpersSwitch.addChild(p2_sep)
         self.helpersSwitch.addChild(dir_sep)
 
+
+        # Guides P1
+        self.p1_x_sep, self.p1_x_coords = self._makeGuideLine((1, 0, 0))  # rouge
+        self.p1_y_sep, self.p1_y_coords = self._makeGuideLine((0, 1, 0))  # vert
+
+        # Guides P2
+        self.p2_x_sep, self.p2_x_coords = self._makeGuideLine((1, 0, 0))
+        self.p2_y_sep, self.p2_y_coords = self._makeGuideLine((0, 1, 0))
+
+        self.helpersSwitch.addChild(self.p1_x_sep)
+        self.helpersSwitch.addChild(self.p1_y_sep)
+        self.helpersSwitch.addChild(self.p2_x_sep)
+        self.helpersSwitch.addChild(self.p2_y_sep)
+
+
+
         vobj.RootNode.addChild(self.helpersSwitch)
 
         Gui.Selection.addObserver(self)
@@ -1120,6 +1136,42 @@ class ViewProviderProfile:
         sep.addChild(sph)
         return sep
 
+
+    def _makeLocalFrame(self, p1, p2):
+        # T = direction de l'edge
+        T = (p2 - p1)
+        if T.Length == 0:
+            return None, None
+        T.normalize()
+
+        # Choisir un vecteur "up" pas colinéaire
+        up = App.Vector(0, 0, 1)
+        if abs(T.dot(up)) > 0.9:
+            up = App.Vector(0, 1, 0)
+
+        # U et V dans le plan normal à l'edge
+        U = T.cross(up)
+        U.normalize()
+        V = T.cross(U)
+        V.normalize()
+
+        return U, V
+
+    def _makeGuideLine(self, color):
+        sep = coin.SoSeparator()
+
+        mat = coin.SoMaterial()
+        mat.diffuseColor = color
+        sep.addChild(mat)
+
+        coords = coin.SoCoordinate3()
+        line = coin.SoLineSet()
+        sep.addChild(coords)
+        sep.addChild(line)
+
+        return sep, coords
+
+
     def _updatePoints(self):
         obj = self.Object
         if not obj or not obj.Target:
@@ -1129,18 +1181,84 @@ class ViewProviderProfile:
         p1 = edge.Vertexes[0].Point
         p2 = edge.Vertexes[1].Point
 
+        # Coordonnées locales objet
         inv = obj.Placement.inverse()
-
         p1l = inv.multVec(p1)
         p2l = inv.multVec(p2)
 
+        # --- Sphères ---
         self.p1_tr.translation.setValue(p1l.x, p1l.y, p1l.z)
         self.p2_tr.translation.setValue(p2l.x, p2l.y, p2l.z)
 
+        # --- Ligne P1-P2 ---
         self.dir_coords.point.setValues(0, 2, [
             (p1l.x, p1l.y, p1l.z),
             (p2l.x, p2l.y, p2l.z)
         ])
+
+        # --- Direction de l'edge (locale) ---
+        edge_dir = (p2l - p1l)
+        if edge_dir.Length == 0:
+            return
+        edge_dir.normalize()
+
+        # --- Axes issus de l'Attachment / Placement ---
+        rot = obj.Placement.Rotation
+        Xw = rot.multVec(App.Vector(1, 0, 0))
+        Yw = rot.multVec(App.Vector(0, 1, 0))
+
+        # Passage en local aussi
+        X = inv.multVec(Xw + obj.Placement.Base) - inv.multVec(obj.Placement.Base)
+        Y = inv.multVec(Yw + obj.Placement.Base) - inv.multVec(obj.Placement.Base)
+
+        # --- Projection dans le plan normal à l'edge ---
+        def project_in_plane(v, n):
+            return v - n.multiply(v.dot(n))
+
+        Xp = project_in_plane(X, edge_dir)
+        Yp = project_in_plane(Y, edge_dir)
+
+        if Xp.Length == 0 or Yp.Length == 0:
+            return
+
+        Xp.normalize()
+        Yp.normalize()
+
+        # Longueur des guides
+        L = 10.0
+
+        # --- Guides au point P1 ---
+        p1x1 = p1l
+        p1x2 = p1l + Xp * L
+        p1y1 = p1l
+        p1y2 = p1l + Yp * L
+
+        self.p1_x_coords.point.setValues(0, 2, [
+            (p1x1.x, p1x1.y, p1x1.z),
+            (p1x2.x, p1x2.y, p1x2.z),
+        ])
+
+        self.p1_y_coords.point.setValues(0, 2, [
+            (p1y1.x, p1y1.y, p1y1.z),
+            (p1y2.x, p1y2.y, p1y2.z),
+        ])
+
+        # --- Guides au point P2 ---
+        p2x1 = p2l
+        p2x2 = p2l + Xp * L
+        p2y1 = p2l
+        p2y2 = p2l + Yp * L
+
+        self.p2_x_coords.point.setValues(0, 2, [
+            (p2x1.x, p2x1.y, p2x1.z),
+            (p2x2.x, p2x2.y, p2x2.z),
+        ])
+
+        self.p2_y_coords.point.setValues(0, 2, [
+            (p2y1.x, p2y1.y, p2y1.z),
+            (p2y2.x, p2y2.y, p2y2.z),
+        ])
+
 
     def updateData(self, fp, prop):
         if prop == "Target": 
