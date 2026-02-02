@@ -5,15 +5,18 @@ import FreeCAD as App
 import FreeCADGui as Gui
 
 from freecad.frameforge.best_fit import CutPart, Stock, best_fit_decreasing
-from freecad.frameforge.create_bom import (
-    group_links,
-    group_profiles,
+from freecad.frameforge._utils import (
     is_extrudedcutout,
     is_fusion,
     is_group,
     is_part,
     is_profile,
-    is_trimmedbody,
+    is_trimmedbody
+)
+
+from freecad.frameforge.create_bom import (
+    group_links,
+    group_profiles,
     make_bom,
     traverse_assembly,
 )
