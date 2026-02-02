@@ -176,8 +176,8 @@ def get_trimmed_profile_all_cutting_angles(trimmed_profile):
 
     angle_div = 2.0 if trimmed_profile.TrimmedProfileType == "End Miter" else 1.0
 
-    if trimmed_profile.TrimmedProfileType == "End Miter" or trimmed_profile.CutType == "Simple fit":
-        for bound in trimmed_profile.TrimmingBoundary:
+    for bound in trimmed_profile.TrimmingBoundary:
+        if trimmed_profile.TrimmedProfileType == "End Miter" or trimmed_profile.CutType == "Simple fit":
             for sub in bound[1]:  # sous-objets (souvent "FaceX")
                 face = bound[0].getSubObject(sub)
                 if isinstance(face.Surface, Part.Plane):
@@ -188,8 +188,8 @@ def get_trimmed_profile_all_cutting_angles(trimmed_profile):
                         angle = 180 - angle
 
                     angles.append(angle / angle_div)
-    else:
-        angles = ["?", "?"]
+        else:
+            angles.append("P")
 
     if hasattr(trimmed_profile.TrimmedBody, "TrimmedProfileType"):
         parent_profile = trimmed_profile.TrimmedBody
@@ -263,14 +263,15 @@ def get_readable_cutting_angles(bsc1, bsc2, bec1, bec2, *trim_cuts):
             return (f"{bsc1:.1f} / {bsc2:.1f}", f"{bec1:.1f} / {bec2:.1f}")
 
     elif len(trim_cuts) == 2:
-        return (f"@ {trim_cuts[0]:.1f}", f"@ {trim_cuts[1]:.1f}")
+        trim_cuts = [f"{tc:.1f}" if isinstance(tc, float) else tc for tc in trim_cuts]
+        return (f"@ {trim_cuts[0]}", f"@ {trim_cuts[1]}")
 
     elif len(trim_cuts) == 1:
         bevels_not_zero = [b for b in all_bevels if b != 0]
         if len(bevels_not_zero) == 0:
-            return ("0.0", f"@ {trim_cuts[0]:.1f}")
+            return ("0.0", f"@ {trim_cuts[0]}")
 
         elif len(bevels_not_zero) == 1:
-            return (f"{abs(bevels_not_zero[0]):.1f}", f"@ {trim_cuts[0]:.1f}")
+            return (f"{abs(bevels_not_zero[0])}", f"@ {trim_cuts[0]}")
 
     return ("?", "?")
