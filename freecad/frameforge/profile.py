@@ -1409,47 +1409,7 @@ class ViewProviderProfile:
         FreeCADGui.ActiveDocument.setEdit(self.Object, 0)
 
 
-class ViewProviderCustomProfile:
-    def __init__(self, obj):
-        """Set this object to the proxy object of the actual view provider"""
-        obj.Proxy = self
-
-    def attach(self, vobj):
-        """Setup the scene sub-graph of the view provider, this method is mandatory"""
-        self.ViewObject = vobj
-        self.Object = vobj.Object
-        return
-
-    def updateData(self, fp, prop):
-        """If a property of the handled feature has changed we have the chance to handle this here"""
-        return
-
-    def getDisplayModes(self, obj):
-        """Return a list of display modes."""
-        modes = []
-        return modes
-
-    def getDefaultDisplayMode(self):
-        """Return the name of the default display mode. It must be defined in getDisplayModes."""
-        return "FlatLines"
-
-    def setDisplayMode(self, mode):
-        """Map the display mode defined in attach with those defined in getDisplayModes.
-        Since they have the same names nothing needs to be done. This method is optional.
-        """
-        return mode
-
-    def claimChildren(self):
-        return []
-
-    def onChanged(self, vp, prop):
-        """Print the name of the property that has changed"""
-        # App.Console.PrintMessage("Change {} property: {}\n".format(str(vp), str(prop)))
-        pass
-
-    def onDelete(self, fp, sub):
-        return True
-
+class ViewProviderCustomProfile(ViewProviderProfile):
     def getIcon(self):
         """Return the icon in XMP format which will appear in the tree view. This method is optional
         and if not defined a default icon is shown.
@@ -1519,18 +1479,6 @@ class ViewProviderCustomProfile:
             "                ",
             "                "};
         	"""
-
-    def dumps(self):
-        """
-        Called during document saving.
-        """
-        return None
-
-    def loads(self, state):
-        """
-        Called during document restore.
-        """
-        return None
 
     def setEdit(self, vobj, mode):
         return None
