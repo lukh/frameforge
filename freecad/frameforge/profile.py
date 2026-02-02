@@ -1080,7 +1080,7 @@ class ViewProviderProfile:
         self.p1_tr = coin.SoTranslation()
         p1_sep = coin.SoSeparator()
         p1_sep.addChild(self.p1_tr)
-        p1_sep.addChild(self._makeSphere((1, 0, 0)))  # rouge
+        p1_sep.addChild(self._makeSphere((1, 0.25, 0)))  # rouge
 
         # Point 2
         self.p2_tr = coin.SoTranslation()
@@ -1127,7 +1127,7 @@ class ViewProviderProfile:
         p1_label_sep.addChild(font1)
 
         txt1 = coin.SoText2()
-        txt1.string = "1"
+        txt1.string = "B"
         p1_label_sep.addChild(txt1)
 
         # --- Label 2 ---
@@ -1144,7 +1144,7 @@ class ViewProviderProfile:
         p2_label_sep.addChild(font2)
 
         txt2 = coin.SoText2()
-        txt2.string = "2"
+        txt2.string = "A"
         p2_label_sep.addChild(txt2)
 
         # Ajout au switch
