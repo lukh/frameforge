@@ -1113,6 +1113,44 @@ class ViewProviderProfile:
         self.helpersSwitch.addChild(self.p2_x_sep)
         self.helpersSwitch.addChild(self.p2_y_sep)
 
+        # --- Label 1 ---
+        self.p1_label_tr = coin.SoTranslation()
+        p1_label_sep = coin.SoSeparator()
+        p1_label_sep.addChild(self.p1_label_tr)
+
+        mat1 = coin.SoMaterial()
+        mat1.diffuseColor = (1, 1, 1)  # blanc
+        p1_label_sep.addChild(mat1)
+
+        font1 = coin.SoFont()
+        font1.size = 14
+        p1_label_sep.addChild(font1)
+
+        txt1 = coin.SoText2()
+        txt1.string = "1"
+        p1_label_sep.addChild(txt1)
+
+        # --- Label 2 ---
+        self.p2_label_tr = coin.SoTranslation()
+        p2_label_sep = coin.SoSeparator()
+        p2_label_sep.addChild(self.p2_label_tr)
+
+        mat2 = coin.SoMaterial()
+        mat2.diffuseColor = (1, 1, 1)  # blanc
+        p2_label_sep.addChild(mat2)
+
+        font2 = coin.SoFont()
+        font2.size = 14
+        p2_label_sep.addChild(font2)
+
+        txt2 = coin.SoText2()
+        txt2.string = "2"
+        p2_label_sep.addChild(txt2)
+
+        # Ajout au switch
+        self.helpersSwitch.addChild(p1_label_sep)
+        self.helpersSwitch.addChild(p2_label_sep)
+
 
 
         vobj.RootNode.addChild(self.helpersSwitch)
@@ -1189,6 +1227,14 @@ class ViewProviderProfile:
         # --- Sphères ---
         self.p1_tr.translation.setValue(p1l.x, p1l.y, p1l.z)
         self.p2_tr.translation.setValue(p2l.x, p2l.y, p2l.z)
+
+        offset = App.Vector(2, 2, 2)  # ajuste si besoin
+
+        p1_label_pos = p1l + offset
+        p2_label_pos = p2l + offset
+
+        self.p1_label_tr.translation.setValue(p1_label_pos.x, p1_label_pos.y, p1_label_pos.z)
+        self.p2_label_tr.translation.setValue(p2_label_pos.x, p2_label_pos.y, p2_label_pos.z)
 
         # --- Ligne P1-P2 ---
         self.dir_coords.point.setValues(0, 2, [
