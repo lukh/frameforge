@@ -1080,13 +1080,13 @@ class ViewProviderProfile:
         self.p1_tr = coin.SoTranslation()
         p1_sep = coin.SoSeparator()
         p1_sep.addChild(self.p1_tr)
-        p1_sep.addChild(self._makeSphere((1, 0.25, 0)))  # rouge
+        p1_sep.addChild(self._makeSphere((1, 0.25, 0)))  # orange
 
         # Point 2
         self.p2_tr = coin.SoTranslation()
         p2_sep = coin.SoSeparator()
         p2_sep.addChild(self.p2_tr)
-        p2_sep.addChild(self._makeSphere((0, 0, 1)))  # bleu
+        p2_sep.addChild(self._makeSphere((0, 0, 1)))  # blue
 
         # Line
         dir_sep = coin.SoSeparator()
@@ -1101,8 +1101,8 @@ class ViewProviderProfile:
 
 
         # Guides P1
-        self.p1_x_sep, self.p1_x_coords = self._makeGuideLine((1, 0, 0))  # rouge
-        self.p1_y_sep, self.p1_y_coords = self._makeGuideLine((0, 1, 0))  # vert
+        self.p1_x_sep, self.p1_x_coords = self._makeGuideLine((1, 0, 0))  # red
+        self.p1_y_sep, self.p1_y_coords = self._makeGuideLine((0, 1, 0))  # green
 
         # Guides P2
         self.p2_x_sep, self.p2_x_coords = self._makeGuideLine((1, 0, 0))
@@ -1113,13 +1113,13 @@ class ViewProviderProfile:
         self.helpersSwitch.addChild(self.p2_x_sep)
         self.helpersSwitch.addChild(self.p2_y_sep)
 
-        # --- Label 1 ---
+        # Label 1
         self.p1_label_tr = coin.SoTranslation()
         p1_label_sep = coin.SoSeparator()
         p1_label_sep.addChild(self.p1_label_tr)
 
         mat1 = coin.SoMaterial()
-        mat1.diffuseColor = (1, 1, 1)  # blanc
+        mat1.diffuseColor = (1, 1, 1)
         p1_label_sep.addChild(mat1)
 
         font1 = coin.SoFont()
@@ -1130,13 +1130,13 @@ class ViewProviderProfile:
         txt1.string = "B"
         p1_label_sep.addChild(txt1)
 
-        # --- Label 2 ---
+        # Label 2
         self.p2_label_tr = coin.SoTranslation()
         p2_label_sep = coin.SoSeparator()
         p2_label_sep.addChild(self.p2_label_tr)
 
         mat2 = coin.SoMaterial()
-        mat2.diffuseColor = (1, 1, 1)  # blanc
+        mat2.diffuseColor = (1, 1, 1)
         p2_label_sep.addChild(mat2)
 
         font2 = coin.SoFont()
@@ -1147,11 +1147,8 @@ class ViewProviderProfile:
         txt2.string = "A"
         p2_label_sep.addChild(txt2)
 
-        # Ajout au switch
         self.helpersSwitch.addChild(p1_label_sep)
         self.helpersSwitch.addChild(p2_label_sep)
-
-
 
         vobj.RootNode.addChild(self.helpersSwitch)
 
@@ -1176,7 +1173,7 @@ class ViewProviderProfile:
 
 
     def _makeLocalFrame(self, p1, p2):
-        # T = direction de l'edge
+        # T = edge dir
         T = (p2 - p1)
         if T.Length == 0:
             return None, None
@@ -1219,16 +1216,16 @@ class ViewProviderProfile:
         p1 = edge.Vertexes[0].Point
         p2 = edge.Vertexes[1].Point
 
-        # Coordonnées locales objet
+        # Local coordinates
         inv = obj.Placement.inverse()
         p1l = inv.multVec(p1)
         p2l = inv.multVec(p2)
 
-        # --- Sphères ---
+        # Spheres
         self.p1_tr.translation.setValue(p1l.x, p1l.y, p1l.z)
         self.p2_tr.translation.setValue(p2l.x, p2l.y, p2l.z)
 
-        offset = App.Vector(2, 2, 2)  # ajuste si besoin
+        offset = App.Vector(2, 2, 2)
 
         p1_label_pos = p1l + offset
         p2_label_pos = p2l + offset
@@ -1236,28 +1233,25 @@ class ViewProviderProfile:
         self.p1_label_tr.translation.setValue(p1_label_pos.x, p1_label_pos.y, p1_label_pos.z)
         self.p2_label_tr.translation.setValue(p2_label_pos.x, p2_label_pos.y, p2_label_pos.z)
 
-        # --- Ligne P1-P2 ---
+        # Normal Line
         self.dir_coords.point.setValues(0, 2, [
             (p1l.x, p1l.y, p1l.z),
             (p2l.x, p2l.y, p2l.z)
         ])
 
-        # --- Direction de l'edge (locale) ---
+        # Coord system
         edge_dir = (p2l - p1l)
         if edge_dir.Length == 0:
             return
         edge_dir.normalize()
 
-        # --- Axes issus de l'Attachment / Placement ---
         rot = obj.Placement.Rotation
         Xw = rot.multVec(App.Vector(1, 0, 0))
         Yw = rot.multVec(App.Vector(0, 1, 0))
 
-        # Passage en local aussi
         X = inv.multVec(Xw + obj.Placement.Base) - inv.multVec(obj.Placement.Base)
         Y = inv.multVec(Yw + obj.Placement.Base) - inv.multVec(obj.Placement.Base)
 
-        # --- Projection dans le plan normal à l'edge ---
         def project_in_plane(v, n):
             return v - n.multiply(v.dot(n))
 
@@ -1270,10 +1264,9 @@ class ViewProviderProfile:
         Xp.normalize()
         Yp.normalize()
 
-        # Longueur des guides
         L = 10.0
 
-        # --- Guides au point P1 ---
+        # LCS A
         p1x1 = p1l
         p1x2 = p1l + Xp * L
         p1y1 = p1l
@@ -1289,7 +1282,7 @@ class ViewProviderProfile:
             (p1y2.x, p1y2.y, p1y2.z),
         ])
 
-        # --- Guides au point P2 ---
+        # LCS B
         p2x1 = p2l
         p2x2 = p2l + Xp * L
         p2y1 = p2l
