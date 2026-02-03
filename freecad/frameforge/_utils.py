@@ -210,11 +210,13 @@ def length_along_normal(obj):
     doc = FreeCAD.ActiveDocument
 
     if is_profile(obj):
-        target = obj.Target
-        edge = doc.getObject(target[0].Name).getSubObject(target[1][0])
+        if hasattr(obj, "Target"):
+            target = obj.Target
+            edge = doc.getObject(target[0].Name).getSubObject(target[1][0])
+        else:
+            return 0.0 # TODO handle this case !!!
 
     elif is_trimmedbody(obj):
-
         def resolve_edge(link):
             target = obj.Proxy.getTarget(link)
             return doc.getObject(target[0].Name).getSubObject(target[1][0])
