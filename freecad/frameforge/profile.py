@@ -1461,7 +1461,7 @@ class ViewProviderProfile:
 
     def onDelete(self, fp, sub):
         Gui.Selection.removeObserver(self)
-        vobj.RootNode.removeChild(self.helpersSwitch)
+        self.ViewObject.RootNode.removeChild(self.helpersSwitch)
         return True
 
     def getIcon(self):
