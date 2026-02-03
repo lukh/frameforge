@@ -1078,17 +1078,20 @@ class ViewProviderProfile:
         self.helpersSwitch = coin.SoSwitch()
         self.helpersSwitch.whichChild = coin.SO_SWITCH_NONE
 
+        sph_d = max(self.Object.Width.Value, self.Object.Height.Value) / 6
+        font_size = int(1.4*max(self.Object.Width.Value, self.Object.Height.Value))
+
         # Point 1
         self.p1_tr = coin.SoTranslation()
         p1_sep = coin.SoSeparator()
         p1_sep.addChild(self.p1_tr)
-        p1_sep.addChild(self._makeSphere((0, 0, 1)))  # blue
+        p1_sep.addChild(self._makeSphere(sph_d, (0, 0, 1)))  # blue
 
         # Point 2
         self.p2_tr = coin.SoTranslation()
         p2_sep = coin.SoSeparator()
         p2_sep.addChild(self.p2_tr)
-        p2_sep.addChild(self._makeSphere((1, 0.25, 0)))  # orange
+        p2_sep.addChild(self._makeSphere(sph_d, (1, 0.25, 0)))  # orange
 
         # Line
         dir_sep = coin.SoSeparator()
@@ -1125,7 +1128,7 @@ class ViewProviderProfile:
         p1_label_sep.addChild(mat1)
 
         font1 = coin.SoFont()
-        font1.size = 14
+        font1.size = font_size
         p1_label_sep.addChild(font1)
 
         txt1 = coin.SoText2()
@@ -1142,7 +1145,7 @@ class ViewProviderProfile:
         p2_label_sep.addChild(mat2)
 
         font2 = coin.SoFont()
-        font2.size = 14
+        font2.size = font_size
         p2_label_sep.addChild(font2)
 
         txt2 = coin.SoText2()
@@ -1163,13 +1166,13 @@ class ViewProviderProfile:
     def clearSelection(self, other):
         self.helpersSwitch.whichChild = coin.SO_SWITCH_NONE
 
-    def _makeSphere(self, color):
+    def _makeSphere(self, dia, color):
         sep = coin.SoSeparator()
         mat = coin.SoMaterial()
         mat.diffuseColor = color
         sep.addChild(mat)
         sph = coin.SoSphere()
-        sph.radius = 1.5
+        sph.radius = dia
         sep.addChild(sph)
         return sep
 
@@ -1211,7 +1214,7 @@ class ViewProviderProfile:
 
     def _updatePoints(self):
         obj = self.Object
-        if not obj or not obj.Target:
+        if not obj or not hasattr(obj, "Target") or not obj.Target:
             return
 
         edge = obj.Target[0].getSubObject(obj.Target[1][0])
@@ -1220,17 +1223,18 @@ class ViewProviderProfile:
 
         # Local coordinates
         inv = obj.Placement.inverse()
-        p1l = inv.multVec(p1)
-        p2l = inv.multVec(p2)
+        p1l = inv.multVec(p1) + App.Vector(0, 0, obj.OffsetB)
+        p2l = inv.multVec(p2) - App.Vector(0, 0, obj.OffsetA)
 
         # Spheres
         self.p1_tr.translation.setValue(p1l.x, p1l.y, p1l.z)
         self.p2_tr.translation.setValue(p2l.x, p2l.y, p2l.z)
 
-        offset = App.Vector(2, 2, 2)
+
+        offset = App.Vector(0, 0, max(obj.Width.Value, obj.Height.Value)/2)
 
         p1_label_pos = p1l + offset
-        p2_label_pos = p2l + offset
+        p2_label_pos = p2l - offset
 
         self.p1_label_tr.translation.setValue(p1_label_pos.x, p1_label_pos.y, p1_label_pos.z)
         self.p2_label_tr.translation.setValue(p2_label_pos.x, p2_label_pos.y, p2_label_pos.z)
