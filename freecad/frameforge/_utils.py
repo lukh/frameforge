@@ -236,31 +236,31 @@ def length_along_normal(obj):
 
 
 
-def get_readable_cutting_angles(bsc1, bsc2, bec1, bec2, *trim_cuts):
-    all_bevels = [bsc1, bsc2, bec1, bec2]
-    start_bevels = [bsc1, bsc2]
-    end_bevels = [bec1, bec2]
+def get_readable_cutting_angles(ba_y, ba_x, bb_y, bb_x, *trim_cuts):
+    all_bevels = [ba_y, ba_x, bb_y, bb_x]
+    start_bevels = [ba_y, ba_x]
+    end_bevels = [bb_y, bb_x]
 
     if len(trim_cuts) == 0:
         # a real profile
         if all([b == 0 for b in all_bevels]):
             return ("0.0", "0.0")
 
-        elif bsc1 == bec1 == 0.0:
-            angles = (bsc2, bec2)
+        elif ba_y == bb_y == 0.0:
+            angles = (ba_x, bb_x)
             angles = angles if (angles[0] * angles[1] <= 0) else (abs(angles[0]), abs(angles[1]))
             return (f"{angles[0]:.1f}", f"{angles[1]:.1f}")
 
-        elif bsc2 == bec2 == 0.0:
-            angles = (bsc1, bec1)
+        elif ba_x == bb_x == 0.0:
+            angles = (ba_y, bb_y)
             angles = angles if (angles[0] * angles[1] <= 0) else (abs(angles[0]), abs(angles[1]))
             return (f"{angles[0]:.1f}", f"{angles[1]:.1f}")
 
-        elif (bsc1 == 0.0 and bec2 == 0.0) ^ (bsc2 == 0.0 and bec1 == 0.0):
-            return (f"{(bsc1 + bsc2):.1f}", f"* {(bec1+bec2):.1f}")
+        elif (ba_y == 0.0 and bb_x == 0.0) ^ (ba_x == 0.0 and bb_y == 0.0):
+            return (f"{(ba_y + ba_x):.1f}", f"* {(bb_y+bb_x):.1f}")
 
         else:
-            return (f"{bsc1:.1f} / {bsc2:.1f}", f"{bec1:.1f} / {bec2:.1f}")
+            return (f"{ba_y:.1f} / {ba_x:.1f}", f"{bb_y:.1f} / {bb_x:.1f}")
 
     elif len(trim_cuts) == 2:
         trim_cuts = [f"{tc:.1f}" if isinstance(tc, float) else tc for tc in trim_cuts]

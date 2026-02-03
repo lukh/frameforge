@@ -66,7 +66,7 @@ class Profile:
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
         with initialization value 'init_w' to 'init_wc' : ProfileHeight, ProfileWidth, [...] CenteredOnWidth. Depending
-        on 'bevels_combined' parameters, there is 4 others properties for bevels : BevelStartCut1, etc. Depending on
+        on 'bevels_combined' parameters, there is 4 others properties for bevels : BevelACutY, etc. Depending on
         'fam' parameter, there is properties specific to profile family.
         """
 
@@ -133,24 +133,25 @@ class Profile:
 
         if not bevels_combined:
             obj.addProperty(
-                "App::PropertyFloat", "BevelStartCut1", "Profile", "Bevel on First axle at the start of the profile"
-            ).BevelStartCut1 = 0
+                "App::PropertyFloat", "BevelACutY", "Profile", "Bevel on First axle at the start of the profile"
+            ).BevelACutY = 0
             obj.addProperty(
                 "App::PropertyFloat",
-                "BevelStartCut2",
+                "BevelACutX",
                 "Profile",
                 "Rotate the cut on Second axle at the start of the profile",
-            ).BevelStartCut2 = 0
+            ).BevelACutX = 0
             obj.addProperty(
-                "App::PropertyFloat", "BevelEndCut1", "Profile", "Bevel on First axle at the end of the profile"
-            ).BevelEndCut1 = 0
+                "App::PropertyFloat", "BevelBCutY", "Profile", "Bevel on First axle at the end of the profile"
+            ).BevelBCutY = 0
             obj.addProperty(
                 "App::PropertyFloat",
-                "BevelEndCut2",
+                "BevelBCutX",
                 "Profile",
                 "Rotate the cut on Second axle at the end of the profile",
-            ).BevelEndCut2 = 0
+            ).BevelBCutX = 0
         if bevels_combined:
+            # TODO NOT USED
             obj.addProperty(
                 "App::PropertyFloat", "BevelStartCut", "Profile", "Bevel at the start of the profile"
             ).BevelStartCut = 0
@@ -163,6 +164,15 @@ class Profile:
             obj.addProperty(
                 "App::PropertyFloat", "BevelEndRotate", "Profile", "Rotate the second cut on Profile axle"
             ).BevelEndRotate = 0
+
+
+        obj.addProperty("App::PropertyFloat", "OffsetA", "Profile", "Parameter for structure").OffsetA = (
+            0.0
+        )
+
+        obj.addProperty("App::PropertyFloat", "OffsetB", "Profile", "Parameter for structure").OffsetB = (
+            0.0
+        )
 
         obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = init_wg
         obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram").ApproxWeight = (
@@ -233,15 +243,6 @@ class Profile:
         )
         obj.setEditorMode("CuttingAngleB", 1)
 
-
-        obj.addProperty("App::PropertyFloat", "OffsetA", "Structure", "Parameter for structure").OffsetA = (
-            0.0  # Property for structure
-        )
-
-        obj.addProperty("App::PropertyFloat", "OffsetB", "Structure", "Parameter for structure").OffsetB = (
-            0.0  # Property for structure
-        )
-
         if link_sub:
             obj.addProperty("App::PropertyLinkSub", "Target", "Base", "Target face").Target = link_sub
 
@@ -289,14 +290,14 @@ class Profile:
         obj.MakeFillet = init_mf
 
         # if not bevels_combined:
-        #     obj.BevelStartCut1", "Profile",
-        #                     "Bevel on First axle at the start of the profile").BevelStartCut1 = 0
-        #     obj.BevelStartCut2", "Profile",
-        #                     "Rotate the cut on Second axle at the start of the profile").BevelStartCut2 = 0
-        #     obj.BevelEndCut1", "Profile",
-        #                     "Bevel on First axle at the end of the profile").BevelEndCut1 = 0
-        #     obj.BevelEndCut2", "Profile",
-        #                     "Rotate the cut on Second axle at the end of the profile").BevelEndCut2 = 0
+        #     obj.BevelACutY", "Profile",
+        #                     "Bevel on First axle at the start of the profile").BevelACutY = 0
+        #     obj.BevelACutX", "Profile",
+        #                     "Rotate the cut on Second axle at the start of the profile").BevelACutX = 0
+        #     obj.BevelBCutY", "Profile",
+        #                     "Bevel on First axle at the end of the profile").BevelBCutY = 0
+        #     obj.BevelBCutX", "Profile",
+        #                     "Rotate the cut on Second axle at the end of the profile").BevelBCutX = 0
         # if bevels_combined:
         #     obj.BevelStartCut", "Profile",
         #                     "Bevel at the start of the profile").BevelStartCut = 0
@@ -339,10 +340,10 @@ class Profile:
             or p == "FilletRadius"
             or p == "Centered"
             or p == "Length"
-            or p == "BevelStartCut1"
-            or p == "BevelEndCut1"
-            or p == "BevelStartCut2"
-            or p == "BevelEndCut2"
+            or p == "BevelACutY"
+            or p == "BevelBCutY"
+            or p == "BevelACutX"
+            or p == "BevelBCutX"
             or p == "BevelStartCut"
             or p == "BevelEndCut"
             or p == "BevelStartRotate"
@@ -378,28 +379,28 @@ class Profile:
         w = h = 0
 
         if self.bevels_combined == False:
-            if obj.BevelStartCut1 > 60:
-                obj.BevelStartCut1 = 60
-            if obj.BevelStartCut1 < -60:
-                obj.BevelStartCut1 = -60
-            if obj.BevelStartCut2 > 60:
-                obj.BevelStartCut2 = 60
-            if obj.BevelStartCut2 < -60:
-                obj.BevelStartCut2 = -60
+            if obj.BevelACutY > 60:
+                obj.BevelACutY = 60
+            if obj.BevelACutY < -60:
+                obj.BevelACutY = -60
+            if obj.BevelACutX > 60:
+                obj.BevelACutX = 60
+            if obj.BevelACutX < -60:
+                obj.BevelACutX = -60
 
-            if obj.BevelEndCut1 > 60:
-                obj.BevelEndCut1 = 60
-            if obj.BevelEndCut1 < -60:
-                obj.BevelEndCut1 = -60
-            if obj.BevelEndCut2 > 60:
-                obj.BevelEndCut2 = 60
-            if obj.BevelEndCut2 < -60:
-                obj.BevelEndCut2 = -60
+            if obj.BevelBCutY > 60:
+                obj.BevelBCutY = 60
+            if obj.BevelBCutY < -60:
+                obj.BevelBCutY = -60
+            if obj.BevelBCutX > 60:
+                obj.BevelBCutX = 60
+            if obj.BevelBCutX < -60:
+                obj.BevelBCutX = -60
 
-            B1Y = obj.BevelStartCut1
-            B2Y = -obj.BevelEndCut1
-            B1X = -obj.BevelStartCut2
-            B2X = obj.BevelEndCut2
+            B1Y = obj.BevelACutY
+            B2Y = -obj.BevelBCutY
+            B1X = -obj.BevelACutX
+            B2X = obj.BevelBCutX
             B1Z = 0
             B2Z = 0
 
@@ -1074,10 +1075,10 @@ class Profile:
         
         obj.Length = length_along_normal(obj)
         cut_angles = get_readable_cutting_angles(
-            getattr(obj, "BevelStartCut1", "N/A"),
-            getattr(obj, "BevelStartCut2", "N/A"),
-            getattr(obj, "BevelEndCut1", "N/A"),
-            getattr(obj, "BevelEndCut2", "N/A"),
+            getattr(obj, "BevelACutY", "N/A"),
+            getattr(obj, "BevelACutX", "N/A"),
+            getattr(obj, "BevelBCutY", "N/A"),
+            getattr(obj, "BevelBCutX", "N/A"),
         )
 
         obj.CuttingAngleA = cut_angles[0]
@@ -1097,6 +1098,9 @@ class Profile:
                     "",
                 ).Family = self.fam
 
+            # add CustomProfile atttribute
+            if not hasattr(obj, "CustomProfile"):
+                obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
 
             # add LinearWeight attribute (<= 0.1.7)
             if not hasattr(obj, "LinearWeight"):
@@ -1116,6 +1120,66 @@ class Profile:
             if obj.Family == "Pipe":
                 obj.Thickness = 2*obj.Thickness
 
+            # update properties (bevels and offset)
+            bsc1 = obj.BevelStartCut1
+            bsc2 = obj.BevelStartCut2
+            bec1 = obj.BevelEndCut1
+            bec2 = obj.BevelEndCut2
+            obj.addProperty(
+                "App::PropertyFloat", "BevelACutY", "Profile", "Bevel on First axle at the start of the profile"
+            ).BevelACutY = bsc1
+            obj.addProperty(
+                "App::PropertyFloat",
+                "BevelACutX",
+                "Profile",
+                "Rotate the cut on Second axle at the start of the profile",
+            ).BevelACutX = bsc2
+            obj.addProperty(
+                "App::PropertyFloat", "BevelBCutY", "Profile", "Bevel on First axle at the end of the profile"
+            ).BevelBCutY = bec1
+            obj.addProperty(
+                "App::PropertyFloat",
+                "BevelBCutX",
+                "Profile",
+                "Rotate the cut on Second axle at the end of the profile",
+            ).BevelBCutX = bec2
+
+            obj.removeProperty("BevelStartCut1")
+            obj.removeProperty("BevelStartCut2")
+            obj.removeProperty("BevelEndCut1")
+            obj.removeProperty("BevelEndCut2")
+
+            off_a = obj.OffsetA
+            off_b = obj.OffsetB
+
+            obj.removeProperty("OffsetA")
+            obj.removeProperty("OffsetB")
+
+            obj.addProperty("App::PropertyFloat", "OffsetA", "Profile", "Parameter for structure").OffsetA = (
+                off_a
+            )
+
+            obj.addProperty("App::PropertyFloat", "OffsetB", "Profile", "Parameter for structure").OffsetB = (
+                off_b
+            )
+
+            obj.addProperty(
+                "App::PropertyString",
+                "CuttingAngleA",
+                "Structure",
+                "Cutting Angle A",
+            )
+            obj.setEditorMode("CuttingAngleA", 1)
+            obj.addProperty(
+                "App::PropertyString",
+                "CuttingAngleB",
+                "Structure",
+                "Cutting Angle B",
+            )
+            obj.setEditorMode("CuttingAngleB", 1)
+
+
+            # add version
             obj.addProperty(
                 "App::PropertyString",
                 "FrameforgeVersion",
