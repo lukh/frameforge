@@ -1116,6 +1116,9 @@ class Profile:
                 obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price").Price = 0.0
                 obj.setEditorMode("Price", 1)
 
+            # double the thickness if pipe #DO NOT COMMIT, Used to migrate Microforge Trailers (PUMBA? Dumbo ?)
+            # if obj.Family == "Pipe":
+            #     obj.Thickness = 2*obj.Thickness
 
             obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = False
             obj.setEditorMode("Cutout", 1)
@@ -1199,9 +1202,9 @@ class ViewProviderProfile:
         """Set this object to the proxy object of the actual view provider"""
         obj.Proxy = self
 
-    def attach(self, vobj):
-        self.ViewObject = vobj
-        self.Object = vobj.Object
+    def _ensureHelpers(self):
+        if hasattr(self, "helpersSwitch") and self.helpersSwitch:
+            return
 
         self.helpersSwitch = coin.SoSwitch()
         self.helpersSwitch.whichChild = coin.SO_SWITCH_NONE
@@ -1283,9 +1286,21 @@ class ViewProviderProfile:
         self.helpersSwitch.addChild(p1_label_sep)
         self.helpersSwitch.addChild(p2_label_sep)
 
-        vobj.RootNode.addChild(self.helpersSwitch)
+        self.ViewObject.RootNode.addChild(self.helpersSwitch)
 
         Gui.Selection.addObserver(self)
+
+    def attach(self, vobj):
+        self.ViewObject = vobj
+        self.Object = vobj.Object
+
+        if hasattr(self, "helpersSwitch"):
+            self.ViewObject.RootNode.removeChild(self.helpersSwitch)
+            self.helpersSwitch = None
+
+        self._ensureHelpers()
+
+        self._updatePoints()
 
     def addSelection(self, doc, obj, sub, pnt):
         if obj == self.Object.Name:
@@ -1341,6 +1356,8 @@ class ViewProviderProfile:
 
 
     def _updatePoints(self):
+        self._ensureHelpers()
+
         obj = self.Object
         if not obj or not hasattr(obj, "Target") or not obj.Target:
             return
@@ -1462,6 +1479,9 @@ class ViewProviderProfile:
     def onDelete(self, fp, sub):
         Gui.Selection.removeObserver(self)
         self.ViewObject.RootNode.removeChild(self.helpersSwitch)
+
+        self.helpersSwitch = None
+
         return True
 
     def getIcon(self):
@@ -1506,16 +1526,10 @@ class ViewProviderProfile:
         	"""
 
     def dumps(self):
-        """
-        Called during document saving.
-        """
-        return None
+        return {}
 
     def loads(self, state):
-        """
-        Called during document restore.
-        """
-        return None
+        return
 
     def setEdit(self, vobj, mode):
         if mode != 0:
