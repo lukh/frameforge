@@ -210,7 +210,6 @@ class Profile:
 
         if link_sub:
             obj.addProperty("App::PropertyLinkSub", "Target", "Base", "Target face").Target = link_sub
-            obj.setExpression(".AttachmentOffset.Base.z", "-OffsetA")
 
         if custom_profile:
             obj.addProperty("App::PropertyLink", "CustomProfile", "Base", "Target profile").CustomProfile = (
@@ -995,6 +994,9 @@ class Profile:
                 p = tslot20x20_one_slot()
 
         if L:
+            # translate to take OffsetA into account
+            p = p.translate(vec(0, 0, -obj.OffsetA))
+            
             ProfileFull = p.extrude(vec(0, 0, L))
             obj.Shape = ProfileFull
 
