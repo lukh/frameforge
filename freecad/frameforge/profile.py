@@ -1080,13 +1080,13 @@ class ViewProviderProfile:
         self.p1_tr = coin.SoTranslation()
         p1_sep = coin.SoSeparator()
         p1_sep.addChild(self.p1_tr)
-        p1_sep.addChild(self._makeSphere((1, 0.25, 0)))  # orange
+        p1_sep.addChild(self._makeSphere((0, 0, 1)))  # blue
 
         # Point 2
         self.p2_tr = coin.SoTranslation()
         p2_sep = coin.SoSeparator()
         p2_sep.addChild(self.p2_tr)
-        p2_sep.addChild(self._makeSphere((0, 0, 1)))  # blue
+        p2_sep.addChild(self._makeSphere((1, 0.25, 0)))  # orange
 
         # Line
         dir_sep = coin.SoSeparator()
@@ -1300,7 +1300,7 @@ class ViewProviderProfile:
 
 
     def updateData(self, fp, prop):
-        if prop == "Target": 
+        if prop in ["Target", "OffsetA", "OffsetB"]: 
             self._updatePoints()
 
     def getDisplayModes(self, obj):
