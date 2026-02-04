@@ -268,9 +268,6 @@ class CreateProfileTaskPanel:
             sk_parent = sketch.Parents[-1][0]
             sk_parent.addObject(obj)
 
-        # Create a ViewObject in current GUI
-        ViewProviderProfile(obj.ViewObject)
-
         if sketch is not None and edge is not None:
             # Tuple assignment for edge
             feature = sketch
@@ -313,6 +310,9 @@ class CreateProfileTaskPanel:
             self.form_proxy.cb_combined_bevel.isChecked(),
             link_sub,
         )
+
+        # Create a ViewObject in current GUI
+        ViewProviderProfile(obj.ViewObject)
 
     def addSelection(self, doc, obj, sub, other):
         self.update_selection()
