@@ -1116,9 +1116,9 @@ class Profile:
                 obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price").Price = 0.0
                 obj.setEditorMode("Price", 1)
 
-            # double the thickness if pipe #DO NOT COMMIT, Used to migrate Microforge Trailers (PUMBA? Dumbo ?)
-            # if obj.Family == "Pipe":
-            #     obj.Thickness = 2*obj.Thickness
+            # double the thickness if pipe
+            if obj.Family == "Pipe":
+                obj.Thickness = 2*obj.Thickness
 
             obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = False
             obj.setEditorMode("Cutout", 1)
