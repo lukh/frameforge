@@ -1391,62 +1391,26 @@ class ViewProviderProfile:
         ])
 
         # Coord system
-        edge_dir = (p2l - p1l)
-        if edge_dir.Length == 0:
-            return
-        edge_dir.normalize()
-
-        rot = obj.Placement.Rotation
-        Xw = rot.multVec(App.Vector(1, 0, 0))
-        Yw = rot.multVec(App.Vector(0, 1, 0))
-
-        X = inv.multVec(Xw + obj.Placement.Base) - inv.multVec(obj.Placement.Base)
-        Y = inv.multVec(Yw + obj.Placement.Base) - inv.multVec(obj.Placement.Base)
-
-        def project_in_plane(v, n):
-            return v - n.multiply(v.dot(n))
-
-        Xp = project_in_plane(X, edge_dir)
-        Yp = project_in_plane(Y, edge_dir)
-
-        if Xp.Length == 0 or Yp.Length == 0:
-            return
-
-        Xp.normalize()
-        Yp.normalize()
-
-        L = 10.0
-
-        # LCS A
-        p1x1 = p1l
-        p1x2 = p1l + Xp * L
-        p1y1 = p1l
-        p1y2 = p1l + Yp * L
+        L = max(obj.Width.Value, obj.Height.Value)
 
         self.p1_x_coords.point.setValues(0, 2, [
-            (p1x1.x, p1x1.y, p1x1.z),
-            (p1x2.x, p1x2.y, p1x2.z),
+            (p1l.x, p1l.y, p1l.z),
+            (p1l.x + L, p1l.y, p1l.z),
         ])
 
         self.p1_y_coords.point.setValues(0, 2, [
-            (p1y1.x, p1y1.y, p1y1.z),
-            (p1y2.x, p1y2.y, p1y2.z),
+            (p1l.x, p1l.y, p1l.z),
+            (p1l.x, p1l.y + L, p1l.z),
         ])
 
-        # LCS B
-        p2x1 = p2l
-        p2x2 = p2l + Xp * L
-        p2y1 = p2l
-        p2y2 = p2l + Yp * L
-
         self.p2_x_coords.point.setValues(0, 2, [
-            (p2x1.x, p2x1.y, p2x1.z),
-            (p2x2.x, p2x2.y, p2x2.z),
+            (p2l.x, p2l.y, p2l.z),
+            (p2l.x + L, p2l.y, p2l.z),
         ])
 
         self.p2_y_coords.point.setValues(0, 2, [
-            (p2y1.x, p2y1.y, p2y1.z),
-            (p2y2.x, p2y2.y, p2y2.z),
+            (p2l.x, p2l.y, p2l.z),
+            (p2l.x, p2l.y + L, p2l.z),
         ])
 
 
