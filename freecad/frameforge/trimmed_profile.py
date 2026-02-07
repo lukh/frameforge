@@ -220,6 +220,9 @@ class TrimmedProfile:
 
     def run_compatibility_migrations(self, obj):
         if not hasattr(obj, "FrameforgeVersion"):
+            # migrate parents
+            for link in obj.TrimmingBoundary:
+                link[0].Proxy.execute(link[0])
             obj.TrimmedBody.Proxy.execute(obj.TrimmedBody)
 
 
