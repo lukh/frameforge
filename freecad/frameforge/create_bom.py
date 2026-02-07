@@ -225,8 +225,11 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
             )
 
     elif is_part(obj):
-        for child in obj.OutList:
-            if child.InList == [obj]:
+        for child in obj.Group:
+            # TODO: Fix this ugly way to find children
+            # I didn't find another way when into a Part
+            # It makes it mandatory to have visible object when generating BOM
+            if child.getParentGroup() in (obj, None) and child.Visibility:
                 traverse_assembly(
                     profiles_data,
                     links_data,
