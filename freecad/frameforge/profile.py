@@ -1167,6 +1167,9 @@ class Profile:
                 off_b
             )
 
+            obj.setExpression(".AttachmentOffset.Base.z", None)
+            obj.AttachmentOffset.Base.z = 0.0
+
             obj.addProperty(
                 "App::PropertyString",
                 "CuttingAngleA",
