@@ -50,7 +50,7 @@ def is_link(obj):
 
 
 def is_part_or_part_design(obj):
-    return obj.TypeId.startswith(("Part::", "PartDesign::"))
+    return obj.TypeId.startswith(("Part::", "PartDesign::")) and obj.TypeId != "Part::FeaturePython"
 
 
 def get_profile_from_trimmedbody(obj):
