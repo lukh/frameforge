@@ -21,6 +21,19 @@ vec = App.Base.Vector
 
 
 class Profile:
+    _id_counter = 1
+
+    @classmethod
+    def get_next_id(cls):
+        pid = cls._id_counter
+        cls._id_counter += 1
+
+        return pid
+
+    def set_current_pid(cls, pid):
+        cls._id_counter = pid
+    
+
     def __init__(
         self,
         obj,
@@ -51,6 +64,13 @@ class Profile:
         """
 
         self.Type = "Profile"
+
+        obj.addProperty(
+            "App::PropertyInteger",
+            "PID",
+            "Profile",
+            "Profile ID",
+        ).PID = Profile.get_next_id()
 
         obj.addProperty(
             "App::PropertyString",
