@@ -1306,8 +1306,11 @@ class ViewProviderProfile:
         self._updatePoints()
 
     def addSelection(self, doc, obj, sub, pnt):
-        if obj == self.Object.Name:
-            self.helpersSwitch.whichChild = coin.SO_SWITCH_ALL
+        try:
+            if obj == self.Object.Name:
+                self.helpersSwitch.whichChild = coin.SO_SWITCH_ALL
+        except Exception as e:
+            App.Console.PrintMessage(f"{e}\n")
 
     def clearSelection(self, other):
         self.helpersSwitch.whichChild = coin.SO_SWITCH_NONE
@@ -1418,8 +1421,11 @@ class ViewProviderProfile:
 
 
     def updateData(self, fp, prop):
-        if prop in ["Target", "OffsetA", "OffsetB"]: 
-            self._updatePoints()
+        if prop in ["Target", "OffsetA", "OffsetB"]:
+            try:
+                self._updatePoints()
+            except:
+                App.Console.PrintMessage(f"Can't update profile {fp.Label} and helper in 3D, maybe linked to a migration\n")
 
     def getDisplayModes(self, obj):
         """Return a list of display modes."""
