@@ -23,7 +23,8 @@ from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPA
 
 def place_balloon(balloon):
     view = balloon.SourceView
-    P = balloon.Target.Shape.CenterOfGravity
+    obj = App.ActiveDocument.getObject(balloon.TargetName)
+    P = obj.Shape.CenterOfGravity
 
     D = view.Direction.normalize()
     X = view.XDirection.normalize()
@@ -63,9 +64,8 @@ def create_balloon(view, src_obj):
         raise RuntimeError("Impossible de trouver la page contenant la vue")
 
     balloon = doc.addObject('TechDraw::DrawViewBalloon', f"Balloon_{src_obj.Label}")
-    balloon.addProperty("App::PropertyLink", "Target", "FrameForge", "Target Profile").Target = src_obj
+    balloon.addProperty("App::PropertyString", "TargetName", "FrameForge", "Target Profile").TargetName = src_obj.Name
     balloon.SourceView = view
-    balloon.Text = src_obj.PID
     page.addView(balloon)
 
     place_balloon(balloon)
@@ -173,7 +173,7 @@ class ResfreshBalloonsCommand:
         if App.ActiveDocument:
             selection = Gui.Selection.getSelection()
 
-            balloons = [b for b in selection if b.TypeId == "TechDraw::DrawViewBalloon" and hasattr(b, "Target")]
+            balloons = [b for b in selection if b.TypeId == "TechDraw::DrawViewBalloon" and hasattr(b, "TargetName")]
             if len(balloons) <= 0:
                 return False
             return True
@@ -185,7 +185,7 @@ class ResfreshBalloonsCommand:
 
         App.ActiveDocument.openTransaction("Resfresh Balloons")
 
-        balloons = [b for b in selection if b.TypeId == "TechDraw::DrawViewBalloon" and hasattr(b, "Target")]
+        balloons = [b for b in selection if b.TypeId == "TechDraw::DrawViewBalloon" and hasattr(b, "TargetName")]
         for b in balloons:
             place_balloon(b)
 
