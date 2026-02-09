@@ -14,7 +14,9 @@ from freecad.frameforge._utils import (
     is_group,
     is_part,
     is_profile,
-    is_trimmedbody
+    is_trimmedbody,
+    is_link,
+    is_part_or_part_design
 )
 
 def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_path=False):

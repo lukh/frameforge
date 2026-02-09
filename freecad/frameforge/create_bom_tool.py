@@ -11,7 +11,8 @@ from freecad.frameforge._utils import (
     is_group,
     is_part,
     is_profile,
-    is_trimmedbody
+    is_trimmedbody,
+    is_link
 )
 
 from freecad.frameforge.create_bom import (
@@ -227,7 +228,7 @@ class CreateBOMCommand:
                         or is_profile(sel)
                         or is_trimmedbody(sel)
                         or is_extrudedcutout(sel)
-                        or is_link(s)
+                        or is_link(sel)
                         for sel in Gui.Selection.getSelection()
                     ]
                 )
