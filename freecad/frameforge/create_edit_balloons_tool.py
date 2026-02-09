@@ -154,7 +154,7 @@ class CreateBalloonsCommand:
 
 
         App.ActiveDocument.commitTransaction()
-        App.ActiveDocument.recompute()
+        # App.ActiveDocument.recompute()
 
 
 
@@ -194,7 +194,7 @@ class ResfreshBalloonsCommand:
 
 
         App.ActiveDocument.commitTransaction()
-        App.ActiveDocument.recompute()
+        # App.ActiveDocument.recompute()
 
 
 

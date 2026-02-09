@@ -152,7 +152,7 @@ class PopulateIDsTaskPanel:
 
 
             App.ActiveDocument.commitTransaction()
-            App.ActiveDocument.recompute()
+            # App.ActiveDocument.recompute()
 
             return True
 
@@ -268,7 +268,7 @@ class ResetIDsCommand:
                 o.PID = ""
 
             App.ActiveDocument.commitTransaction()
-            App.ActiveDocument.recompute()
+            # App.ActiveDocument.recompute()
             
 
 Gui.addCommand("FrameForge_PopulateIDs", PopulateIDsCommand())
