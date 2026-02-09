@@ -132,6 +132,7 @@ class CreateBOMTaskPanel:
                     or is_profile(s)
                     or is_trimmedbody(s)
                     or is_extrudedcutout(s)
+                    or is_link(s)
                 )
                 for s in sel
             ]
@@ -226,6 +227,7 @@ class CreateBOMCommand:
                         or is_profile(sel)
                         or is_trimmedbody(sel)
                         or is_extrudedcutout(sel)
+                        or is_link(s)
                         for sel in Gui.Selection.getSelection()
                     ]
                 )
