@@ -113,7 +113,7 @@ def is_extrudedcutout(obj):
 
 
 def is_link(obj):
-    return obj.TypeId == "App::Link"
+    return obj.TypeId == "App::Link" and hasattr(obj, "AttachmentOffset")
 
 
 def is_part_or_part_design(obj):
