@@ -214,22 +214,56 @@ def get_trimmed_profile_all_cutting_angles(trimmed_profile):
     edge = resolve_edge(trimmed_profile.TrimmedBody)
     dir_vec = (edge.Vertexes[-1].Point.sub(edge.Vertexes[0].Point)).normalize()
 
-    angle_div = 2.0 if trimmed_profile.TrimmedProfileType == "End Miter" else 1.0
 
-    for bound in trimmed_profile.TrimmingBoundary:
-        if trimmed_profile.TrimmedProfileType == "End Miter" or trimmed_profile.CutType == "Simple fit":
-            for sub in bound[1]:  # sous-objets (souvent "FaceX")
-                face = bound[0].getSubObject(sub)
-                if isinstance(face.Surface, Part.Plane):
-                    normal = face.normalAt(0.5, 0.5).normalize()
-                    angle = math.degrees(dir_vec.getAngle(normal))
+    if trimmed_profile.TrimmedProfileType == "End Trim":
+        if trimmed_profile.CutType in ["Simple fit", "Simple cut"]:
+            for bound in trimmed_profile.TrimmingBoundary:
+                for sub in bound[1]:  # sous-objets (souvent "FaceX")
+                    face = bound[0].getSubObject(sub)
+                    if isinstance(face.Surface, Part.Plane):
+                        normal = face.normalAt(0.5, 0.5).normalize()
+                        angle = math.degrees(dir_vec.getAngle(normal))
 
-                    if angle > 90:
-                        angle = 180 - angle
+                        if angle > 90:
+                            angle = 180 - angle
 
-                    angles.append(angle / angle_div)
-        else:
+                        angles.append(angle)
+        elif trimmed_profile.CutType in ["Perfect fit", "Coped cut"]:
             angles.append("P")
+
+        else:
+            raise ValueError("Unknown CutType")
+
+    elif trimmed_profile.TrimmedProfileType == "End Miter":
+        doc = FreeCAD.activeDocument()
+        precision = 0.001
+        target1 = trimmed_profile.Proxy.getTarget(trimmed_profile.TrimmedBody)
+        edge1 = doc.getObject(target1[0].Name).getSubObject(target1[1][0])
+        bounds_target = []
+        for bound in trimmed_profile.TrimmingBoundary:
+            bounds_target.append(trimmed_profile.Proxy.getTarget(bound[0]))
+        trimming_boundary_edges = []
+        for target in bounds_target:
+            trimming_boundary_edges.append(doc.getObject(target[0].Name).getSubObject(target[1][0]))
+        for edge2 in trimming_boundary_edges:
+            end1 = edge1.Vertexes[-1].Point
+            start1 = edge1.Vertexes[0].Point
+            end2 = edge2.Vertexes[-1].Point
+            start2 = edge2.Vertexes[0].Point
+            vec1 = start1.sub(end1)
+            vec2 = start2.sub(end2)
+
+            angle = math.degrees(vec1.getAngle(vec2))
+
+            if end1.distanceToPoint(start2) < precision or start1.distanceToPoint(end2) < precision:
+                angle = 180 - angle
+
+            bisect = angle / 2.0
+            angles.append(90.0 - bisect)
+
+    else:
+        raise ValueError("Unknown TrimmedProfileType")
+    
 
     if hasattr(trimmed_profile.TrimmedBody, "TrimmedProfileType"):
         parent_profile = trimmed_profile.TrimmedBody
