@@ -27,20 +27,7 @@ from freecad.frameforge.version import __version__ as ff_version
 vec = App.Base.Vector
 
 
-class Profile:
-    _id_counter = 1
-
-    @classmethod
-    def get_next_id(cls):
-        pid = cls._id_counter
-        cls._id_counter += 1
-
-        return pid
-
-    def set_current_pid(cls, pid):
-        cls._id_counter = pid
-    
-
+class Profile:  
     def __init__(
         self,
         obj,
@@ -73,11 +60,11 @@ class Profile:
         self.Type = "Profile"
 
         obj.addProperty(
-            "App::PropertyInteger",
+            "App::PropertyString",
             "PID",
             "Profile",
             "Profile ID",
-        ).PID = Profile.get_next_id()
+        ).PID = ""
 
         obj.addProperty(
             "App::PropertyString",
@@ -1088,6 +1075,14 @@ class Profile:
 
     def run_compatibility_migrations(self, obj):
         if not hasattr(obj, "FrameforgeVersion"):
+            if not hasattr(obj, "PID"):
+                obj.addProperty(
+                    "App::PropertyString",
+                    "PID",
+                    "Profile",
+                    "Profile ID",
+                ).PID = ""
+
             # add Family atttribute
             if not hasattr(obj, "Family"):
                 App.Console.PrintMessage(f"Frameforge::object migration : adding Family to {obj.Label}\n")

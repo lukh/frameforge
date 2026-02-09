@@ -28,6 +28,14 @@ class TrimmedProfile:
             "Frameforge Version used to create the profile",
         ).FrameforgeVersion = ff_version
 
+        obj.addProperty(
+            "App::PropertyString",
+            "PID",
+            "Profile",
+            "Profile ID",
+        ).PID = ""
+        obj.setEditorMode("PID", 1)
+
 
         obj.addProperty(
             "App::PropertyLink", "TrimmedBody", "TrimmedProfile", translate("App::Property", "Body to be trimmed")
@@ -195,6 +203,7 @@ class TrimmedProfile:
         prof = get_profile_from_trimmedbody(obj)
         angles = get_trimmed_profile_all_cutting_angles(obj)
 
+        obj.PID = prof.PID
         obj.Width = prof.ProfileWidth
         obj.Height = prof.ProfileHeight
         obj.Family = prof.Family
@@ -229,6 +238,14 @@ class TrimmedProfile:
             App.Console.PrintMessage(f"Frameforge::object migration : Migrate {obj.Label} to 0.1.8\n")
 
             # related to Profile
+            obj.addProperty(
+                "App::PropertyString",
+                "PID",
+                "Profile",
+                "Profile ID",
+            ).PID = ""
+            obj.setEditorMode("PID", 1)
+
             obj.addProperty("App::PropertyString", "Family", "Profile", "")
             obj.setEditorMode("Family", 1)
 

@@ -32,6 +32,15 @@ class ExtrudedCutout:
             "Frameforge Version used to create the profile",
         ).FrameforgeVersion = ff_version
 
+        obj.addProperty(
+            "App::PropertyString",
+            "PID",
+            "Profile",
+            "Profile ID",
+        ).PID = ""
+        obj.setEditorMode("PID", 1)
+
+
         obj.addProperty("App::PropertyLinkSub", "baseObject", "ExtrudedCutout", "SelectedFace").baseObject = (
             selected_face
         )
@@ -172,6 +181,7 @@ class ExtrudedCutout:
         else:
             angles = ()
 
+        obj.PID = prof.PID
         obj.Width = prof.ProfileWidth
         obj.Height = prof.ProfileHeight
         obj.Family = prof.Family
@@ -201,6 +211,14 @@ class ExtrudedCutout:
             App.Console.PrintMessage(f"Frameforge::object migration : Migrate {obj.Label} to 0.1.8\n")
 
             # related to Profile
+            obj.addProperty(
+                "App::PropertyString",
+                "PID",
+                "Profile",
+                "Profile ID",
+            ).PID = ""
+            obj.setEditorMode("PID", 1)
+
             obj.addProperty("App::PropertyString", "Family", "Profile", "")
             obj.setEditorMode("Family", 1)
 
