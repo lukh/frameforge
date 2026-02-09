@@ -143,6 +143,12 @@ def get_profiles_and_links_from_object(profiles, links, obj):
     elif is_profile(obj):
         profiles.append(obj)
 
+    elif is_trimmedbody(obj):
+        profiles.append(get_profile_from_trimmedbody(obj))
+
+    elif is_extrudedcutout(obj):
+        profiles.append(get_profile_from_extrudedcutout(obj))
+
     elif is_link(obj):
         links.append(obj)
 
