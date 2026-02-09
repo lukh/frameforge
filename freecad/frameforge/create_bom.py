@@ -57,10 +57,11 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
 
     elif is_profile(obj) or is_trimmedbody(obj) or is_extrudedcutout(obj):
         p["parent"] = parent
+        p["ID"] = obj.PID
         p["label"] = obj.Label
         p["family"] = (
             getattr(getattr(obj, "CustomProfile"), "Label", "Custom Profile")
-            if hasattr(obj, "CustomProfile")
+            if obj.CustomProfile
             else getattr(obj, "Family", "N/A")
         )
         p["size_name"] = obj.SizeName
@@ -77,7 +78,7 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
 
 
     elif is_link(obj):
-        links_data.append({"parent": parent, "label": obj.Label, "part": obj.LinkedObject.Label, "quantity": "1", "price":getattr(obj.LinkedObject, "Price", "N/A")})
+        links_data.append({"parent": parent, "ID": obj.PID, "label": obj.Label, "part": obj.LinkedObject.Label, "quantity": "1", "price":getattr(obj.LinkedObject, "Price", "N/A")})
 
     elif is_part_or_part_design(obj):
         links_data.append({"parent": parent, "label": obj.Label, "part": obj.Label, "quantity": "1", "price":getattr(obj, "Price", "N/A")})
@@ -106,6 +107,7 @@ def group_profiles(profiles_data):
         d = {}
 
         d["parent"] = g["parent"]
+        d["ID"] = ", ".join([g["ID"] for g in group])
         d["label"] = ", ".join([g["label"] for g in group])
         d["family"] = g["family"]
         d["size_name"] = g["size_name"]
@@ -134,6 +136,7 @@ def group_links(links_data):
     for k, group in links_data_grouped.items():
         ol = {}
         ol["parent"] = k[0]
+        ol["ID"] = ", ".join([g.get("ID", "") for g in group])
         ol["label"] = ", ".join([g["label"] for g in group])
         ol["part"] = k[1]
         ol["price"] = k[2]
@@ -151,33 +154,35 @@ def make_bom(profiles_data, links_data, bom_name="BOM"):
     spreadsheet.set("A1", "Profiles")
 
     spreadsheet.set("A2", "Parent")
-    spreadsheet.set("B2", "Name")
+    spreadsheet.set("B2", "ID")
     spreadsheet.set("C2", "Family")
     spreadsheet.set("D2", "SizeName")
-    spreadsheet.set("E2", "Material")
-    spreadsheet.set("F2", "Length")
-    spreadsheet.set("G2", "CutAngle1")
-    spreadsheet.set("H2", "CutAngle2")
-    spreadsheet.set("I2", "Drill/Cutout")
-    spreadsheet.set("J2", "ApproxWeight")
-    spreadsheet.set("K2", "Price/U")
-    spreadsheet.set("L2", "Quantity")
+    spreadsheet.set("E2", "Length")
+    spreadsheet.set("F2", "CutAngle1")
+    spreadsheet.set("G2", "CutAngle2")
+    spreadsheet.set("H2", "Drill/Cutout")
+    spreadsheet.set("I2", "Quantity")
+    spreadsheet.set("J2", "Material")
+    spreadsheet.set("K2", "ApproxWeight")
+    spreadsheet.set("L2", "Price/U")
+    spreadsheet.set("M2", "Name")
 
     row = 3
 
     for prof in profiles_data:
         spreadsheet.set("A" + str(row), prof["parent"])
-        spreadsheet.set("B" + str(row), prof["label"])
+        spreadsheet.set("B" + str(row), prof["ID"])
         spreadsheet.set("C" + str(row), prof["family"])
         spreadsheet.set("D" + str(row), prof["size_name"])
-        spreadsheet.set("E" + str(row), prof["material"])
-        spreadsheet.set("F" + str(row), prof["length"])
-        spreadsheet.set("G" + str(row), "'" + str(prof["cut_angle_1"]))
-        spreadsheet.set("H" + str(row), "'" + str(prof["cut_angle_2"]))
-        spreadsheet.set("I" + str(row), "'" + str(prof["cutout"]))
-        spreadsheet.set("J" + str(row), prof["approx_weight"])
-        spreadsheet.set("K" + str(row), prof["price"])
-        spreadsheet.set("L" + str(row), str(prof["quantity"]))
+        spreadsheet.set("E" + str(row), prof["length"])
+        spreadsheet.set("F" + str(row), "'" + str(prof["cut_angle_1"]))
+        spreadsheet.set("G" + str(row), "'" + str(prof["cut_angle_2"]))
+        spreadsheet.set("H" + str(row), "'" + str(prof["cutout"]))
+        spreadsheet.set("I" + str(row), str(prof["quantity"]))
+        spreadsheet.set("J" + str(row), prof["material"])
+        spreadsheet.set("K" + str(row), prof["approx_weight"])
+        spreadsheet.set("L" + str(row), prof["price"])
+        spreadsheet.set("M" + str(row), prof["label"])
 
         row += 1
 
@@ -186,18 +191,20 @@ def make_bom(profiles_data, links_data, bom_name="BOM"):
         spreadsheet.set("A" + str(row), "Parts")
         row += 1
         spreadsheet.set("A" + str(row), "Parent")
-        spreadsheet.set("B" + str(row), "Name")
+        spreadsheet.set("B" + str(row), "ID")
         spreadsheet.set("C" + str(row), "Part/Type")
         spreadsheet.set("D" + str(row), "Price/U")
         spreadsheet.set("E" + str(row), "Quantity")
+        spreadsheet.set("F" + str(row), "Name")
         row += 1
 
         for lnk in links_data:
             spreadsheet.set("A" + str(row), lnk["parent"])
-            spreadsheet.set("B" + str(row), lnk["label"])
+            spreadsheet.set("B" + str(row), lnk["ID"])
             spreadsheet.set("C" + str(row), lnk["part"])
             spreadsheet.set("D" + str(row), str(lnk["price"]))
             spreadsheet.set("E" + str(row), str(lnk["quantity"]))
+            spreadsheet.set("F" + str(row), lnk["label"])
 
             row += 1
 

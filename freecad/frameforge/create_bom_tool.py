@@ -31,7 +31,7 @@ def make_cut_list(sorted_stocks, cutlist_name="CutList"):
 
     spreadsheet.set("A1", "Material")
     spreadsheet.set("B1", "Stock")
-    spreadsheet.set("C1", "CutPart")
+    spreadsheet.set("C1", "CutPart ID")
     spreadsheet.set("D1", "Length")
     spreadsheet.set("E1", "CutAngle1")
     spreadsheet.set("F1", "CutAngle2")
@@ -49,7 +49,7 @@ def make_cut_list(sorted_stocks, cutlist_name="CutList"):
                     spreadsheet.set("A" + str(row), stocks + f" / used = {stock.used:.1f}, left = {stock.left:.1f}")
 
                 spreadsheet.set("B" + str(row), str(stock_idx))
-                spreadsheet.set("C" + str(row), prof["label"])
+                spreadsheet.set("C" + str(row), prof["ID"])
                 spreadsheet.set("D" + str(row), str(prof["length"]))
                 spreadsheet.set("E" + str(row), "'" + str(prof["cut_angle_1"]))
                 spreadsheet.set("F" + str(row), "'" + str(prof["cut_angle_2"]))
