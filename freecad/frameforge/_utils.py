@@ -120,6 +120,40 @@ def is_part_or_part_design(obj):
     return obj.TypeId.startswith(("Part::", "PartDesign::"))
 
 
+
+
+def get_profiles_and_links_from_object(profiles, links, obj):
+    if is_fusion(obj):
+        for child in obj.Shapes:
+            get_profiles_and_links_from_object(profiles, links, child)
+
+    elif is_group(obj):
+        for child in obj.Group:
+            get_profiles_and_links_from_object(profiles, links, child)
+
+    elif is_part(obj):
+        for child in obj.Group:
+            # TODO: Fix this ugly way to find children
+            # I didn't find another way when into a Part
+            # It makes it mandatory to have visible object when generating BOM
+            if child.getParentGroup() in (obj, None) and child.Visibility:
+                get_profiles_and_links_from_object(profiles, links, child)
+
+
+    elif is_profile(obj):
+        profiles.append(obj)
+
+    elif is_link(obj):
+        links.append(obj)
+
+
+def get_profiles_and_links_from_document():
+    doc = FreeCAD.ActiveDocument
+    return [o for o in doc.Objects if is_profile(o)], [o for o in doc.Objects if is_link(o)]
+
+
+
+
 # TODO move this code into TrimmedProfile ?
 def get_profile_from_trimmedbody(obj):
     if is_trimmedbody(obj):
