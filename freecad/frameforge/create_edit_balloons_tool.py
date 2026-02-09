@@ -44,6 +44,9 @@ def place_balloon(balloon):
 
     balloon.X = x2d + 20
     balloon.Y = y2d + 20
+
+    balloon.Text = obj.PID
+
 	
 def create_balloon(view, src_obj):
     doc = App.ActiveDocument
