@@ -33,8 +33,8 @@ def place_balloon(balloon):
     C = view.getGeometricCenter()
 
     d = P.sub(C)
-    x2d = d.dot(X) * view.Scale
-    y2d = d.dot(Y) * view.Scale
+    x2d = d.dot(X) # * view.Scale
+    y2d = d.dot(Y) # * view.Scale
     
     pageX = view.X.Value + x2d
     pageY = view.Y.Value + y2d
