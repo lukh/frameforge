@@ -141,8 +141,8 @@ def populate_ids(sel_profiles, sel_links, doc_profiles, doc_links,
             profiles_used = {o.PID for o in sel_profiles if o.PID}
             links_used = {o.PID for o in sel_links if o.PID}
         else:
-            profiles_used = {o.PID for o in doc_profiles if o.PID} - {o.PID for o in sel_profiles if o.PID}
-            links_used = {o.PID for o in doc_links if o.PID} - {o.PID for o in sel_links if o.PID}
+            profiles_used = {getattr(o, "PID", "") for o in doc_profiles if getattr(o, "PID", "")} - {getattr(o, "PID", "") for o in sel_profiles if getattr(o, "PID", "")}
+            links_used = {getattr(o, "PID", "") for o in doc_links if getattr(o, "PID", "")} - {getattr(o, "PID", "") for o in sel_links if getattr(o, "PID", "")}
 
 
     if numbering_scheme in ["fill_selection", "fill_document"]:
