@@ -51,6 +51,7 @@ from freecad.frameforge._utils import (
 
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.populate_ids import populate_ids
+from freecad.frameforge.version import __version__ as ff_version
 
 
 
