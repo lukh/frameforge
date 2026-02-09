@@ -118,7 +118,7 @@ class PopulateIDsTaskPanel:
             doc_profiles, doc_links = get_profiles_and_links_from_document()
 
             #handle compat here, Link don't have specific proxy
-            for l in sel_links:
+            for l in doc_links:
                 if not hasattr(l, "PID"):
                     l.addProperty(
                         "App::PropertyString",
