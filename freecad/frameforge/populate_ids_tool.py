@@ -117,6 +117,25 @@ class PopulateIDsTaskPanel:
 
             doc_profiles, doc_links = get_profiles_and_links_from_document()
 
+            #handle compat here, Link don't have specific proxy
+            for l in sel_links:
+                if not hasattr(l, "PID"):
+                    l.addProperty(
+                        "App::PropertyString",
+                        "PID",
+                        "Frameforge",
+                        "Profile ID",
+                    ).PID = ""
+
+                if not hasattr(l, "FrameforgeVersion"):
+                    l.addProperty(
+                        "App::PropertyString",
+                        "FrameforgeVersion",
+                        "Frameforge",
+                        "Frameforge Version used to create the profile",
+                    ).FrameforgeVersion = ff_version
+                
+
             numbering_type = ["all_numbers", "all_letters", "number_for_profiles_letters_for_links" ,"letters_for_profiles_number_for_links"][self.form.cb_numbering_type.currentIndex()]
             allow_duplicated = self.form.cb_allow_duplicated.isChecked()
             reset_existing = self.form.cb_reset_numbering.isChecked()
