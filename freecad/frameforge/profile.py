@@ -1102,7 +1102,6 @@ class ViewProviderProfile:
         if mode != 0:
             return None
 
-        # TODO: understand why this import is needed for here and not for TrimmedProfile ???
         import freecad.frameforge.edit_profile_tool
 
         taskd = freecad.frameforge.edit_profile_tool.EditProfileTaskPanel(self.Object)
