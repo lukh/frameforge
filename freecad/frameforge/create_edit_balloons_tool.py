@@ -21,7 +21,7 @@ from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPA
 
 
 
-def place_balloon(balloon):
+def place_balloon(balloon, move_balloon=False):
     view = balloon.SourceView
     obj = App.ActiveDocument.getObject(balloon.TargetName)
     P = obj.Shape.CenterOfGravity
@@ -42,8 +42,9 @@ def place_balloon(balloon):
     balloon.OriginX = x2d
     balloon.OriginY = y2d
 
-    balloon.X = x2d + 20
-    balloon.Y = y2d + 20
+    if move_balloon:
+        balloon.X = x2d + 20
+        balloon.Y = y2d + 20
 
     balloon.Text = obj.PID
 
@@ -71,7 +72,7 @@ def create_balloon(view, src_obj):
     balloon.SourceView = view
     page.addView(balloon)
 
-    place_balloon(balloon)
+    place_balloon(balloon, move_balloon=True)
 
 
 
