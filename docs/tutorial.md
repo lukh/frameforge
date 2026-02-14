@@ -56,6 +56,8 @@ You can change the size just below the family, the tool has a lot of predefined 
 
 **And voila ! You have your first frame !**
 
+You can add a Unit Price (per meter), it will be used into the BOM tool
+
 
 ## Going 3D... Making a cube !
 
@@ -340,3 +342,115 @@ A Dialog opens, keep it default (Attach to "Plane Face")
 ![alt text](images/91-extrudedcutout.png)
 
 ![alt text](images/92-extrudedcutout-done.png)
+
+
+## Add Other elements to your design
+
+Often, when building metallic frames, you will need to add laser-cut parts, or welded nut to your design.
+
+It is adressed in Frameforge, via the "Link" command. 
+Mainly it is a "App::Link" object, with an "Attachment" property.
+
+The workflow is the following. 
+
+You have a Part container with your Skeleton Skecths, and your profiles.
+Create an object outside the Part, or in another part. (via Part, PartDesign, SheetMetal, whatever)
+
+This is the reference object, that you can send to manufacturer, make nice 2D TechDraw, etc.
+
+Add an object to yout design:
+- Select the object in the Tree View
+- Click on the "Attached Link" command in FrameForge toolbar.
+- It will open the AttachementEditor Task (the same as FreeCAD internal attachement)
+- You can then attach your Linked Part to what you want, via Vertexes and Edges of your base sketch.
+- Validate the Task
+- Then you got a Link to your part that is physically linked to your design.
+- Manually move the Link into the Part Container (should be handled automatically)
+- et voila ! You've added a Custom part into your design !
+
+If you change the part (the original one) it will update the links automatically 
+You can add several links of the same part.
+
+You can add a "Price" property that will be added into the BOM
+
+## Naming/Referencing your Profiles/Links.
+
+When building bigger (> 20 Profiles) designs, it is handy to get ID of the Profiles.
+
+It is addressed as well.
+
+Profiles and FrameForge Links, when created, have an "ID" property, that is empty when the element is inserted.
+
+You can use Populate ID and Reset ID to fill them automatically, regarding your selection and the existing design
+
+Workflow:
+- Select Profiles, Links, or Part Container/Fusion/Group.
+- Click on "Populate IDs" command in FrameForge toolbar.
+- The Populate ID Task opens, configure it the way you want:
+    - Allow Duplicating IDs : Don't check for existing IDs inside the document
+
+    - Reset Numbering IDs : reset IDs of selected Profiles/Links before renumbering it
+
+    - IDs numbering type : "All Numbers" / "All Letters" / "Number for profiles, letters for Links", "Letters for profiles, Number for links"
+
+    - IDs numbering scheme : 
+        - Fill when available (inside selection)
+        - Fill when available (whole document)
+        - Start at current document numbering
+        - Start at specific number/letter
+
+    - First Number ID
+    - First Letter ID
+
+
+Validate, and voila !
+
+You can also reset the existing document 's IDs with the "Reset IDs" Command
+
+## Create Balloons inside TechDraw
+
+That has been a must have for a LOOONG time !
+
+This tool allows you to create/update Balloons inside a TechDraw View for all Links/Profiles.
+(It was so long and error-prone to do it manually !)
+
+Workflow:
+- Create a TechDraw Page
+- Insert a View with Profiles, Links, Part Container of Profiles and Links
+
+- In the TreeView, select
+    - The TechDraw View to fill with balloons. (the View, not a View Group !)
+    - All the links and profiles to create balloons for.
+
+- Click on the "Create Balloons" Command in FrameForge toolbar.
+
+Et voila! you've got the balloons, with their arrow pointing at the center of the parts ! 
+(you still have to move the balloon itself where you want)
+
+The Balloons are annotated with the Profile/Link ID.
+
+If you change the design, (dimensions) just select the balloons in the TreeView, and launch the "Resfresh Balloons" Command, 
+It will update arrow positions and labels accordingly.
+
+## BOM Tool
+
+Another fancy tool is the BOM tool.
+
+You've spend several hours (days ?) to make a nice design, you still have to write the BOM/CutList. That is slow, and error prone.
+
+Just use the BOM tool ! Select the Part Container/Profiles/Links to be taken into account and click on the "Create BOM" Command
+
+It will create a BOM SpreadSheet, and a CutList SpreadSheet.
+
+The BOM contains the Profiles, with their Cut angles, Quantity, Length, Material, ID, Price, Weigth.
+It also can contains all the Links, ie the LaserCut Parts for instance.
+
+If selected, you can also create a CutList, **sorted to optimize your work** at the saw.
+- Add Kerf and Stock Length.
+
+About Angles:
+- If the Object is a Profile, the tool uses BevelsCut A/B - X/Y ("- / *" symbol for same direction cut or 90° rotated cut)
+- If the Object is a TrimmedProfile, the tool calculate the angle (angle prefix with "@" symbol)
+- If a TrimmedProfile is Perfect Cut (Notch) is is noted "P"
+
+Check your BOM for error !
