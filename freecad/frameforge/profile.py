@@ -1093,6 +1093,22 @@ class Profile:
                     "",
                 ).Family = self.fam
 
+            if not hasattr(obj, "SizeName"):
+                obj.addProperty(
+                    "App::PropertyString",
+                    "SizeName",
+                    "Profile",
+                    "",
+                ).SizeName = "?"
+
+            if not hasattr(obj, "Material"):
+                obj.addProperty(
+                    "App::PropertyString",
+                    "Material",
+                    "Profile",
+                    "",
+                ).Material = ""
+
             # add CustomProfile atttribute
             if not hasattr(obj, "CustomProfile"):
                 obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
