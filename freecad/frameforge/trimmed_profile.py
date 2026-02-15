@@ -116,6 +116,8 @@ class TrimmedProfile:
                     p1 = end1
                     p2 = start1
                     p3 = start2
+                else:
+                    raise RuntimeError("End Miter: edges not aligned. Ensure they meet at a common endpoint.")
 
                 normal = Part.Plane(p1, p2, p3).toShape().normalAt(0, 0)
                 cutplane = Part.makePlane(10, 10, p1, vec1, normal)
