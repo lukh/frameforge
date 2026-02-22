@@ -63,6 +63,13 @@ class CreateTrimmedProfileTaskPanel:
     def set_trimmed_body(self):
         if len(Gui.Selection.getSelectionEx()) == 1:
             trimmed_body = Gui.Selection.getSelectionEx()[0].Object
+            
+            subels = Gui.Selection.getSelectionEx()[0].SubElementNames
+            if len(subels) != 1 or not isinstance(trimmed_body.getSubObject(subels[0]), Part.Face):
+                App.Console.PrintMessage(translate("frameforge", f"Select a Face for TrimmedBody\n"))
+                return
+
+
             App.Console.PrintMessage(translate("frameforge", f"Set Trimmed body: {trimmed_body.Name}\n"))
             self.fp.TrimmedBody = trimmed_body
 
@@ -78,6 +85,10 @@ class CreateTrimmedProfileTaskPanel:
         trimming_boundaries = [e for e in self.fp.TrimmingBoundary]
 
         for selObject in Gui.Selection.getSelectionEx():
+            if len(selObject.SubElementNames) != 1 or not isinstance(selObject.Object.getSubObject(selObject.SubElementNames[0]), Part.Face):
+                App.Console.PrintMessage(translate("frameforge", f"Select a Faces only\n"))
+                return
+
             if all([tb != (selObject.Object, tuple(selObject.SubElementNames)) for tb in trimming_boundaries]):
                 trimming_boundaries.append((selObject.Object, tuple(selObject.SubElementNames)))
 
@@ -89,7 +100,7 @@ class CreateTrimmedProfileTaskPanel:
                 )
 
             else:
-                App.Console.PrintMessage(translate("frameforge", "Already a trimming body for this TrimmedBody\n"))
+                App.Console.PrintMessage(translate("frameforge", "Already a trimming boundarie for this TrimmedBody\n"))
 
         self.fp.TrimmingBoundary = trimming_boundaries
 
@@ -180,15 +191,17 @@ class TrimProfileCommand:
     def IsActive(self):
         if App.ActiveDocument:
             if len(Gui.Selection.getSelection()) > 0:
-                active = False
-                for sel in Gui.Selection.getSelection():
-                    if hasattr(sel, "Target"):
-                        active = True
-                    elif hasattr(sel, "TrimmedBody"):
-                        active = True
-                    else:
+                for sel in Gui.Selection.getSelectionEx():
+                    o = sel.Object
+                    if not hasattr(o, "Target") and not hasattr(o, "TrimmedBody"):
                         return False
-                return active
+                    
+                    if len(sel.SubElementNames) != 1:
+                        return False
+                    elif not isinstance(o.getSubObject(sel.SubElementNames[0]), Part.Face):
+                        return False
+
+                return True
             else:
                 return True
         return False
