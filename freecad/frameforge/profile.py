@@ -1009,20 +1009,19 @@ class Profile:
                 p = tslot20x20_one_slot()
 
         if L:
-            # translate to take OffsetA into account
-            p = p.translate(vec(0, 0, -obj.OffsetA))
-            
+            p = p.copy()
+            p.translate(vec(0, 0, -obj.OffsetA))
             ProfileFull = p.extrude(vec(0, 0, L))
-            obj.Shape = ProfileFull
 
             if B1Y or B2Y or B1X or B2X or B1Z or B2Z:  # make the bevels:
 
                 hc = 10 * max(H, W)
 
+                # "B" side
                 ProfileExt = ProfileFull.fuse(p.extrude(vec(0, 0, L + hc / 4)))
                 box = Part.makeBox(hc, hc, hc)
-                box.translate(vec(-hc / 2 + w, -hc / 2 + h, L))
-                pr = vec(0, 0, L)
+                box.translate(vec(-hc / 2 + w, -hc / 2 + h, L - obj.OffsetA))
+                pr = vec(0, 0, L - obj.OffsetA)
                 box.rotate(pr, vec(0, 1, 0), B2Y)
                 if self.bevels_combined == True:
                     box.rotate(pr, vec(0, 0, 1), B2Z)
@@ -1030,10 +1029,11 @@ class Profile:
                     box.rotate(pr, vec(1, 0, 0), B2X)
                 ProfileCut = ProfileExt.cut(box)
 
+                # "A" side
                 ProfileExt = ProfileCut.fuse(p.extrude(vec(0, 0, -hc / 4)))
                 box = Part.makeBox(hc, hc, hc)
-                box.translate(vec(-hc / 2 + w, -hc / 2 + h, -hc))
-                pr = vec(0, 0, 0)
+                box.translate(vec(-hc / 2 + w, -hc / 2 + h, -hc-obj.OffsetA))
+                pr = vec(0, 0, -obj.OffsetA)
                 box.rotate(pr, vec(0, 1, 0), B1Y)
                 if self.bevels_combined == True:
                     box.rotate(pr, vec(0, 0, 1), B1Z)
@@ -1041,9 +1041,11 @@ class Profile:
                     box.rotate(pr, vec(1, 0, 0), B1X)
                 ProfileCut = ProfileExt.cut(box)
 
-                obj.Shape = ProfileCut.removeSplitter()
+                ProfileFull = ProfileCut.removeSplitter()
 
                 # if wire2: obj.Shape = Part.Compound([wire1,wire2])  # OCC Sweep doesn't be able hollow shape yet :-(
+
+            obj.Shape = ProfileFull
 
         else:
             obj.Shape = Part.Face(wire1)
