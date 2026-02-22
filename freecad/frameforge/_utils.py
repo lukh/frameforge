@@ -192,6 +192,14 @@ def get_profile_from_extrudedcutout(obj):
 
 
 # TODO move this code into ExtrudedCutOut ?
+def get_childrens_from_extrudedcutout(obj):
+    yield obj
+    if is_trimmedbody(obj):
+        yield from get_childrens_from_trimmedbody(obj.TrimmedBody)
+    elif is_extrudedcutout(obj):
+        yield from get_childrens_from_extrudedcutout(obj.baseObject[0])
+
+# TODO move this code into ExtrudedCutOut ?
 def get_trimmedprofile_from_extrudedcutout(obj):
     if is_extrudedcutout(obj):
         bo = obj.baseObject[0]

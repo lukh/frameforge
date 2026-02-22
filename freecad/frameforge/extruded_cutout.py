@@ -13,6 +13,7 @@ from freecad.frameforge._utils import (
     get_readable_cutting_angles,
     length_along_normal,
     get_profile_from_extrudedcutout,
+    get_childrens_from_extrudedcutout,
     get_trimmedprofile_from_extrudedcutout,
     get_trimmed_profile_all_cutting_angles
 )
@@ -132,6 +133,10 @@ class ExtrudedCutout:
             # Ensure the Sketch and baseObject properties are valid.
             if fp.Sketch is None or fp.baseObject is None:
                 raise FrameForgeException("Both the Sketch and baseObject properties must be set.")
+
+            # hide trimmed body
+            for tb in get_childrens_from_extrudedcutout(fp.baseObject[0]):
+                tb.ViewObject.Visibility = False
 
             cutSketch = fp.Sketch
             selected_object, face_name = fp.baseObject
