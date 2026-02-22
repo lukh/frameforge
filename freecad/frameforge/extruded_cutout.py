@@ -169,6 +169,8 @@ class ViewProviderExtrudedCutout:
         if mode != 0:
             return None
 
+        import freecad.frameforge.create_extruded_cutout_tool
+
         taskd = freecad.frameforge.create_extruded_cutout_tool.CreateExtrudedCutoutTaskPanel(self.Object)
         Gui.Control.showDialog(taskd)
         return True
