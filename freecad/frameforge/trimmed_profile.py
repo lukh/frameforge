@@ -252,6 +252,8 @@ class ViewProviderTrimmedProfile:
         if mode != 0:
             return None
 
+        import freecad.frameforge.create_trimmed_profiles_tool
+
         taskd = freecad.frameforge.create_trimmed_profiles_tool.CreateTrimmedProfileTaskPanel(
             self.Object, mode="edition"
         )
