@@ -167,6 +167,12 @@ def get_profile_from_trimmedbody(obj):
     else:
         return obj
 
+# TODO move this code into TrimmedProfile ?
+def get_childrens_from_trimmedbody(obj):
+    yield obj
+    if is_trimmedbody(obj):
+        yield from get_childrens_from_trimmedbody(obj.TrimmedBody)
+
 
 # TODO move this code into ExtrudedCutOut ?
 def get_profile_from_extrudedcutout(obj):

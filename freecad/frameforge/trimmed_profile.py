@@ -14,6 +14,7 @@ from freecad.frameforge._utils import (
     get_readable_cutting_angles,
     length_along_normal,
     get_profile_from_trimmedbody,
+    get_childrens_from_trimmedbody,
     get_trimmed_profile_all_cutting_angles
 )
 
@@ -119,6 +120,10 @@ class TrimmedProfile:
             return
         if len(fp.TrimmingBoundary) == 0:
             return
+
+        # hide trimmed body
+        for tb in get_childrens_from_trimmedbody(fp.TrimmedBody):
+            tb.ViewObject.Visibility = False
 
         cut_shapes = []
 
@@ -356,13 +361,7 @@ class ViewProviderTrimmedProfile:
         return mode
 
     def claimChildren(self):
-        childrens = [self.Object.TrimmedBody]
-        if len(childrens) > 0:
-            for child in childrens:
-                if child:
-                    # if hasattr("ViewObject", child)
-                    child.ViewObject.Visibility = False
-        return childrens
+        return [self.Object.TrimmedBody]
 
     def onChanged(self, vp, prop):
         """Print the name of the property that has changed"""
