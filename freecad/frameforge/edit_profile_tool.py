@@ -30,7 +30,7 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
         self.form_proxy.sb_radius1.setValue(self.profile.RadiusLarge)
         self.form_proxy.sb_radius2.setValue(self.profile.RadiusSmall)
         self.form_proxy.sb_length.setValue(self.profile.ProfileLength)
-        self.form_proxy.sb_weight.setValue(self.profile.ApproxWeight )
+        self.form_proxy.sb_weight.setValue(self.profile.ApproxWeight)
         try:
             self.form_proxy.sb_unitprice.setValue(self.profile.UnitPrice)
         except:

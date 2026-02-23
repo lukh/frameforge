@@ -32,7 +32,6 @@ class Profile:
 
     def set_current_pid(cls, pid):
         cls._id_counter = pid
-    
 
     def __init__(
         self,
@@ -151,7 +150,6 @@ class Profile:
             obj.LinearWeight * init_len / 1000
         )
         obj.setEditorMode("ApproxWeight", 1)  # user doesn't change !
-
 
         obj.addProperty("App::PropertyFloat", "UnitPrice", "Base", "Approximate linear price").UnitPrice = (
             init_unit_price
@@ -1033,8 +1031,6 @@ class Profile:
         obj.positionBySupport()
         obj.recompute()
 
-
-
     def run_compatibility_migrations(self, obj):
         # add Family atttribute
         if not hasattr(obj, "Family"):
@@ -1046,13 +1042,13 @@ class Profile:
                 "",
             ).Family = self.fam
 
-
         # add LinearWeight attribute (<= 0.1.7)
         if not hasattr(obj, "LinearWeight"):
             App.Console.PrintMessage(f"Frameforge::object migration : adding LinearWeight ({self.WM}) to {obj.Label}\n")
-            obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = self.WM
+            obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = (
+                self.WM
+            )
             obj.setEditorMode("ApproxWeight", 1)
-
 
         # add prices
         if not hasattr(obj, "UnitPrice"):
@@ -1060,7 +1056,7 @@ class Profile:
         if not hasattr(obj, "Price"):
             obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price").Price = 0.0
             obj.setEditorMode("Price", 1)
-            
+
 
 class ViewProviderProfile:
     def __init__(self, obj):
