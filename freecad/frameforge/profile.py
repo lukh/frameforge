@@ -19,9 +19,14 @@ from freecad.frameforge.extrusions import (
 )
 from freecad.frameforge._utils import (
     get_readable_cutting_angles,
-    length_along_normal
+    length_along_normal,
+    normalize_anchor,
 )
 from freecad.frameforge.version import __version__ as ff_version
+
+# Anchor enumerations for path alignment (PropertyEnumeration; index 0,1,2 used in formulas)
+ANCHOR_X = ("Left", "Center", "Right")
+ANCHOR_Y = ("Bottom", "Center", "Top")
 
 # Global variable for a 3D float vector (used in Profile class)
 vec = App.Base.Vector
@@ -41,18 +46,19 @@ class Profile:
         init_wg,
         init_unit_price,
         init_mf,
-        init_hc,
-        init_wc,
+        init_anchor_x,
+        init_anchor_y,
         material,
         fam,
         size_name,
         bevels_combined,
         link_sub=None,
         custom_profile=None,
+        init_rotation=0.0,
     ):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
-        with initialization value 'init_w' to 'init_wc' : ProfileHeight, ProfileWidth, [...] CenteredOnWidth. Depending
+        with initialization value 'init_w' to 'init_anchor_y' : ProfileHeight, ProfileWidth, [...] AnchorY (0,1,2). Depending
         on 'bevels_combined' parameters, there is 4 others properties for bevels : BevelACutY, etc. Depending on
         'fam' parameter, there is properties specific to profile family.
         """
@@ -177,11 +183,23 @@ class Profile:
         obj.setEditorMode("Price", 1)  # user doesn't change !
 
         obj.addProperty(
-            "App::PropertyBool", "CenteredOnHeight", "Profile", "Choose corner or profile centre as origin"
-        ).CenteredOnHeight = init_hc
+            "App::PropertyEnumeration", "AnchorX", "Profile",
+            "Path alignment (horizontal)"
+        ).AnchorX = ANCHOR_X
+        obj.AnchorX = ANCHOR_X[normalize_anchor(init_anchor_x)]
         obj.addProperty(
-            "App::PropertyBool", "CenteredOnWidth", "Profile", "Choose corner or profile centre as origin"
-        ).CenteredOnWidth = init_wc
+            "App::PropertyEnumeration", "AnchorY", "Profile",
+            "Path alignment (vertical)"
+        ).AnchorY = ANCHOR_Y
+        obj.AnchorY = ANCHOR_Y[normalize_anchor(init_anchor_y)]
+        if hasattr(obj, "CenteredOnWidth") or hasattr(obj, "CenteredOnHeight"):
+            obj.AnchorX = "Center" if getattr(obj, "CenteredOnWidth", False) else "Left"
+            obj.AnchorY = "Center" if getattr(obj, "CenteredOnHeight", False) else "Bottom"
+
+        obj.addProperty(
+            "App::PropertyFloat", "RotationAngle", "Profile",
+            "Rotation of cross-section around path axis (degrees)"
+        ).RotationAngle = float(init_rotation)
 
         if fam == "UPE":
             obj.addProperty("App::PropertyBool", "UPN", "Profile", "UPE style or UPN style").UPN = False
@@ -253,11 +271,12 @@ class Profile:
         init_wg,
         init_unit_price,
         init_mf,
-        init_hc,
-        init_wc,
+        init_anchor_x,
+        init_anchor_y,
         material,
         fam,
         size_name,
+        init_rotation=0.0,
     ):
         self.run_compatibility_migrations(obj)
 
@@ -298,8 +317,9 @@ class Profile:
         obj.LinearWeight = init_wg
         obj.UnitPrice = init_unit_price
 
-        obj.CenteredOnHeight = init_hc
-        obj.CenteredOnWidth = init_wc
+        obj.AnchorX = ANCHOR_X[normalize_anchor(init_anchor_x)]
+        obj.AnchorY = ANCHOR_Y[normalize_anchor(init_anchor_y)]
+        obj.RotationAngle = float(init_rotation)
 
         if obj.Family == "UPE":
             obj.UPN = False
@@ -337,6 +357,9 @@ class Profile:
             or p == "BevelEndRotate"
             or p == "OffsetA"
             or p == "OffsetB"
+            or p == "AnchorX"
+            or p == "AnchorY"
+            or p == "RotationAngle"
         ):
             self.execute(obj)
 
@@ -417,10 +440,10 @@ class Profile:
             B1X = 0
             B2X = 0
 
-        if obj.CenteredOnWidth == True:
-            w = -W / 2
-        if obj.CenteredOnHeight == True:
-            h = -H / 2
+        ax = ANCHOR_X.index(obj.AnchorX) if obj.AnchorX in ANCHOR_X else 1
+        ay = ANCHOR_Y.index(obj.AnchorY) if obj.AnchorY in ANCHOR_Y else 1
+        w = -W * ax / 2
+        h = -H * ay / 2
 
         if obj.Family == "Equal Leg Angles" or obj.Family == "Unequal Leg Angles":
             if obj.MakeFillet == False:
@@ -1008,6 +1031,10 @@ class Profile:
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_one_slot()
 
+        rot_angle = getattr(obj, "RotationAngle", 0.0)
+        if rot_angle != 0:
+            p = p.rotate(vec(0, 0, 0), vec(0, 0, 1), rot_angle)
+
         if L:
             p = p.copy()
             p.translate(vec(0, 0, -obj.OffsetA))
@@ -1048,6 +1075,9 @@ class Profile:
             obj.Shape = ProfileFull
 
         else:
+            # Anchor already applied when building wire1; apply rotation now.
+            if rot_angle != 0:
+                wire1 = wire1.rotate(vec(0, 0, 0), vec(0, 0, 1), rot_angle)
             obj.Shape = Part.Face(wire1)
 
         self._update_structure_data(obj)
@@ -1198,6 +1228,29 @@ class Profile:
             )
             obj.setEditorMode("CuttingAngleB", 1)
 
+            # Anchor: CenteredOn* -> AnchorX/AnchorY (enum)
+            if not hasattr(obj, "AnchorX") or not hasattr(obj, "AnchorY"):
+                obj.addProperty(
+                    "App::PropertyEnumeration", "AnchorX", "Profile",
+                    "Path alignment (horizontal)"
+                ).AnchorX = ANCHOR_X
+                obj.AnchorX = "Center" if getattr(obj, "CenteredOnWidth", False) else "Left"
+                obj.addProperty(
+                    "App::PropertyEnumeration", "AnchorY", "Profile",
+                    "Path alignment (vertical)"
+                ).AnchorY = ANCHOR_Y
+                obj.AnchorY = "Center" if getattr(obj, "CenteredOnHeight", False) else "Bottom"
+                if hasattr(obj, "CenteredOnWidth"):
+                    obj.removeProperty("CenteredOnWidth")
+                if hasattr(obj, "CenteredOnHeight"):
+                    obj.removeProperty("CenteredOnHeight")
+
+            # RotationAngle: add if missing (handled in code like OffsetA)
+            if not hasattr(obj, "RotationAngle"):
+                obj.addProperty(
+                    "App::PropertyFloat", "RotationAngle", "Profile",
+                    "Rotation of cross-section around path axis (degrees)"
+                ).RotationAngle = 0.0
 
             # add version
             obj.addProperty(
@@ -1207,11 +1260,9 @@ class Profile:
                 "Frameforge Version used to create the profile",
             ).FrameforgeVersion = ff_version
 
-
         else:
             if obj.FrameforgeVersion == "0.1.8":
                 pass
-            
 
 class ViewProviderProfile:
     def __init__(self, obj):
@@ -1434,7 +1485,7 @@ class ViewProviderProfile:
 
 
     def updateData(self, fp, prop):
-        if prop in ["Target", "OffsetA", "OffsetB"]:
+        if prop in ["Target", "OffsetA", "OffsetB", "RotationAngle"]:
             try:
                 self._updatePoints()
             except:

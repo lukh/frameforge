@@ -286,6 +286,11 @@ def get_trimmed_profile_all_cutting_angles(trimmed_profile):
     return angles
 
 
+def normalize_anchor(val):
+    """Normalize anchor to int 0–2. Accepts bool (legacy: True→1, False→0) or int; e.g. from custom macros."""
+    if isinstance(val, bool):
+        return 1 if val else 0
+    return max(0, min(2, int(val)))
 
 
 def length_along_normal(obj):

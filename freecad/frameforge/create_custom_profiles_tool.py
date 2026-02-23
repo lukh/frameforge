@@ -134,15 +134,17 @@ class CreateCustomProfileTaskPanel:
             0.0,  # self.form.sb_radius2.value(),
             self.form.sb_length.value(),
             self.form.sb_weight.value(),
+            0.0,  # init_unit_price (no UI in custom profile dialog)
             False,  # self.form.cb_make_fillet.isChecked(),  # and self.form.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
-            False,  # self.form.cb_height_centered.isChecked(),
-            False,  # self.form.cb_width_centered.isChecked(),
+            1,  # self.form.cb_width_centered → center
+            1,  # self.form.cb_height_centered → center
             self.form.le_material.text(),  # self.form.combo_material.currentText(),
             "Custom Profile",  # self.form.combo_family.currentText(),
             "None",  # self.form.combo_size.currentText(),
             False,  # self.form.cb_combined_bevel.isChecked(),
             link_sub,
             self.custom_profile,
+            init_rotation=0.0,
         )
 
     def select_profile(self):

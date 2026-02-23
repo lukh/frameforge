@@ -38,6 +38,14 @@ class CreateProfileTaskPanel:
             if key in [k for t, k, v in param.GetContents()]:
                 func(param.GetBool(key))
 
+        # Center anchor radio buttons in grid cells (create_profiles2.ui)
+        form2 = self.form[1]
+        grid_anchor = form2.group_anchor.layout()
+        for ax in range(3):
+            for ay in range(3):
+                btn = getattr(form2, f"rb_anchor_{ax}_{ay}")
+                grid_anchor.setAlignment(btn, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+
         self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, "Warehouse.png")))
 
         self.form_proxy.combo_material.currentIndexChanged.connect(self.on_material_changed)
@@ -47,6 +55,10 @@ class CreateProfileTaskPanel:
         self.form_proxy.cb_make_fillet.stateChanged.connect(self.on_cb_make_fillet_changed)
 
         self.form_proxy.combo_material.addItems([k for k in self.profiles])
+
+        for deg in ("0", "90", "180", "270"):
+            self.form_proxy.combo_rotation.addItem(deg)
+        self.form_proxy.combo_rotation.setCurrentIndex(0)
 
         param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
         if not param.IsEmpty():
@@ -70,9 +82,50 @@ class CreateProfileTaskPanel:
             execute_if_has_bool("Default Prefix Profile in Name", self.form_proxy.cb_prefix_profile_in_name.setChecked)
             execute_if_has_bool("Default Reverse Attachement", self.form_proxy.cb_reverse_attachment.setChecked)
             execute_if_has_bool("Default Make Fillet", self.form_proxy.cb_make_fillet.setChecked)
-            execute_if_has_bool("Default Height Centered", self.form_proxy.cb_height_centered.setChecked)
-            execute_if_has_bool("Default Width Centered", self.form_proxy.cb_width_centered.setChecked)
+            keys = [k for t, k, v in param.GetContents()]
+            if "Default AnchorX" in keys:
+                ax = max(0, min(2, param.GetInt("Default AnchorX", 1)))
+                ay = max(0, min(2, param.GetInt("Default AnchorY", 1)))
+                self.set_anchor(ax, ay)
+            elif "Default Width Centered" in keys or "Default Height Centered" in keys:
+                ax = 1 if param.GetBool("Default Width Centered", False) else 0
+                ay = 1 if param.GetBool("Default Height Centered", False) else 0
+                self.set_anchor(ax, ay)
+            if "Default RotationAngle" in keys:
+                try:
+                    val = float(param.GetString("Default RotationAngle", "0"))
+                    self.form_proxy.combo_rotation.setCurrentText(str(int(val) if val == int(val) else val))
+                except (TypeError, ValueError):
+                    self.form_proxy.combo_rotation.setCurrentText("0")
             execute_if_has_bool("Default Centered Bevel", self.form_proxy.cb_combined_bevel.setChecked)
+
+    def get_anchor(self):
+        """Return (anchor_x, anchor_y) 0=left/bottom, 1=center, 2=right/top."""
+        for ax in range(3):
+            for ay in range(3):
+                if getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").isChecked():
+                    return (ax, ay)
+        return (1, 1)
+
+    def set_anchor(self, anchor_x, anchor_y):
+        ax = max(0, min(2, anchor_x))
+        ay = max(0, min(2, anchor_y))
+        getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").setChecked(True)
+
+    def get_rotation(self):
+        """Return rotation angle in degrees (float)."""
+        try:
+            return float(self.form_proxy.combo_rotation.currentText())
+        except (TypeError, ValueError):
+            return 0.0
+
+    def set_rotation(self, degrees):
+        t = str(int(degrees) if degrees == int(degrees) else degrees)
+        i = self.form_proxy.combo_rotation.findText(t)
+        if i >= 0:
+            self.form_proxy.combo_rotation.setCurrentIndex(i)
+        else:
+            self.form_proxy.combo_rotation.setCurrentText(t)
 
     def on_material_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
@@ -188,8 +241,10 @@ class CreateProfileTaskPanel:
             param.SetBool("Default Reverse Attachement", self.form_proxy.cb_reverse_attachment.isChecked())
 
             param.SetBool("Default Make Fillet", self.form_proxy.cb_make_fillet.isChecked())
-            param.SetBool("Default Height Centered", self.form_proxy.cb_height_centered.isChecked())
-            param.SetBool("Default Width Centered", self.form_proxy.cb_width_centered.isChecked())
+            ax, ay = self.get_anchor()
+            param.SetInt("Default AnchorX", ax)
+            param.SetInt("Default AnchorY", ay)
+            param.SetString("Default RotationAngle", self.form_proxy.combo_rotation.currentText())
             param.SetBool("Default Centered Bevel", self.form_proxy.cb_combined_bevel.isChecked())
 
             self.proceed()
@@ -302,13 +357,13 @@ class CreateProfileTaskPanel:
             self.form_proxy.sb_weight.value(),
             self.form_proxy.sb_unitprice.value(),
             self.form_proxy.cb_make_fillet.isChecked(),  # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
-            self.form_proxy.cb_height_centered.isChecked(),
-            self.form_proxy.cb_width_centered.isChecked(),
+            *self.get_anchor(),
             self.form_proxy.combo_material.currentText(),
             self.form_proxy.combo_family.currentText(),
             self.form_proxy.combo_size.currentText(),
             self.form_proxy.cb_combined_bevel.isChecked(),
             link_sub,
+            init_rotation=self.get_rotation(),
         )
 
         # Create a ViewObject in current GUI
