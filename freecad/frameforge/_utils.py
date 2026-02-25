@@ -74,7 +74,6 @@ def getShape(obj, prop, shape_type):
         return None
 
 
-
 def is_fusion(obj):
     if obj.TypeId == "Part::MultiFuse":
         shape = obj.Shape
@@ -120,8 +119,6 @@ def is_part_or_part_design(obj):
     return obj.TypeId.startswith(("Part::", "PartDesign::"))
 
 
-
-
 def get_profiles_and_links_from_object(profiles, links, obj):
     if is_fusion(obj):
         for child in obj.Shapes:
@@ -138,7 +135,6 @@ def get_profiles_and_links_from_object(profiles, links, obj):
             # It makes it mandatory to have visible object when generating BOM
             if child.getParentGroup() in (obj, None) and child.Visibility:
                 get_profiles_and_links_from_object(profiles, links, child)
-
 
     elif is_profile(obj):
         profiles.append(obj)
@@ -158,14 +154,13 @@ def get_profiles_and_links_from_document():
     return [o for o in doc.Objects if is_profile(o)], [o for o in doc.Objects if is_link(o)]
 
 
-
-
 # TODO move this code into TrimmedProfile ?
 def get_profile_from_trimmedbody(obj):
     if is_trimmedbody(obj):
         return get_profile_from_trimmedbody(obj.TrimmedBody)
     else:
         return obj
+
 
 # TODO move this code into TrimmedProfile ?
 def get_childrens_from_trimmedbody(obj):
@@ -199,6 +194,7 @@ def get_childrens_from_extrudedcutout(obj):
     elif is_extrudedcutout(obj):
         yield from get_childrens_from_extrudedcutout(obj.baseObject[0])
 
+
 # TODO move this code into ExtrudedCutOut ?
 def get_trimmedprofile_from_extrudedcutout(obj):
     if is_extrudedcutout(obj):
@@ -227,7 +223,6 @@ def get_trimmed_profile_all_cutting_angles(trimmed_profile):
 
     edge = resolve_edge(trimmed_profile.TrimmedBody)
     dir_vec = (edge.Vertexes[-1].Point.sub(edge.Vertexes[0].Point)).normalize()
-
 
     if trimmed_profile.TrimmedProfileType == "End Trim":
         if trimmed_profile.CutType in ["Simple fit", "Simple cut"]:
@@ -277,7 +272,6 @@ def get_trimmed_profile_all_cutting_angles(trimmed_profile):
 
     else:
         raise ValueError("Unknown TrimmedProfileType")
-    
 
     if hasattr(trimmed_profile.TrimmedBody, "TrimmedProfileType"):
         parent_profile = trimmed_profile.TrimmedBody
@@ -307,9 +301,10 @@ def length_along_normal(obj):
             target = obj.Target
             edge = doc.getObject(target[0].Name).getSubObject(target[1][0])
         else:
-            return 0.0 # TODO handle this case !!!
+            return 0.0  # TODO handle this case !!!
 
     elif is_trimmedbody(obj):
+
         def resolve_edge(link):
             target = obj.Proxy.getTarget(link)
             return doc.getObject(target[0].Name).getSubObject(target[1][0])
@@ -328,7 +323,6 @@ def length_along_normal(obj):
 
     length = max(projections) - min(projections)
     return length
-
 
 
 def get_readable_cutting_angles(ba_y, ba_x, bb_y, bb_x, *trim_cuts):

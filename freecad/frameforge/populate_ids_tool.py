@@ -1,6 +1,4 @@
-
-
-#Expected behaviour:
+# Expected behaviour:
 
 # POPULATE
 # Number/Letter for Profiles/Links
@@ -28,8 +26,6 @@
 # Reset All / Reset Selected if objects are selected
 
 
-
-
 import os
 from collections import defaultdict
 
@@ -37,26 +33,19 @@ import FreeCAD as App
 import FreeCADGui as Gui
 
 from freecad.frameforge._utils import (
+    get_profiles_and_links_from_document,
+    get_profiles_and_links_from_object,
     is_extrudedcutout,
     is_fusion,
     is_group,
+    is_link,
     is_part,
     is_profile,
-    is_trimmedbody, 
-    is_link,
-    get_profiles_and_links_from_object, 
-    get_profiles_and_links_from_document
+    is_trimmedbody,
 )
-
-
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.populate_ids import populate_ids
 from freecad.frameforge.version import __version__ as ff_version
-
-
-
-
-
 
 
 class PopulateIDsTaskPanel:
@@ -71,8 +60,6 @@ class PopulateIDsTaskPanel:
             self.form.cb_numbering_scheme.setCurrentIndex(param.GetInt("IDs numbering scheme", 0))
             self.form.sp_first_number.setValue(param.GetInt("First Number ID", 0))
             self.form.le_first_letter.setText(param.GetString("First Letter ID", "A"))
-
-            
 
     def open(self):
         App.Console.PrintMessage(translate("frameforge", "Opening Populate IDs\n"))
@@ -92,17 +79,17 @@ class PopulateIDsTaskPanel:
         sel = Gui.Selection.getSelection()
 
         if all(
-                [
-                    is_fusion(sel)
-                    or is_part(sel)
-                    or is_group(sel)
-                    or is_profile(sel)
-                    or is_trimmedbody(sel)
-                    or is_extrudedcutout(sel)
-                    or is_link(sel)
-                    for sel in Gui.Selection.getSelection()
-                ]
-            ):
+            [
+                is_fusion(sel)
+                or is_part(sel)
+                or is_group(sel)
+                or is_profile(sel)
+                or is_trimmedbody(sel)
+                or is_extrudedcutout(sel)
+                or is_link(sel)
+                for sel in Gui.Selection.getSelection()
+            ]
+        ):
             param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
             param.SetBool("Allow Duplicating IDs", self.form.cb_allow_duplicated.isChecked())
             param.SetBool("Reset Numbering IDs", self.form.cb_reset_numbering.isChecked())
@@ -118,7 +105,7 @@ class PopulateIDsTaskPanel:
 
             doc_profiles, doc_links = get_profiles_and_links_from_document()
 
-            #handle compat here, Link don't have specific proxy
+            # handle compat here, Link don't have specific proxy
             for l in doc_links:
                 if not hasattr(l, "PID"):
                     l.addProperty(
@@ -135,21 +122,31 @@ class PopulateIDsTaskPanel:
                         "Frameforge",
                         "Frameforge Version used to create the profile",
                     ).FrameforgeVersion = ff_version
-                
 
-            numbering_type = ["all_numbers", "all_letters", "number_for_profiles_letters_for_links" ,"letters_for_profiles_number_for_links"][self.form.cb_numbering_type.currentIndex()]
+            numbering_type = [
+                "all_numbers",
+                "all_letters",
+                "number_for_profiles_letters_for_links",
+                "letters_for_profiles_number_for_links",
+            ][self.form.cb_numbering_type.currentIndex()]
             allow_duplicated = self.form.cb_allow_duplicated.isChecked()
             reset_existing = self.form.cb_reset_numbering.isChecked()
-            numbering_scheme = ["fill_selection", "fill_document", "continue_document", "start_at"][self.form.cb_numbering_scheme.currentIndex()]
+            numbering_scheme = ["fill_selection", "fill_document", "continue_document", "start_at"][
+                self.form.cb_numbering_scheme.currentIndex()
+            ]
 
-
-            populate_ids(sel_profiles, sel_links, doc_profiles, doc_links, 
+            populate_ids(
+                sel_profiles,
+                sel_links,
+                doc_profiles,
+                doc_links,
                 numbering_type,
                 allow_duplicated,
                 reset_existing,
                 numbering_scheme,
-                start_number=str(self.form.sp_first_number.value()), start_letter=self.form.le_first_letter.text())
-
+                start_number=str(self.form.sp_first_number.value()),
+                start_letter=self.form.le_first_letter.text(),
+            )
 
             App.ActiveDocument.commitTransaction()
             # App.ActiveDocument.recompute()
@@ -162,11 +159,6 @@ class PopulateIDsTaskPanel:
 
     def clean(self):
         pass
-
-
-
-
-
 
 
 class PopulateIDsCommand:
@@ -207,8 +199,6 @@ class PopulateIDsCommand:
         Gui.Control.showDialog(panel)
 
 
-
-
 class ResetIDsCommand:
     def GetResources(self):
         return {
@@ -246,32 +236,29 @@ class ResetIDsCommand:
         sel = Gui.Selection.getSelection()
 
         if all(
-                [
-                    is_fusion(sel)
-                    or is_part(sel)
-                    or is_group(sel)
-                    or is_profile(sel)
-                    or is_trimmedbody(sel)
-                    or is_extrudedcutout(sel)
-                    or is_link(sel)
-                    for sel in Gui.Selection.getSelection()
-                ]
-            ):
-
+            [
+                is_fusion(sel)
+                or is_part(sel)
+                or is_group(sel)
+                or is_profile(sel)
+                or is_trimmedbody(sel)
+                or is_extrudedcutout(sel)
+                or is_link(sel)
+                for sel in Gui.Selection.getSelection()
+            ]
+        ):
 
             App.ActiveDocument.openTransaction("Reset IDs")
             sel_profiles, sel_links = [], []
             for s in sel:
                 get_profiles_and_links_from_object(sel_profiles, sel_links, s)
 
-            for o in sel_profiles+sel_links:
+            for o in sel_profiles + sel_links:
                 o.PID = ""
 
             App.ActiveDocument.commitTransaction()
             # App.ActiveDocument.recompute()
-            
+
 
 Gui.addCommand("FrameForge_PopulateIDs", PopulateIDsCommand())
 Gui.addCommand("FrameForge_ResetIDs", ResetIDsCommand())
-
-

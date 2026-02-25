@@ -7,18 +7,18 @@ import FreeCADGui as Gui
 import Part
 from PySide import QtCore, QtGui
 
+from freecad.frameforge._utils import (
+    get_childrens_from_extrudedcutout,
+    get_profile_from_extrudedcutout,
+    get_readable_cutting_angles,
+    get_trimmed_profile_all_cutting_angles,
+    get_trimmedprofile_from_extrudedcutout,
+    length_along_normal,
+)
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.frameforge_exceptions import FrameForgeException
-from freecad.frameforge._utils import (
-    get_readable_cutting_angles,
-    length_along_normal,
-    get_profile_from_extrudedcutout,
-    get_childrens_from_extrudedcutout,
-    get_trimmedprofile_from_extrudedcutout,
-    get_trimmed_profile_all_cutting_angles
-)
-
 from freecad.frameforge.version import __version__ as ff_version
+
 
 class ExtrudedCutout:
     def __init__(self, obj, sketch, selected_face):
@@ -40,7 +40,6 @@ class ExtrudedCutout:
             "Profile ID",
         ).PID = ""
         obj.setEditorMode("PID", 1)
-
 
         obj.addProperty("App::PropertyLinkSub", "baseObject", "ExtrudedCutout", "SelectedFace").baseObject = (
             selected_face
@@ -70,7 +69,6 @@ class ExtrudedCutout:
         ]
         obj.CutType = "Through All"
 
-
         # related to Profile
         obj.addProperty("App::PropertyString", "Family", "Profile", "")
         obj.setEditorMode("Family", 1)
@@ -90,7 +88,7 @@ class ExtrudedCutout:
         obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
         obj.setEditorMode("Price", 1)
 
-        #structure
+        # structure
         obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
         obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
         obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
@@ -242,8 +240,7 @@ class ExtrudedCutout:
             obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
             obj.setEditorMode("Price", 1)
 
-
-            #structure
+            # structure
             obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
             obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
             obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")

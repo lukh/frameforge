@@ -3,9 +3,13 @@ import math
 import FreeCAD as App
 import FreeCADGui as Gui
 import Part
-
 from pivy import coin
 
+from freecad.frameforge._utils import (
+    get_readable_cutting_angles,
+    length_along_normal,
+    normalize_anchor,
+)
 from freecad.frameforge.extrusions import (
     tslot20x20,
     tslot20x20_one_slot,
@@ -17,11 +21,6 @@ from freecad.frameforge.extrusions import (
     vslot20x60,
     vslot20x80,
 )
-from freecad.frameforge._utils import (
-    get_readable_cutting_angles,
-    length_along_normal,
-    normalize_anchor,
-)
 from freecad.frameforge.version import __version__ as ff_version
 
 # Anchor enumerations for path alignment (PropertyEnumeration; index 0,1,2 used in formulas)
@@ -32,7 +31,7 @@ ANCHOR_Y = ("Bottom", "Center", "Top")
 vec = App.Base.Vector
 
 
-class Profile:  
+class Profile:
     def __init__(
         self,
         obj,
@@ -80,7 +79,6 @@ class Profile:
             "Profile",
             "Frameforge Version used to create the profile",
         ).FrameforgeVersion = ff_version
-            
 
         obj.addProperty(
             "App::PropertyString",
@@ -94,9 +92,9 @@ class Profile:
             "Profile",
             "",
         ).Family = fam
-        
+
         obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
-        
+
         obj.addProperty(
             "App::PropertyString",
             "SizeName",
@@ -160,21 +158,15 @@ class Profile:
                 "App::PropertyFloat", "BevelEndRotate", "Profile", "Rotate the second cut on Profile axle"
             ).BevelEndRotate = 0
 
+        obj.addProperty("App::PropertyFloat", "OffsetA", "Profile", "Parameter for structure").OffsetA = 0.0
 
-        obj.addProperty("App::PropertyFloat", "OffsetA", "Profile", "Parameter for structure").OffsetA = (
-            0.0
-        )
-
-        obj.addProperty("App::PropertyFloat", "OffsetB", "Profile", "Parameter for structure").OffsetB = (
-            0.0
-        )
+        obj.addProperty("App::PropertyFloat", "OffsetB", "Profile", "Parameter for structure").OffsetB = 0.0
 
         obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = init_wg
         obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram").ApproxWeight = (
             obj.LinearWeight * init_len / 1000
         )
         obj.setEditorMode("ApproxWeight", 1)  # user doesn't change !
-
 
         obj.addProperty("App::PropertyFloat", "UnitPrice", "Base", "Approximate linear price").UnitPrice = (
             init_unit_price
@@ -184,32 +176,27 @@ class Profile:
         )
         obj.setEditorMode("Price", 1)  # user doesn't change !
 
-        obj.addProperty(
-            "App::PropertyEnumeration", "AnchorX", "Profile",
-            "Path alignment (horizontal)"
-        ).AnchorX = ANCHOR_X
+        obj.addProperty("App::PropertyEnumeration", "AnchorX", "Profile", "Path alignment (horizontal)").AnchorX = (
+            ANCHOR_X
+        )
         obj.AnchorX = ANCHOR_X[normalize_anchor(init_anchor_x)]
-        obj.addProperty(
-            "App::PropertyEnumeration", "AnchorY", "Profile",
-            "Path alignment (vertical)"
-        ).AnchorY = ANCHOR_Y
+        obj.addProperty("App::PropertyEnumeration", "AnchorY", "Profile", "Path alignment (vertical)").AnchorY = (
+            ANCHOR_Y
+        )
         obj.AnchorY = ANCHOR_Y[normalize_anchor(init_anchor_y)]
         if hasattr(obj, "CenteredOnWidth") or hasattr(obj, "CenteredOnHeight"):
             obj.AnchorX = "Center" if getattr(obj, "CenteredOnWidth", False) else "Left"
             obj.AnchorY = "Center" if getattr(obj, "CenteredOnHeight", False) else "Bottom"
 
         obj.addProperty(
-            "App::PropertyBool", "MirrorH", "Profile",
-            "Mirror cross-section horizontally (flip X)"
+            "App::PropertyBool", "MirrorH", "Profile", "Mirror cross-section horizontally (flip X)"
         ).MirrorH = bool(init_mirror_h)
         obj.addProperty(
-            "App::PropertyBool", "MirrorV", "Profile",
-            "Mirror cross-section vertically (flip Y)"
+            "App::PropertyBool", "MirrorV", "Profile", "Mirror cross-section vertically (flip Y)"
         ).MirrorV = bool(init_mirror_v)
 
         obj.addProperty(
-            "App::PropertyFloat", "RotationAngle", "Profile",
-            "Rotation of cross-section around path axis (degrees)"
+            "App::PropertyFloat", "RotationAngle", "Profile", "Rotation of cross-section around path axis (degrees)"
         ).RotationAngle = float(init_rotation)
 
         if fam == "UPE":
@@ -226,17 +213,17 @@ class Profile:
             obj.addProperty("App::PropertyBool", "IPN", "Profile", "IPE/HEA style or IPN style").IPN = True
             obj.addProperty("App::PropertyFloat", "FlangeAngle", "Profile").FlangeAngle = 8
 
-
-        #structure
-        obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure").Width = (
-            obj.ProfileWidth
-        )
+        # structure
+        obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure").Width = obj.ProfileWidth
         obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure").Height = (
             obj.ProfileHeight
         )
-        obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure",).Length = (
-            obj.ProfileLength
-        )
+        obj.addProperty(
+            "App::PropertyLength",
+            "Length",
+            "Structure",
+            "Parameter for structure",
+        ).Length = obj.ProfileLength
         obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = False
 
         obj.setEditorMode("Width", 1)  # user doesn't change !
@@ -1084,7 +1071,7 @@ class Profile:
                 # "A" side
                 ProfileExt = ProfileCut.fuse(p.extrude(vec(0, 0, -hc / 4)))
                 box = Part.makeBox(hc, hc, hc)
-                box.translate(vec(-hc / 2 + w, -hc / 2 + h, -hc-obj.OffsetA))
+                box.translate(vec(-hc / 2 + w, -hc / 2 + h, -hc - obj.OffsetA))
                 pr = vec(0, 0, -obj.OffsetA)
                 box.rotate(pr, vec(0, 1, 0), B1Y)
                 if self.bevels_combined == True:
@@ -1115,12 +1102,10 @@ class Profile:
         obj.positionBySupport()
         obj.recompute()
 
-
     def _update_structure_data(self, obj):
         obj.Width = obj.ProfileWidth
         obj.Height = obj.ProfileHeight
 
-        
         obj.Length = length_along_normal(obj)
         cut_angles = get_readable_cutting_angles(
             getattr(obj, "BevelACutY", "N/A"),
@@ -1131,8 +1116,6 @@ class Profile:
 
         obj.CuttingAngleA = cut_angles[0]
         obj.CuttingAngleB = cut_angles[1]
-
-
 
     def run_compatibility_migrations(self, obj):
         if not hasattr(obj, "FrameforgeVersion"):
@@ -1176,10 +1159,13 @@ class Profile:
 
             # add LinearWeight attribute (<= 0.1.7)
             if not hasattr(obj, "LinearWeight"):
-                App.Console.PrintMessage(f"Frameforge::object migration : adding LinearWeight ({self.WM}) to {obj.Label}\n")
-                obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = self.WM
+                App.Console.PrintMessage(
+                    f"Frameforge::object migration : adding LinearWeight ({self.WM}) to {obj.Label}\n"
+                )
+                obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = (
+                    self.WM
+                )
                 obj.setEditorMode("ApproxWeight", 1)
-
 
             # add prices
             if not hasattr(obj, "UnitPrice"):
@@ -1190,11 +1176,10 @@ class Profile:
 
             # double the thickness if pipe
             if obj.Family == "Pipe":
-                obj.Thickness = 2*obj.Thickness
+                obj.Thickness = 2 * obj.Thickness
 
             obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = False
             obj.setEditorMode("Cutout", 1)
-
 
             # update properties (bevels and offset)
             bsc1 = obj.BevelStartCut1
@@ -1231,13 +1216,9 @@ class Profile:
             obj.removeProperty("OffsetA")
             obj.removeProperty("OffsetB")
 
-            obj.addProperty("App::PropertyFloat", "OffsetA", "Profile", "Parameter for structure").OffsetA = (
-                off_a
-            )
+            obj.addProperty("App::PropertyFloat", "OffsetA", "Profile", "Parameter for structure").OffsetA = off_a
 
-            obj.addProperty("App::PropertyFloat", "OffsetB", "Profile", "Parameter for structure").OffsetB = (
-                off_b
-            )
+            obj.addProperty("App::PropertyFloat", "OffsetB", "Profile", "Parameter for structure").OffsetB = off_b
 
             obj.setExpression(".AttachmentOffset.Base.z", None)
             obj.AttachmentOffset.Base.z = 0.0
@@ -1260,13 +1241,11 @@ class Profile:
             # Anchor: CenteredOn* -> AnchorX/AnchorY (enum)
             if not hasattr(obj, "AnchorX") or not hasattr(obj, "AnchorY"):
                 obj.addProperty(
-                    "App::PropertyEnumeration", "AnchorX", "Profile",
-                    "Path alignment (horizontal)"
+                    "App::PropertyEnumeration", "AnchorX", "Profile", "Path alignment (horizontal)"
                 ).AnchorX = ANCHOR_X
                 obj.AnchorX = "Center" if getattr(obj, "CenteredOnWidth", False) else "Left"
                 obj.addProperty(
-                    "App::PropertyEnumeration", "AnchorY", "Profile",
-                    "Path alignment (vertical)"
+                    "App::PropertyEnumeration", "AnchorY", "Profile", "Path alignment (vertical)"
                 ).AnchorY = ANCHOR_Y
                 obj.AnchorY = "Center" if getattr(obj, "CenteredOnHeight", False) else "Bottom"
                 if hasattr(obj, "CenteredOnWidth"):
@@ -1277,20 +1256,20 @@ class Profile:
             # RotationAngle: add if missing (handled in code like OffsetA)
             if not hasattr(obj, "RotationAngle"):
                 obj.addProperty(
-                    "App::PropertyFloat", "RotationAngle", "Profile",
-                    "Rotation of cross-section around path axis (degrees)"
+                    "App::PropertyFloat",
+                    "RotationAngle",
+                    "Profile",
+                    "Rotation of cross-section around path axis (degrees)",
                 ).RotationAngle = 0.0
 
             # MirrorH / MirrorV: add if missing
             if not hasattr(obj, "MirrorH"):
                 obj.addProperty(
-                    "App::PropertyBool", "MirrorH", "Profile",
-                    "Mirror cross-section horizontally (flip X)"
+                    "App::PropertyBool", "MirrorH", "Profile", "Mirror cross-section horizontally (flip X)"
                 ).MirrorH = False
             if not hasattr(obj, "MirrorV"):
                 obj.addProperty(
-                    "App::PropertyBool", "MirrorV", "Profile",
-                    "Mirror cross-section vertically (flip Y)"
+                    "App::PropertyBool", "MirrorV", "Profile", "Mirror cross-section vertically (flip Y)"
                 ).MirrorV = False
 
             # add version
@@ -1305,6 +1284,7 @@ class Profile:
             if obj.FrameforgeVersion == "0.1.8":
                 pass
 
+
 class ViewProviderProfile:
     def __init__(self, obj):
         """Set this object to the proxy object of the actual view provider"""
@@ -1318,7 +1298,7 @@ class ViewProviderProfile:
         self.helpersSwitch.whichChild = coin.SO_SWITCH_NONE
 
         sph_d = max(self.Object.Width.Value, self.Object.Height.Value) / 6
-        font_size = int(1.4*max(self.Object.Width.Value, self.Object.Height.Value))
+        font_size = int(1.4 * max(self.Object.Width.Value, self.Object.Height.Value))
 
         # Point 1
         self.p1_tr = coin.SoTranslation()
@@ -1342,7 +1322,6 @@ class ViewProviderProfile:
         self.helpersSwitch.addChild(p1_sep)
         self.helpersSwitch.addChild(p2_sep)
         self.helpersSwitch.addChild(dir_sep)
-
 
         # Guides P1
         self.p1_x_sep, self.p1_x_coords = self._makeGuideLine((1, 0, 0))  # red
@@ -1430,10 +1409,9 @@ class ViewProviderProfile:
         sep.addChild(sph)
         return sep
 
-
     def _makeLocalFrame(self, p1, p2):
         # T = edge dir
-        T = (p2 - p1)
+        T = p2 - p1
         if T.Length == 0:
             return None, None
         T.normalize()
@@ -1465,7 +1443,6 @@ class ViewProviderProfile:
 
         return sep, coords
 
-
     def _updatePoints(self):
         self._ensureHelpers()
 
@@ -1486,8 +1463,7 @@ class ViewProviderProfile:
         self.p1_tr.translation.setValue(p1l.x, p1l.y, p1l.z)
         self.p2_tr.translation.setValue(p2l.x, p2l.y, p2l.z)
 
-
-        offset = App.Vector(0, 0, max(obj.Width.Value, obj.Height.Value)/2)
+        offset = App.Vector(0, 0, max(obj.Width.Value, obj.Height.Value) / 2)
 
         p1_label_pos = p1l + offset
         p2_label_pos = p2l - offset
@@ -1496,41 +1472,55 @@ class ViewProviderProfile:
         self.p2_label_tr.translation.setValue(p2_label_pos.x, p2_label_pos.y, p2_label_pos.z)
 
         # Normal Line
-        self.dir_coords.point.setValues(0, 2, [
-            (p1l.x, p1l.y, p1l.z),
-            (p2l.x, p2l.y, p2l.z)
-        ])
+        self.dir_coords.point.setValues(0, 2, [(p1l.x, p1l.y, p1l.z), (p2l.x, p2l.y, p2l.z)])
 
         # Coord system
         L = max(obj.Width.Value, obj.Height.Value)
 
-        self.p1_x_coords.point.setValues(0, 2, [
-            (p1l.x, p1l.y, p1l.z),
-            (p1l.x + L, p1l.y, p1l.z),
-        ])
+        self.p1_x_coords.point.setValues(
+            0,
+            2,
+            [
+                (p1l.x, p1l.y, p1l.z),
+                (p1l.x + L, p1l.y, p1l.z),
+            ],
+        )
 
-        self.p1_y_coords.point.setValues(0, 2, [
-            (p1l.x, p1l.y, p1l.z),
-            (p1l.x, p1l.y + L, p1l.z),
-        ])
+        self.p1_y_coords.point.setValues(
+            0,
+            2,
+            [
+                (p1l.x, p1l.y, p1l.z),
+                (p1l.x, p1l.y + L, p1l.z),
+            ],
+        )
 
-        self.p2_x_coords.point.setValues(0, 2, [
-            (p2l.x, p2l.y, p2l.z),
-            (p2l.x + L, p2l.y, p2l.z),
-        ])
+        self.p2_x_coords.point.setValues(
+            0,
+            2,
+            [
+                (p2l.x, p2l.y, p2l.z),
+                (p2l.x + L, p2l.y, p2l.z),
+            ],
+        )
 
-        self.p2_y_coords.point.setValues(0, 2, [
-            (p2l.x, p2l.y, p2l.z),
-            (p2l.x, p2l.y + L, p2l.z),
-        ])
-
+        self.p2_y_coords.point.setValues(
+            0,
+            2,
+            [
+                (p2l.x, p2l.y, p2l.z),
+                (p2l.x, p2l.y + L, p2l.z),
+            ],
+        )
 
     def updateData(self, fp, prop):
         if prop in ["Target", "OffsetA", "OffsetB", "RotationAngle"]:
             try:
                 self._updatePoints()
             except:
-                App.Console.PrintMessage(f"Can't update profile {fp.Label} and helper in 3D, maybe linked to a migration\n")
+                App.Console.PrintMessage(
+                    f"Can't update profile {fp.Label} and helper in 3D, maybe linked to a migration\n"
+                )
 
     def getDisplayModes(self, obj):
         """Return a list of display modes."""

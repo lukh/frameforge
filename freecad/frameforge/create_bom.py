@@ -7,17 +7,17 @@ import FreeCAD
 import FreeCADGui as Gui
 import Part
 
-
 from freecad.frameforge._utils import (
     is_extrudedcutout,
     is_fusion,
     is_group,
+    is_link,
     is_part,
+    is_part_or_part_design,
     is_profile,
     is_trimmedbody,
-    is_link,
-    is_part_or_part_design
 )
+
 
 def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_path=False):
     p = {}
@@ -76,12 +76,28 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
 
         profiles_data.append(p)
 
-
     elif is_link(obj):
-        links_data.append({"parent": parent, "ID": obj.PID, "label": obj.Label, "part": obj.LinkedObject.Label, "quantity": "1", "price":getattr(obj.LinkedObject, "Price", "N/A")})
+        links_data.append(
+            {
+                "parent": parent,
+                "ID": obj.PID,
+                "label": obj.Label,
+                "part": obj.LinkedObject.Label,
+                "quantity": "1",
+                "price": getattr(obj.LinkedObject, "Price", "N/A"),
+            }
+        )
 
     elif is_part_or_part_design(obj):
-        links_data.append({"parent": parent, "label": obj.Label, "part": obj.Label, "quantity": "1", "price":getattr(obj, "Price", "N/A")})
+        links_data.append(
+            {
+                "parent": parent,
+                "label": obj.Label,
+                "part": obj.Label,
+                "quantity": "1",
+                "price": getattr(obj, "Price", "N/A"),
+            }
+        )
 
 
 def group_profiles(profiles_data):
