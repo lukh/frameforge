@@ -44,6 +44,8 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
             ay = 1 if getattr(self.profile, "CenteredOnHeight", False) else 0
         self.set_anchor(ax, ay)
         self.set_rotation(getattr(self.profile, "RotationAngle", 0.0))
+        self.form_proxy.cb_mirror_h.setChecked(getattr(self.profile, "MirrorH", False))
+        self.form_proxy.cb_mirror_v.setChecked(getattr(self.profile, "MirrorV", False))
 
         self.form_proxy.combo_material.setCurrentText(self.profile.Material)
         self.form_proxy.combo_family.setCurrentText(self.profile.Family)
@@ -82,6 +84,8 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
             self.form_proxy.combo_material.currentText(),
             self.form_proxy.combo_family.currentText(),
             self.form_proxy.combo_size.currentText(),
+            init_mirror_h=self.form_proxy.cb_mirror_h.isChecked(),
+            init_mirror_v=self.form_proxy.cb_mirror_v.isChecked(),
             init_rotation=self.get_rotation(),
         )
 

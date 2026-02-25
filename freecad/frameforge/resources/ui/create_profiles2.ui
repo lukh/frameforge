@@ -228,6 +228,20 @@
          </widget>
         </item>
         <item>
+         <widget class="QCheckBox" name="cb_mirror_h">
+          <property name="text">
+           <string>Mirror horizontally</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cb_mirror_v">
+          <property name="text">
+           <string>Mirror vertically</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QWidget" name="widget_rotation" native="true">
           <layout class="QFormLayout" name="form_rotation">
            <item row="0" column="0">

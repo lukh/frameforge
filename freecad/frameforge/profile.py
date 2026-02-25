@@ -54,6 +54,8 @@ class Profile:
         bevels_combined,
         link_sub=None,
         custom_profile=None,
+        init_mirror_h=False,
+        init_mirror_v=False,
         init_rotation=0.0,
     ):
         """
@@ -197,6 +199,15 @@ class Profile:
             obj.AnchorY = "Center" if getattr(obj, "CenteredOnHeight", False) else "Bottom"
 
         obj.addProperty(
+            "App::PropertyBool", "MirrorH", "Profile",
+            "Mirror cross-section horizontally (flip X)"
+        ).MirrorH = bool(init_mirror_h)
+        obj.addProperty(
+            "App::PropertyBool", "MirrorV", "Profile",
+            "Mirror cross-section vertically (flip Y)"
+        ).MirrorV = bool(init_mirror_v)
+
+        obj.addProperty(
             "App::PropertyFloat", "RotationAngle", "Profile",
             "Rotation of cross-section around path axis (degrees)"
         ).RotationAngle = float(init_rotation)
@@ -276,6 +287,8 @@ class Profile:
         material,
         fam,
         size_name,
+        init_mirror_h=False,
+        init_mirror_v=False,
         init_rotation=0.0,
     ):
         self.run_compatibility_migrations(obj)
@@ -319,6 +332,8 @@ class Profile:
 
         obj.AnchorX = ANCHOR_X[normalize_anchor(init_anchor_x)]
         obj.AnchorY = ANCHOR_Y[normalize_anchor(init_anchor_y)]
+        obj.MirrorH = bool(init_mirror_h)
+        obj.MirrorV = bool(init_mirror_v)
         obj.RotationAngle = float(init_rotation)
 
         if obj.Family == "UPE":
@@ -359,6 +374,8 @@ class Profile:
             or p == "OffsetB"
             or p == "AnchorX"
             or p == "AnchorY"
+            or p == "MirrorH"
+            or p == "MirrorV"
             or p == "RotationAngle"
         ):
             self.execute(obj)
@@ -1031,6 +1048,14 @@ class Profile:
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_one_slot()
 
+        mirror_h = getattr(obj, "MirrorH", False)
+        mirror_v = getattr(obj, "MirrorV", False)
+        center_pt = vec(W / 2 + w, H / 2 + h, 0)
+        if mirror_h:
+            p = p.mirror(center_pt, vec(1, 0, 0))
+        if mirror_v:
+            p = p.mirror(center_pt, vec(0, 1, 0))
+
         rot_angle = getattr(obj, "RotationAngle", 0.0)
         if rot_angle != 0:
             p = p.rotate(vec(0, 0, 0), vec(0, 0, 1), rot_angle)
@@ -1075,7 +1100,11 @@ class Profile:
             obj.Shape = ProfileFull
 
         else:
-            # Anchor already applied when building wire1; apply rotation now.
+            # Anchor already applied when building wire1; mirror then rotation.
+            if mirror_h:
+                wire1 = wire1.mirror(center_pt, vec(1, 0, 0))
+            if mirror_v:
+                wire1 = wire1.mirror(center_pt, vec(0, 1, 0))
             if rot_angle != 0:
                 wire1 = wire1.rotate(vec(0, 0, 0), vec(0, 0, 1), rot_angle)
             obj.Shape = Part.Face(wire1)
@@ -1251,6 +1280,18 @@ class Profile:
                     "App::PropertyFloat", "RotationAngle", "Profile",
                     "Rotation of cross-section around path axis (degrees)"
                 ).RotationAngle = 0.0
+
+            # MirrorH / MirrorV: add if missing
+            if not hasattr(obj, "MirrorH"):
+                obj.addProperty(
+                    "App::PropertyBool", "MirrorH", "Profile",
+                    "Mirror cross-section horizontally (flip X)"
+                ).MirrorH = False
+            if not hasattr(obj, "MirrorV"):
+                obj.addProperty(
+                    "App::PropertyBool", "MirrorV", "Profile",
+                    "Mirror cross-section vertically (flip Y)"
+                ).MirrorV = False
 
             # add version
             obj.addProperty(

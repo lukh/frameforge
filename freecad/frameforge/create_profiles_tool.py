@@ -363,6 +363,8 @@ class CreateProfileTaskPanel:
             self.form_proxy.combo_size.currentText(),
             self.form_proxy.cb_combined_bevel.isChecked(),
             link_sub,
+            init_mirror_h=self.form_proxy.cb_mirror_h.isChecked(),
+            init_mirror_v=self.form_proxy.cb_mirror_v.isChecked(),
             init_rotation=self.get_rotation(),
         )
 
