@@ -1279,7 +1279,7 @@ class ViewProviderProfile:
         p1_label_sep.addChild(font1)
 
         txt1 = coin.SoText2()
-        txt1.string = "B"
+        txt1.string = "A"
         p1_label_sep.addChild(txt1)
 
         # Label 2
@@ -1296,7 +1296,7 @@ class ViewProviderProfile:
         p2_label_sep.addChild(font2)
 
         txt2 = coin.SoText2()
-        txt2.string = "A"
+        txt2.string = "B"
         p2_label_sep.addChild(txt2)
 
         self.helpersSwitch.addChild(p1_label_sep)
@@ -1387,8 +1387,8 @@ class ViewProviderProfile:
 
         # Local coordinates
         inv = obj.Placement.inverse()
-        p1l = inv.multVec(p1) + App.Vector(0, 0, obj.OffsetB)
-        p2l = inv.multVec(p2) - App.Vector(0, 0, obj.OffsetA)
+        p1l = inv.multVec(p1) - App.Vector(0, 0, obj.OffsetA)
+        p2l = inv.multVec(p2) + App.Vector(0, 0, obj.OffsetB)
 
         # Spheres
         self.p1_tr.translation.setValue(p1l.x, p1l.y, p1l.z)
