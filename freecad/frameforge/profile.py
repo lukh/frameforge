@@ -1397,8 +1397,8 @@ class ViewProviderProfile:
 
         offset = App.Vector(0, 0, max(obj.Width.Value, obj.Height.Value)/2)
 
-        p1_label_pos = p1l + offset
-        p2_label_pos = p2l - offset
+        p1_label_pos = p1l - offset
+        p2_label_pos = p2l + offset
 
         self.p1_label_tr.translation.setValue(p1_label_pos.x, p1_label_pos.y, p1_label_pos.z)
         self.p2_label_tr.translation.setValue(p2_label_pos.x, p2_label_pos.y, p2_label_pos.z)
