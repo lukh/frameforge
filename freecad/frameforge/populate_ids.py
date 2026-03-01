@@ -1,10 +1,8 @@
-
 import os
 from collections import defaultdict
 
 import FreeCAD as App
 import FreeCADGui as Gui
-
 
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 
@@ -18,9 +16,9 @@ def letters_to_int(s: str) -> int:
     s = s.strip().upper()
     value = 0
     for c in s:
-        if not ('A' <= c <= 'Z'):
+        if not ("A" <= c <= "Z"):
             raise ValueError(f"Invalid letter ID: {s}")
-        value = value * 26 + (ord(c) - ord('A') + 1)
+        value = value * 26 + (ord(c) - ord("A") + 1)
     return value
 
 
@@ -37,12 +35,13 @@ def int_to_letters(n: int) -> str:
     while n > 0:
         n -= 1
         n, r = divmod(n, 26)
-        result.append(chr(ord('A') + r))
-    return ''.join(reversed(result))
+        result.append(chr(ord("A") + r))
+    return "".join(reversed(result))
 
 
 def number_str_to_int(s: str) -> int:
     return int(s)
+
 
 def int_to_number_str(n: int) -> str:
     if n <= 0:
@@ -50,12 +49,8 @@ def int_to_number_str(n: int) -> str:
     return str(n)
 
 
-
-
 class IdGenerator:
-    def __init__(self, used_ids: set[str], mode: str,
-                 strategy: str,
-                 start_value: str | None = None):
+    def __init__(self, used_ids: set[str], mode: str, strategy: str, start_value: str | None = None):
         """
         mode: "number" or "letter"
         strategy: "start_at", "continue", "fill_gaps"
@@ -116,15 +111,18 @@ class IdGenerator:
         return self.from_int(n)
 
 
-
-
-def populate_ids(sel_profiles, sel_links, doc_profiles, doc_links, 
-            numbering_type, 
-            allow_duplicated, 
-            reset_existing, 
-            numbering_scheme, 
-            start_number="1", start_letter="A"
-        ):
+def populate_ids(
+    sel_profiles,
+    sel_links,
+    doc_profiles,
+    doc_links,
+    numbering_type,
+    allow_duplicated,
+    reset_existing,
+    numbering_scheme,
+    start_number="1",
+    start_letter="A",
+):
 
     if reset_existing:
         for sp in sel_profiles:
@@ -141,9 +139,12 @@ def populate_ids(sel_profiles, sel_links, doc_profiles, doc_links,
             profiles_used = {o.PID for o in sel_profiles if o.PID}
             links_used = {o.PID for o in sel_links if o.PID}
         else:
-            profiles_used = {getattr(o, "PID", "") for o in doc_profiles if getattr(o, "PID", "")} - {getattr(o, "PID", "") for o in sel_profiles if getattr(o, "PID", "")}
-            links_used = {getattr(o, "PID", "") for o in doc_links if getattr(o, "PID", "")} - {getattr(o, "PID", "") for o in sel_links if getattr(o, "PID", "")}
-
+            profiles_used = {getattr(o, "PID", "") for o in doc_profiles if getattr(o, "PID", "")} - {
+                getattr(o, "PID", "") for o in sel_profiles if getattr(o, "PID", "")
+            }
+            links_used = {getattr(o, "PID", "") for o in doc_links if getattr(o, "PID", "")} - {
+                getattr(o, "PID", "") for o in sel_links if getattr(o, "PID", "")
+            }
 
     if numbering_scheme in ["fill_selection", "fill_document"]:
         strategy = "fill_gaps"
@@ -152,16 +153,18 @@ def populate_ids(sel_profiles, sel_links, doc_profiles, doc_links,
     elif numbering_scheme == "start_at":
         strategy = "start_at"
     else:
-        raise ValueError('Wrong numbering_scheme')
-
-
+        raise ValueError("Wrong numbering_scheme")
 
     if numbering_type == "all_numbers":
-        gen_profiles = IdGenerator(profiles_used | links_used, mode="number", strategy=strategy, start_value=start_number)
+        gen_profiles = IdGenerator(
+            profiles_used | links_used, mode="number", strategy=strategy, start_value=start_number
+        )
         gen_links = gen_profiles
 
     elif numbering_type == "all_letters":
-        gen_profiles = IdGenerator(profiles_used | links_used, mode="letter", strategy=strategy, start_value=start_letter)
+        gen_profiles = IdGenerator(
+            profiles_used | links_used, mode="letter", strategy=strategy, start_value=start_letter
+        )
         gen_links = gen_profiles
 
     elif numbering_type == "number_for_profiles_letters_for_links":
@@ -172,7 +175,7 @@ def populate_ids(sel_profiles, sel_links, doc_profiles, doc_links,
         gen_profiles = IdGenerator(profiles_used, mode="letter", strategy=strategy, start_value=start_letter)
         gen_links = IdGenerator(links_used, mode="number", strategy=strategy, start_value=start_number)
     else:
-        raise ValueError('Wrong numbering_type')
+        raise ValueError("Wrong numbering_type")
 
     for sp in sel_profiles:
         sp.PID = gen_profiles.next()

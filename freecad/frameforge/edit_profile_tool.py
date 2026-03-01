@@ -7,7 +7,7 @@ import FreeCADGui as Gui
 from PySide import QtCore, QtGui
 
 from freecad.frameforge.create_profiles_tool import CreateProfileTaskPanel
-from freecad.frameforge.profile import Profile, ViewProviderProfile
+from freecad.frameforge.profile import ANCHOR_X, ANCHOR_Y, Profile, ViewProviderProfile
 
 
 class EditProfileTaskPanel(CreateProfileTaskPanel):
@@ -30,14 +30,22 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
         self.form_proxy.sb_radius1.setValue(self.profile.RadiusLarge)
         self.form_proxy.sb_radius2.setValue(self.profile.RadiusSmall)
         self.form_proxy.sb_length.setValue(self.profile.ProfileLength)
-        self.form_proxy.sb_weight.setValue(self.profile.ApproxWeight )
+        self.form_proxy.sb_weight.setValue(self.profile.ApproxWeight)
         try:
             self.form_proxy.sb_unitprice.setValue(self.profile.UnitPrice)
         except:
             App.Console.PrintMessage(f"Frameforge : can't find Unit Price for {self.profile.Label}\n")
         self.form_proxy.cb_make_fillet.setChecked(self.profile.MakeFillet)
-        self.form_proxy.cb_height_centered.setChecked(self.profile.CenteredOnHeight)
-        self.form_proxy.cb_width_centered.setChecked(self.profile.CenteredOnWidth)
+        if hasattr(self.profile, "AnchorX"):
+            ax = ANCHOR_X.index(self.profile.AnchorX) if self.profile.AnchorX in ANCHOR_X else 1
+            ay = ANCHOR_Y.index(self.profile.AnchorY) if self.profile.AnchorY in ANCHOR_Y else 1
+        else:
+            ax = 1 if getattr(self.profile, "CenteredOnWidth", False) else 0
+            ay = 1 if getattr(self.profile, "CenteredOnHeight", False) else 0
+        self.set_anchor(ax, ay)
+        self.set_rotation(getattr(self.profile, "RotationAngle", 0.0))
+        self.form_proxy.cb_mirror_h.setChecked(getattr(self.profile, "MirrorH", False))
+        self.form_proxy.cb_mirror_v.setChecked(getattr(self.profile, "MirrorV", False))
 
         self.form_proxy.combo_material.setCurrentText(self.profile.Material)
         self.form_proxy.combo_family.setCurrentText(self.profile.Family)
@@ -72,11 +80,13 @@ class EditProfileTaskPanel(CreateProfileTaskPanel):
             self.form_proxy.sb_weight.value(),
             self.form_proxy.sb_unitprice.value(),
             self.form_proxy.cb_make_fillet.isChecked(),  # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
-            self.form_proxy.cb_height_centered.isChecked(),
-            self.form_proxy.cb_width_centered.isChecked(),
+            *self.get_anchor(),
             self.form_proxy.combo_material.currentText(),
             self.form_proxy.combo_family.currentText(),
             self.form_proxy.combo_size.currentText(),
+            init_mirror_h=self.form_proxy.cb_mirror_h.isChecked(),
+            init_mirror_v=self.form_proxy.cb_mirror_v.isChecked(),
+            init_rotation=self.get_rotation(),
         )
 
         App.ActiveDocument.commitTransaction()

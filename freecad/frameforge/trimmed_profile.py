@@ -9,16 +9,16 @@ import FreeCADGui as Gui
 import Part
 from PySide import QtCore, QtGui
 
-from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge._utils import (
-    get_readable_cutting_angles,
-    length_along_normal,
-    get_profile_from_trimmedbody,
     get_childrens_from_trimmedbody,
-    get_trimmed_profile_all_cutting_angles
+    get_profile_from_trimmedbody,
+    get_readable_cutting_angles,
+    get_trimmed_profile_all_cutting_angles,
+    length_along_normal,
 )
-
+from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.version import __version__ as ff_version
+
 
 class TrimmedProfile:
     def __init__(self, obj):
@@ -36,7 +36,6 @@ class TrimmedProfile:
             "Profile ID",
         ).PID = ""
         obj.setEditorMode("PID", 1)
-
 
         obj.addProperty(
             "App::PropertyLink", "TrimmedBody", "TrimmedProfile", translate("App::Property", "Body to be trimmed")
@@ -80,8 +79,7 @@ class TrimmedProfile:
         obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
         obj.setEditorMode("Price", 1)
 
-
-        #structure
+        # structure
         obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
         obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
         obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
@@ -230,7 +228,6 @@ class TrimmedProfile:
 
         obj.CuttingAngleA = cut_angles[0]
         obj.CuttingAngleB = cut_angles[1]
-            
 
     def run_compatibility_migrations(self, obj):
         if not hasattr(obj, "FrameforgeVersion"):
@@ -238,7 +235,6 @@ class TrimmedProfile:
             for link in obj.TrimmingBoundary:
                 link[0].Proxy.execute(link[0])
             obj.TrimmedBody.Proxy.execute(obj.TrimmedBody)
-
 
             App.Console.PrintMessage(f"Frameforge::object migration : Migrate {obj.Label} to 0.1.8\n")
 
@@ -269,8 +265,7 @@ class TrimmedProfile:
             obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
             obj.setEditorMode("Price", 1)
 
-
-            #structure
+            # structure
             obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
             obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
             obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")

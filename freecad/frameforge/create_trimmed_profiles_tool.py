@@ -63,12 +63,11 @@ class CreateTrimmedProfileTaskPanel:
     def set_trimmed_body(self):
         if len(Gui.Selection.getSelectionEx()) == 1:
             trimmed_body = Gui.Selection.getSelectionEx()[0].Object
-            
+
             subels = Gui.Selection.getSelectionEx()[0].SubElementNames
             if len(subels) != 1 or not isinstance(trimmed_body.getSubObject(subels[0]), Part.Face):
                 App.Console.PrintMessage(translate("frameforge", f"Select a Face for TrimmedBody\n"))
                 return
-
 
             App.Console.PrintMessage(translate("frameforge", f"Set Trimmed body: {trimmed_body.Name}\n"))
             self.fp.TrimmedBody = trimmed_body
@@ -85,7 +84,9 @@ class CreateTrimmedProfileTaskPanel:
         trimming_boundaries = [e for e in self.fp.TrimmingBoundary]
 
         for selObject in Gui.Selection.getSelectionEx():
-            if len(selObject.SubElementNames) != 1 or not isinstance(selObject.Object.getSubObject(selObject.SubElementNames[0]), Part.Face):
+            if len(selObject.SubElementNames) != 1 or not isinstance(
+                selObject.Object.getSubObject(selObject.SubElementNames[0]), Part.Face
+            ):
                 App.Console.PrintMessage(translate("frameforge", f"Select a Faces only\n"))
                 return
 
@@ -195,7 +196,7 @@ class TrimProfileCommand:
                     o = sel.Object
                     if not hasattr(o, "Target") and not hasattr(o, "TrimmedBody"):
                         return False
-                    
+
                     if len(sel.SubElementNames) != 1:
                         return False
                     elif not isinstance(o.getSubObject(sel.SubElementNames[0]), Part.Face):

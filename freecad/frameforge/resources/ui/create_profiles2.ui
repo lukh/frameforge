@@ -188,23 +188,80 @@
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="cb_width_centered">
-          <property name="text">
-           <string>Width Centered</string>
+         <widget class="QGroupBox" name="group_anchor">
+          <property name="title">
+           <string>Path alignment</string>
           </property>
-          <property name="checked">
-           <bool>true</bool>
+          <layout class="QGridLayout" name="grid_anchor">
+           <item row="0" column="0">
+            <widget class="QRadioButton" name="rb_anchor_0_2"/>
+           </item>
+           <item row="0" column="1">
+            <widget class="QRadioButton" name="rb_anchor_1_2"/>
+           </item>
+           <item row="0" column="2">
+            <widget class="QRadioButton" name="rb_anchor_2_2"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QRadioButton" name="rb_anchor_0_1"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QRadioButton" name="rb_anchor_1_1">
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QRadioButton" name="rb_anchor_2_1"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QRadioButton" name="rb_anchor_0_0"/>
+           </item>
+           <item row="2" column="1">
+            <widget class="QRadioButton" name="rb_anchor_1_0"/>
+           </item>
+           <item row="2" column="2">
+            <widget class="QRadioButton" name="rb_anchor_2_0"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cb_mirror_h">
+          <property name="text">
+           <string>Mirror horizontally</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="cb_height_centered">
+         <widget class="QCheckBox" name="cb_mirror_v">
           <property name="text">
-           <string>Height Centered</string>
+           <string>Mirror vertically</string>
           </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="widget_rotation" native="true">
+          <layout class="QFormLayout" name="form_rotation">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_rotation">
+             <property name="text">
+              <string>Rotation (°)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="combo_rotation">
+             <property name="editable">
+              <bool>true</bool>
+             </property>
+             <property name="currentText">
+              <string>0</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>

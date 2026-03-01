@@ -5,20 +5,16 @@ import FreeCAD as App
 import FreeCADGui as Gui
 
 from freecad.frameforge._utils import (
+    get_profiles_and_links_from_object,
     is_extrudedcutout,
     is_fusion,
     is_group,
+    is_link,
     is_part,
     is_profile,
-    is_trimmedbody, 
-    is_link,
-    get_profiles_and_links_from_object
+    is_trimmedbody,
 )
-
-
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
-
-
 
 
 def place_balloon(balloon, move_balloon=False):
@@ -33,9 +29,9 @@ def place_balloon(balloon, move_balloon=False):
     C = view.getGeometricCenter()
 
     d = P.sub(C)
-    x2d = d.dot(X) # * view.Scale
-    y2d = d.dot(Y) # * view.Scale
-    
+    x2d = d.dot(X)  # * view.Scale
+    y2d = d.dot(Y)  # * view.Scale
+
     pageX = view.X.Value + x2d
     pageY = view.Y.Value + y2d
 
@@ -48,7 +44,7 @@ def place_balloon(balloon, move_balloon=False):
 
     balloon.Text = obj.PID
 
-	
+
 def create_balloon(view, src_obj):
     doc = App.ActiveDocument
     page = None
@@ -67,14 +63,12 @@ def create_balloon(view, src_obj):
     if page is None:
         raise RuntimeError("Impossible de trouver la page contenant la vue")
 
-    balloon = doc.addObject('TechDraw::DrawViewBalloon', f"Balloon_{src_obj.Label}")
+    balloon = doc.addObject("TechDraw::DrawViewBalloon", f"Balloon_{src_obj.Label}")
     balloon.addProperty("App::PropertyString", "TargetName", "FrameForge", "Target Profile").TargetName = src_obj.Name
     balloon.SourceView = view
     page.addView(balloon)
 
     place_balloon(balloon, move_balloon=True)
-
-
 
 
 class CreateBalloonsCommand:
@@ -101,16 +95,16 @@ class CreateBalloonsCommand:
                 return False
 
             objects = [
-                    sel
-                    for sel in selection if 
-                    is_fusion(sel)
-                    or is_part(sel)
-                    or is_group(sel)
-                    or is_profile(sel)
-                    or is_trimmedbody(sel)
-                    or is_extrudedcutout(sel)
-                    or is_link(sel)
-                ]
+                sel
+                for sel in selection
+                if is_fusion(sel)
+                or is_part(sel)
+                or is_group(sel)
+                or is_profile(sel)
+                or is_trimmedbody(sel)
+                or is_extrudedcutout(sel)
+                or is_link(sel)
+            ]
 
             if len(objects) <= 0:
                 return False
@@ -124,40 +118,35 @@ class CreateBalloonsCommand:
 
         views = [s for s in selection if s.TypeId == "TechDraw::DrawProjGroupItem"]
         objects = [
-                sel
-                for sel in selection if 
-                is_fusion(sel)
-                or is_part(sel)
-                or is_group(sel)
-                or is_profile(sel)
-                or is_trimmedbody(sel)
-                or is_extrudedcutout(sel)
-                or is_link(sel)
-            ]
+            sel
+            for sel in selection
+            if is_fusion(sel)
+            or is_part(sel)
+            or is_group(sel)
+            or is_profile(sel)
+            or is_trimmedbody(sel)
+            or is_extrudedcutout(sel)
+            or is_link(sel)
+        ]
 
         if len(objects) <= 0 or len(views) != 1:
             return
 
         view = views[0]
 
-
         App.ActiveDocument.openTransaction("Create Balloons")
 
         sel_profiles, sel_links = [], []
         for s in objects:
             get_profiles_and_links_from_object(sel_profiles, sel_links, s)
-        
 
         ff_objects = sel_profiles + sel_links
 
         for o in ff_objects:
             create_balloon(view, o)
 
-
         App.ActiveDocument.commitTransaction()
         # App.ActiveDocument.recompute()
-
-
 
 
 class ResfreshBalloonsCommand:
@@ -193,10 +182,8 @@ class ResfreshBalloonsCommand:
         for b in balloons:
             place_balloon(b)
 
-
         App.ActiveDocument.commitTransaction()
         # App.ActiveDocument.recompute()
-
 
 
 Gui.addCommand("FrameForge_CreateBalloons", CreateBalloonsCommand())
