@@ -12,7 +12,7 @@ from freecad.frameforge.profile import Profile, ViewProviderProfile
 
 class CreateProfileTaskPanel:
     def __init__(self):
-        self._objects = []
+        self._objects = {}
 
         self.form = [
             Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles1.ui")),
@@ -23,7 +23,6 @@ class CreateProfileTaskPanel:
 
         self.load_data()
         self.initialize_ui()
-
 
     def load_data(self):
         self.profiles = {}
@@ -113,8 +112,8 @@ class CreateProfileTaskPanel:
         self.form_proxy.cb_mirror_h.stateChanged.connect(self.proceed)
         self.form_proxy.cb_mirror_v.stateChanged.connect(self.proceed)
         self.form_proxy.combo_rotation.currentIndexChanged.connect(self.proceed)
-        for ax in range (3):
-            for ay in range (3):
+        for ax in range(3):
+            for ay in range(3):
                 getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").clicked.connect(self.proceed)
 
         self.proceed()
@@ -270,7 +269,7 @@ class CreateProfileTaskPanel:
             self.proceed()
             self.clean()
 
-            for o in self._objects:
+            for o in self._objects.values():
                 o.ViewObject.Transparency = 0
                 o.ViewObject.ShapeColor = (0.44, 0.47, 0.5)
 
@@ -296,10 +295,7 @@ class CreateProfileTaskPanel:
 
     def proceed(self):
         print("Procceed")
-        # remove existing temp obj
-        for o in self._objects:
-            App.ActiveDocument.removeObject(o.Name)
-        self._objects = []
+        seen_profiles = []
 
         selection_list = Gui.Selection.getSelectionEx()
 
@@ -338,16 +334,53 @@ class CreateProfileTaskPanel:
                     edges = [f"Edge{idx + 1}" for idx, e in enumerate(sketch_sel.Object.Shape.Edges)]
 
                 for i, edge in enumerate(edges):
-                    o = self.make_profile(sketch_sel.Object, edge, p_name)
-                    self._objects.append(o)
+                    k = self.create_or_update_profile(sketch_sel.Object, edge, p_name)
+                    seen_profiles.append(k)
 
         else:
-            o = self.make_profile(None, None, p_name)
-            self._objects.append(o)
+            k = self.create_or_update_profile(None, None, p_name)
+            seen_profiles.append(k)
 
-        for o in self._objects:
-            o.recompute()
+        for k, o in self._objects.items():
+            if k in seen_profiles:
+                o.recompute()
 
+            else:
+                App.ActiveDocument.removeObject(o.Name)
+
+    def create_or_update_profile(self, sketch, edge, name):
+        key = (sketch, edge)
+
+        if key in self._objects:
+            self.update_profile(self._objects[key])
+
+        else:
+            o = self.make_profile(sketch, edge, name)
+            self._objects[key] = o
+
+        return key
+
+    def update_profile(self, profile):
+        profile.Proxy.set_properties(
+            profile,
+            self.form_proxy.sb_width.value(),
+            self.form_proxy.sb_height.value(),
+            self.form_proxy.sb_main_thickness.value(),
+            self.form_proxy.sb_flange_thickness.value(),
+            self.form_proxy.sb_radius1.value(),
+            self.form_proxy.sb_radius2.value(),
+            self.form_proxy.sb_length.value(),
+            self.form_proxy.sb_weight.value(),
+            self.form_proxy.sb_unitprice.value(),
+            self.form_proxy.cb_make_fillet.isChecked(),  # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
+            *self.get_anchor(),
+            self.form_proxy.combo_material.currentText(),
+            self.form_proxy.combo_family.currentText(),
+            self.form_proxy.combo_size.currentText(),
+            init_mirror_h=self.form_proxy.cb_mirror_h.isChecked(),
+            init_mirror_v=self.form_proxy.cb_mirror_v.isChecked(),
+            init_rotation=self.get_rotation(),
+        )
 
     def make_profile(self, sketch, edge, name):
         # Create an object in current document
