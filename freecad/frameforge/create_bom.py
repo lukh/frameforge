@@ -311,10 +311,26 @@ def traverse_assembly(profiles_data, links_data, obj, parent="", full_parent_pat
         profiles_data.append(p)
 
     elif is_link(obj):
-        links_data.append({"parent": parent, "label": obj.Label, "part": obj.LinkedObject.Label, "quantity": "1", "price":getattr(obj.LinkedObject, "Price", "N/A")})
+        links_data.append(
+            {
+                "parent": parent,
+                "label": obj.Label,
+                "part": obj.LinkedObject.Label,
+                "quantity": "1",
+                "price": getattr(obj.LinkedObject, "Price", "N/A"),
+            }
+        )
 
     elif is_part_or_part_design(obj):
-        links_data.append({"parent": parent, "label": obj.Label, "part": obj.Label, "quantity": "1", "price":getattr(obj, "Price", "N/A")})
+        links_data.append(
+            {
+                "parent": parent,
+                "label": obj.Label,
+                "part": obj.Label,
+                "quantity": "1",
+                "price": getattr(obj, "Price", "N/A"),
+            }
+        )
 
 
 def group_profiles(profiles_data):
