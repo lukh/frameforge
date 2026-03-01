@@ -3406,6 +3406,22 @@
                 "Radius2": "0.75",
                 "Weight": "2.00"
             },
+            "40x20x1.5": {
+                "Height": "40",
+                "Width": "20",
+                "Thickness": "1.5",
+                "Radius1": "3",
+                "Radius2": "1.5",
+                "Weight": "2.25"
+            },
+            "40x20x2": {
+                "Height": "40",
+                "Width": "20",
+                "Thickness": "2",
+                "Radius1": "3",
+                "Radius2": "1.5",
+                "Weight": "2.55"
+            },
             "50x25x2.5": {
                 "Height": "50",
                 "Width": "25",
