@@ -1263,7 +1263,7 @@ class Profile:
                     "RotationAngle",
                     "Profile",
                     "Rotation of cross-section around path axis (degrees)",
-                ).RotationAngle = obj.AttachmentOffset.Rotation.Angle
+                ).RotationAngle = math.degrees(obj.AttachmentOffset.Rotation.Angle)
                 obj.setExpression(".AttachmentOffset.Rotation.Angle", "RotationAngle")
 
             # MirrorH / MirrorV: add if missing
