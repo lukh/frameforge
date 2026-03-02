@@ -77,25 +77,6 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         return True
 
     def proceed(self):
-        self.profile.Proxy.set_properties(
-            self.profile,
-            self.form_proxy.sb_width.value(),
-            self.form_proxy.sb_height.value(),
-            self.form_proxy.sb_main_thickness.value(),
-            self.form_proxy.sb_flange_thickness.value(),
-            self.form_proxy.sb_radius1.value(),
-            self.form_proxy.sb_radius2.value(),
-            self.form_proxy.sb_length.value(),
-            self.form_proxy.sb_weight.value(),
-            self.form_proxy.sb_unitprice.value(),
-            self.form_proxy.cb_make_fillet.isChecked(),  # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
-            *self.get_anchor(),
-            self.form_proxy.combo_material.currentText(),
-            self.form_proxy.combo_family.currentText(),
-            self.form_proxy.combo_size.currentText(),
-            init_mirror_h=self.form_proxy.cb_mirror_h.isChecked(),
-            init_mirror_v=self.form_proxy.cb_mirror_v.isChecked(),
-            init_rotation=self.get_rotation(),
-        )
+        self.update_profile(self.profile)
 
         self.profile.recompute()
