@@ -17,8 +17,6 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
 
         super().__init__()
 
-        self.proceed()
-
     def initialize_ui(self):
         super().initialize_ui()
 
@@ -56,6 +54,8 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
 
     def open(self):
         App.ActiveDocument.openTransaction("Edit Profile")
+
+        self.proceed()
 
         self.profile.ViewObject.Transparency = 50
         self.profile.ViewObject.ShapeColor = (0.8, 0.2, 0.1)
