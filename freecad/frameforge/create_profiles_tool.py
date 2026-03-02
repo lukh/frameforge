@@ -271,18 +271,22 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
     def __init__(self):
         super().__init__()
 
-        self.proceed()
-
     def open(self):
         App.Console.PrintMessage(translate("frameforge", "Opening CreateProfile\n"))
         self.update_selection()
 
         App.ActiveDocument.openTransaction("Add Profile")
 
+        self.proceed()
+
     def reject(self):
         App.Console.PrintMessage(translate("frameforge", "Rejecting CreateProfile\n"))
 
         self.clean()
+
+        for o in self._objects.values():
+            App.ActiveDocument.removeObject(o.Name)
+
         App.ActiveDocument.abortTransaction()
 
         return True
@@ -384,12 +388,15 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
             k = self.create_or_update_profile(None, None, p_name)
             seen_profiles.append(k)
 
-        for k, o in self._objects.items():
+        for k in list(self._objects.keys()):
+            o = self._objects[k]
+
             if k in seen_profiles:
                 o.recompute()
 
             else:
                 App.ActiveDocument.removeObject(o.Name)
+                del self._objects[k]
 
     def create_or_update_profile(self, sketch, edge, name):
         key = (sketch, edge)
