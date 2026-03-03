@@ -265,13 +265,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="cb_reverse_attachment">
-          <property name="text">
-           <string>Reverse Attachment</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QCheckBox" name="cb_combined_bevel">
           <property name="text">
            <string>Combined Bevels</string>
