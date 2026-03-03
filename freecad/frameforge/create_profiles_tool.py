@@ -229,6 +229,15 @@ class BaseProfileTaskPanel(ABC):
         self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, material, img_name)))
 
     def update_profile(self, profile):
+        if not self.form_proxy.cb_reverse_attachment.isChecked():
+            # print("Not reverse attachment")
+            profile.MapPathParameter = 1
+            profile.MapReversed = False
+        else:
+            # print("Reverse attachment")
+            profile.MapPathParameter = 0
+            profile.MapReversed = True
+
         profile.Proxy.set_properties(
             profile,
             self.form_proxy.sb_width.value(),
@@ -440,6 +449,7 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
         if not self.form_proxy.cb_reverse_attachment.isChecked():
             # print("Not reverse attachment")
             obj.MapPathParameter = 1
+            obj.MapReversed = False
         else:
             # print("Reverse attachment")
             obj.MapPathParameter = 0
