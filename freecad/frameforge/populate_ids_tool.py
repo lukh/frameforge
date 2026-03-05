@@ -56,6 +56,7 @@ class PopulateIDsTaskPanel:
         if not param.IsEmpty():
             self.form.cb_allow_duplicated.setChecked(param.GetBool("Allow Duplicating IDs", False))
             self.form.cb_group_ids_for_identical.setChecked(param.GetBool("Group IDs", False))
+            self.form.cb_include_part_count_in_pid.setChecked(param.GetBool("Include Count", False))
             self.form.cb_reset_numbering.setChecked(param.GetBool("Reset Numbering IDs", False))
             self.form.cb_numbering_type.setCurrentIndex(param.GetInt("IDs numbering type", 0))
             self.form.cb_numbering_scheme.setCurrentIndex(param.GetInt("IDs numbering scheme", 0))
@@ -94,6 +95,7 @@ class PopulateIDsTaskPanel:
             param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
             param.SetBool("Allow Duplicating IDs", self.form.cb_allow_duplicated.isChecked())
             param.SetBool("Group IDs", self.form.cb_group_ids_for_identical.isChecked())
+            param.SetBool("Include Count", self.form.cb_include_part_count_in_pid.isChecked())
             param.SetBool("Reset Numbering IDs", self.form.cb_reset_numbering.isChecked())
             param.SetInt("IDs numbering type", self.form.cb_numbering_type.currentIndex())
             param.SetInt("IDs numbering scheme", self.form.cb_numbering_scheme.currentIndex())
@@ -133,6 +135,7 @@ class PopulateIDsTaskPanel:
             ][self.form.cb_numbering_type.currentIndex()]
             allow_duplicated = self.form.cb_allow_duplicated.isChecked()
             group_ids_for_identical = self.form.cb_group_ids_for_identical.isChecked()
+            include_part_count_in_pid = self.form.cb_include_part_count_in_pid.isChecked()
             reset_existing = self.form.cb_reset_numbering.isChecked()
             numbering_scheme = ["fill_selection", "fill_document", "continue_document", "start_at"][
                 self.form.cb_numbering_scheme.currentIndex()
@@ -146,6 +149,7 @@ class PopulateIDsTaskPanel:
                 numbering_type,
                 allow_duplicated,
                 group_ids_for_identical,
+                include_part_count_in_pid,
                 reset_existing,
                 numbering_scheme,
                 start_number=str(self.form.sp_first_number.value()),

@@ -5,7 +5,12 @@ import FreeCAD as App
 import FreeCADGui as Gui
 
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
-
+from freecad.frameforge._utils import (
+    is_extrudedcutout,
+    is_trimmedbody,
+    get_profile_from_extrudedcutout,
+    get_profile_from_trimmedbody,
+)
 
 def letters_to_int(s: str) -> int:
     """
@@ -119,6 +124,7 @@ def populate_ids(
     numbering_type,
     allow_duplicated,
     group_ids_for_identical,
+    include_part_count_in_pid,
     reset_existing,
     numbering_scheme,
     start_number="1",
@@ -206,7 +212,13 @@ def populate_ids(
 
         for _, group in profiles_grouped.items():
             pid = gen_profiles.next()
+            if include_part_count_in_pid:
+                pid += f" x{len(group)}"
             for p in group:
+                if is_trimmedbody(p):
+                    p = get_profile_from_trimmedbody(p)
+                elif is_extrudedcutout(p):
+                    p = get_profile_from_extrudedcutout(p)
                 p.PID = pid
 
 

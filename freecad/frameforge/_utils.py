@@ -136,14 +136,8 @@ def get_profiles_and_links_from_object(profiles, links, obj):
             if child.getParentGroup() in (obj, None) and child.Visibility:
                 get_profiles_and_links_from_object(profiles, links, child)
 
-    elif is_profile(obj):
+    elif is_profile(obj) or is_trimmedbody(obj) or is_extrudedcutout(obj):
         profiles.append(obj)
-
-    elif is_trimmedbody(obj):
-        profiles.append(get_profile_from_trimmedbody(obj))
-
-    elif is_extrudedcutout(obj):
-        profiles.append(get_profile_from_extrudedcutout(obj))
 
     elif is_link(obj):
         links.append(obj)
