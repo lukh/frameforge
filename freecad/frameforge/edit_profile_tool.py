@@ -62,6 +62,7 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
 
     def reject(self):
         App.ActiveDocument.abortTransaction()
+        Gui.ActiveDocument.resetEdit()
 
         return True
 
@@ -73,6 +74,7 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
 
         App.ActiveDocument.commitTransaction()
         App.ActiveDocument.recompute()
+        Gui.ActiveDocument.resetEdit()
 
         return True
 
