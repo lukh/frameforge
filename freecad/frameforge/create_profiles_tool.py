@@ -1,6 +1,7 @@
 import glob
 import json
 import os
+import re
 from abc import ABC, abstractmethod
 
 import FreeCAD as App
@@ -104,10 +105,12 @@ class BaseProfileTaskPanel(ABC):
             execute_if_has_bool("Default Centered Bevel", self.form_proxy.cb_combined_bevel.setChecked)
 
         # connect to proceed
+        self.form_proxy.combo_material.currentIndexChanged.connect(self.proceed)
+        self.form_proxy.combo_family.currentIndexChanged.connect(self.proceed)
         self.form_proxy.combo_size.currentIndexChanged.connect(self.proceed)
+
         self.form_proxy.cb_make_fillet.stateChanged.connect(self.proceed)
         self.form_proxy.cb_reverse_attachment.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_make_fillet.stateChanged.connect(self.proceed)
         self.form_proxy.cb_combined_bevel.stateChanged.connect(self.proceed)
 
         self.form_proxy.cb_mirror_h.stateChanged.connect(self.proceed)
@@ -116,6 +119,11 @@ class BaseProfileTaskPanel(ABC):
         for ax in range(3):
             for ay in range(3):
                 getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").clicked.connect(self.proceed)
+
+        self.form_proxy.cb_sketch_in_name.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_family_in_name.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_size_in_name.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_prefix_profile_in_name.stateChanged.connect(self.proceed)
 
     def get_anchor(self):
         """Return (anchor_x, anchor_y) 0=left/bottom, 1=center, 2=right/top."""
@@ -398,11 +406,27 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
                 App.ActiveDocument.removeObject(o.Name)
                 del self._objects[k]
 
+    def has_name_prefix(self, internal_name, target_str):
+        pattern = r"\d+$"
+
+        prefix_obj = re.sub(pattern, "", internal_name)
+        prefix_target = re.sub(pattern, "", target_str)
+
+        return prefix_obj == prefix_target
+
     def create_or_update_profile(self, sketch, edge, name):
         key = (sketch, edge)
 
         if key in self._objects:
-            self.update_profile(self._objects[key])
+            o = self._objects[key]
+            if self.has_name_prefix(o.Name, name):
+                self.update_profile(o)
+
+            else:
+                # handle renames
+                App.ActiveDocument.removeObject(o.Name)
+                o = self.make_profile(sketch, edge, name)
+                self._objects[key] = o
 
         else:
             o = self.make_profile(sketch, edge, name)
