@@ -17,80 +17,14 @@ from freecad.frameforge.best_fit import CutPart, Stock, best_fit_decreasing
 from freecad.frameforge.create_bom import (
     group_links,
     group_profiles,
-    make_bom,
+    make_bom, make_cut_list,
     traverse_assembly,
 )
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
 
 
-def make_cut_list(sorted_stocks, cutlist_name="CutList"):
-    doc = App.ActiveDocument
-    spreadsheet = doc.addObject("Spreadsheet::Sheet", cutlist_name)
 
-    spreadsheet.set("A1", "Material")
-    spreadsheet.set("B1", "Stock")
-    spreadsheet.set("C1", "CutPart ID")
-    spreadsheet.set("D1", "Length")
-    spreadsheet.set("E1", "CutAngle1")
-    spreadsheet.set("F1", "CutAngle2")
-    spreadsheet.set("G1", "Quantity")
-
-    row = 2
-
-    for stocks in sorted_stocks:
-        stock_idx = 0
-        for stock in sorted_stocks[stocks]:
-            cut_part_idx = 0
-            for cut_part in stock.parts:
-                prof = cut_part.obj
-                if cut_part_idx == 0:
-                    spreadsheet.set("A" + str(row), stocks + f" / used = {stock.used:.1f}, left = {stock.left:.1f}")
-
-                spreadsheet.set("B" + str(row), str(stock_idx))
-                spreadsheet.set("C" + str(row), prof["ID"])
-                spreadsheet.set("D" + str(row), str(prof["length"]))
-                spreadsheet.set("E" + str(row), "'" + str(prof["cut_angle_1"]))
-                spreadsheet.set("F" + str(row), "'" + str(prof["cut_angle_2"]))
-                spreadsheet.set("G" + str(row), str(prof["quantity"]))
-
-                row += 1
-                cut_part_idx += 1
-
-            stock_idx += 1
-
-        row += 1
-
-    row += 1
-    spreadsheet.set("A" + str(row), "Stock statistics")
-    spreadsheet.set("B" + str(row), "Length Used")
-    spreadsheet.set("C" + str(row), "Stock Used")
-    spreadsheet.set("D" + str(row), "Stock Count")
-    row += 1
-    for stocks in sorted_stocks:
-        spreadsheet.set("A" + str(row), stocks)
-        spreadsheet.set("B" + str(row), f"{sum([s.used for s in sorted_stocks[stocks]])}")
-        spreadsheet.set("C" + str(row), f"{sum([s.length for s in sorted_stocks[stocks]])}")
-        spreadsheet.set("D" + str(row), f"{len(sorted_stocks[stocks])}")
-
-        row += 1
-
-    row += 1
-    spreadsheet.set("A" + str(row), "Legend")
-    spreadsheet.set("A" + str(row + 1), "*")
-    spreadsheet.set("B" + str(row + 1), "Angles 1 and 2 are rotated 90° along the edge")
-    spreadsheet.set("A" + str(row + 2), "-")
-    spreadsheet.set(
-        "B" + str(row + 2),
-        "Angles 1 and 2 are cut in the same direction (no need to rotate the stock 180° when cutting)",
-    )
-    spreadsheet.set("A" + str(row + 3), "~")
-    spreadsheet.set(
-        "B" + str(row + 3),
-        "Angle is calculated from a TrimmedProfile -> be careful to check length, angles and cut direction",
-    )
-    spreadsheet.set("A" + str(row + 4), "?")
-    spreadsheet.set("B" + str(row + 4), "Can't compute the angle, do it yourself !")
 
 
 class CreateBOMTaskPanel:
