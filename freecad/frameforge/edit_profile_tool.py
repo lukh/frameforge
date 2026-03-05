@@ -22,6 +22,10 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
 
         self.form_proxy.groupBox_5.setEnabled(False)
 
+        # Block signals during initialization to prevent unintended side effects
+        self.form_proxy.cb_mirror_h.blockSignals(True)
+        self.form_proxy.cb_mirror_v.blockSignals(True)
+
         self.form_proxy.sb_width.setValue(self.profile.ProfileWidth)
         self.form_proxy.sb_height.setValue(self.profile.ProfileHeight)
         self.form_proxy.sb_main_thickness.setValue(self.profile.Thickness)
@@ -49,6 +53,10 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         self.form_proxy.combo_material.setCurrentText(self.profile.Material)
         self.form_proxy.combo_family.setCurrentText(self.profile.Family)
         self.form_proxy.combo_size.setCurrentText(self.profile.SizeName)
+
+        # Unblock signals after initialization
+        self.form_proxy.cb_mirror_h.blockSignals(False)
+        self.form_proxy.cb_mirror_v.blockSignals(False)
 
         # self.form_proxy.cb_combined_bevel.setChecked()
 
