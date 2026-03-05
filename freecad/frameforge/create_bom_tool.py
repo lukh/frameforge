@@ -57,6 +57,21 @@ class CreateBOMTaskPanel:
     def accept(self):
         sel = Gui.Selection.getSelection()
 
+        bom_spreadsheet = None
+        cutlist_spreadsheet = None
+
+        if len(sel) >= 2:
+            if sel[0].TypeId == "Spreadsheet::Sheet":
+                # TODO : WarningBox
+                bom_spreadsheet = sel[0]
+
+            if sel[1].TypeId == "Spreadsheet::Sheet":
+                # TODO : WarningBox
+                cutlist_spreadsheet = sel[1]
+
+            sel = [s for s in sel if s.TypeId != "Spreadsheet::Sheet"]
+
+
         if all(
             [
                 (
@@ -103,7 +118,7 @@ class CreateBOMTaskPanel:
                 links_data = []
 
             # BOM
-            make_bom(bom_data, links_data, bom_name=bom_name)
+            make_bom(bom_data, links_data, bom_name=bom_name, spreadsheet=bom_spreadsheet)
 
             # Cut List
             if self.form.cut_list_cb.isChecked():
@@ -120,7 +135,7 @@ class CreateBOMTaskPanel:
                         self.form.stock_length_sb.value(), parts
                     )
 
-                make_cut_list(sorted_stocks, bom_name + "_CutList")
+                make_cut_list(sorted_stocks, cutlist_name=bom_name + "_CutList", spreadsheet=cutlist_spreadsheet)
 
             App.ActiveDocument.commitTransaction()
             App.ActiveDocument.recompute()
@@ -145,7 +160,7 @@ class CreateBOMCommand:
                 "MetalWB",
                 "<html><head/><body><p><b>Create Spreadsheet with profiles</b> \
                     <br><br> \
-                    select fusions or profiles \
+                    select fusions or profiles. First select existing BOM and cutlist to update existing spreadsheet \
                     </p></body></html>",
             ),
         }
@@ -162,6 +177,7 @@ class CreateBOMCommand:
                         or is_trimmedbody(sel)
                         or is_extrudedcutout(sel)
                         or is_link(sel)
+                        or sel.TypeId == "Spreadsheet::Sheet"
                         for sel in Gui.Selection.getSelection()
                     ]
                 )

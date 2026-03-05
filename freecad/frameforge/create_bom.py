@@ -163,9 +163,11 @@ def group_links(links_data):
     return out_list
 
 
-def make_bom(profiles_data, links_data, bom_name="BOM"):
+def make_bom(profiles_data, links_data, bom_name="BOM", spreadsheet=None):
     doc = FreeCAD.ActiveDocument
-    spreadsheet = doc.addObject("Spreadsheet::Sheet", bom_name)
+    
+    if spreadsheet is None:
+        spreadsheet = doc.addObject("Spreadsheet::Sheet", bom_name)
 
     spreadsheet.set("A1", "Profiles")
 
