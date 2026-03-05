@@ -123,7 +123,7 @@ def group_profiles(profiles_data):
         d = {}
 
         d["parent"] = g["parent"]
-        d["ID"] = ", ".join([g["ID"] for g in group])
+        d["ID"] = ", ".join(set([g["ID"] for g in group]))
         d["label"] = ", ".join([g["label"] for g in group])
         d["family"] = g["family"]
         d["size_name"] = g["size_name"]
@@ -152,7 +152,7 @@ def group_links(links_data):
     for k, group in links_data_grouped.items():
         ol = {}
         ol["parent"] = k[0]
-        ol["ID"] = ", ".join([g.get("ID", "") for g in group])
+        ol["ID"] = ", ".join(set([g.get("ID", "") for g in group]))
         ol["label"] = ", ".join([g["label"] for g in group])
         ol["part"] = k[1]
         ol["price"] = k[2]

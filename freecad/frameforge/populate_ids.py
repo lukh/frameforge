@@ -118,6 +118,7 @@ def populate_ids(
     doc_links,
     numbering_type,
     allow_duplicated,
+    group_ids_for_identical,
     reset_existing,
     numbering_scheme,
     start_number="1",
@@ -177,7 +178,48 @@ def populate_ids(
     else:
         raise ValueError("Wrong numbering_type")
 
-    for sp in sel_profiles:
-        sp.PID = gen_profiles.next()
-    for sl in sel_links:
-        sl.PID = gen_links.next()
+
+    # group profiles / links if needed
+    if group_ids_for_identical:
+        group_profiles_key_func = lambda obj: (
+            # obj.Parent, # ???
+            obj.Family,
+            round(float(obj.Length.Value), 1),
+            obj.Material,
+            obj.SizeName,
+            # round(float(x["price"]), 1), # TODO: Workaround for Lenght problem
+            obj.CuttingAngleA,
+            obj.CuttingAngleB,
+            obj.Cutout,
+        )
+        group_links_key_func = lambda obj: (
+            # obj.Parent, # ???
+            obj.LinkedObject.Label,
+            getattr(obj.LinkedObject, "Price", "N/A")
+        )
+
+        profiles_grouped = defaultdict(list)
+        links_grouped = defaultdict(list)
+        
+        for sp in sel_profiles:
+            profiles_grouped[group_profiles_key_func(sp)].append(sp)
+
+        for _, group in profiles_grouped.items():
+            pid = gen_profiles.next()
+            for p in group:
+                p.PID = pid
+
+
+        for sl in sel_links:
+            links_grouped[group_links_key_func(sl)].append(sl)
+
+        for _, group in links_grouped.items():
+            pid = gen_links.next()
+            for l in group:
+                l.PID = pid
+
+    else:
+        for sp in sel_profiles:
+            sp.PID = gen_profiles.next()
+        for sl in sel_links:
+            sl.PID = gen_links.next()
