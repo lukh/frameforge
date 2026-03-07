@@ -1276,6 +1276,12 @@ class Profile:
                     "App::PropertyBool", "MirrorV", "Profile", "Mirror cross-section vertically (flip Y)"
                 ).MirrorV = False
 
+            if obj.MapReversed:
+                # MirrorH/MirrorV are more flexible than "Reverse attachment"
+                obj.MirrorH = not obj.MirrorH
+                obj.MapReversed = False
+                obj.MapPathParameter = 1.0 - obj.MapPathParameter
+
             # add version
             obj.addProperty(
                 "App::PropertyString",
@@ -1459,13 +1465,8 @@ class ViewProviderProfile:
             return
 
         edge = obj.Target[0].getSubObject(obj.Target[1][0])
-        # backward compatibility
-        if obj.MapReversed:
-            p1 = edge.Vertexes[0].Point
-            p2 = edge.Vertexes[1].Point
-        else:
-            p1 = edge.Vertexes[1].Point
-            p2 = edge.Vertexes[0].Point
+        p1 = edge.Vertexes[1].Point
+        p2 = edge.Vertexes[0].Point
 
         # Local coordinates
         inv = obj.Placement.inverse()
