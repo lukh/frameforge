@@ -165,7 +165,7 @@ def group_links(links_data):
 
 def make_bom(profiles_data, links_data, bom_name="BOM", spreadsheet=None):
     doc = FreeCAD.ActiveDocument
-    
+
     if spreadsheet is None:
         spreadsheet = doc.addObject("Spreadsheet::Sheet", bom_name)
 
@@ -242,7 +242,6 @@ def make_bom(profiles_data, links_data, bom_name="BOM", spreadsheet=None):
     )
     spreadsheet.set("A" + str(row + 4), "P")
     spreadsheet.set("B" + str(row + 4), "Perfect Cut, you have to notch it !")
-
 
 
 def make_cut_list(sorted_stocks, cutlist_name="CutList", spreadsheet=None):

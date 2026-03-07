@@ -185,7 +185,6 @@ def populate_ids(
     else:
         raise ValueError("Wrong numbering_type")
 
-
     # group profiles / links if needed
     if group_ids_for_identical:
         group_profiles_key_func = lambda obj: (
@@ -202,12 +201,12 @@ def populate_ids(
         group_links_key_func = lambda obj: (
             # obj.Parent, # ???
             obj.LinkedObject.Label,
-            getattr(obj.LinkedObject, "Price", "N/A")
+            getattr(obj.LinkedObject, "Price", "N/A"),
         )
 
         profiles_grouped = defaultdict(list)
         links_grouped = defaultdict(list)
-        
+
         for sp in sel_profiles:
             profiles_grouped[group_profiles_key_func(sp)].append(sp)
 
@@ -221,7 +220,6 @@ def populate_ids(
                 elif is_extrudedcutout(p):
                     p = get_profile_from_extrudedcutout(p)
                 p.PID = pid
-
 
         for sl in sel_links:
             links_grouped[group_links_key_func(sl)].append(sl)
