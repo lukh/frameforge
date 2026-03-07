@@ -200,10 +200,7 @@ class FrameForge(Gui.Workbench):
         "FrameForge_CreateBOM",
     ]
 
-    toolbox_utilities = [
-        "FrameForge_RecomputeFrameForgeObjects",
-        "FrameForge_ExportTechDraw"
-    ]
+    toolbox_utilities = ["FrameForge_RecomputeFrameForgeObjects", "FrameForge_ExportTechDraw"]
 
     def GetClassName(self):
         return "Gui::PythonWorkbench"
@@ -225,7 +222,7 @@ class FrameForge(Gui.Workbench):
             edit_profile_tool,
             parametric_line,
             populate_ids_tool,
-            utilities
+            utilities,
         )
         from freecad.frameforge.ff_tools import translate
 
