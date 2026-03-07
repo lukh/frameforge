@@ -69,7 +69,6 @@ class CreateBOMTaskPanel:
 
             sel = [s for s in sel if s.TypeId != "Spreadsheet::Sheet"]
 
-
         if all(
             [
                 (
