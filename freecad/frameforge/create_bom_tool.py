@@ -17,14 +17,12 @@ from freecad.frameforge.best_fit import CutPart, Stock, best_fit_decreasing
 from freecad.frameforge.create_bom import (
     group_links,
     group_profiles,
-    make_bom, make_cut_list,
+    make_bom,
+    make_cut_list,
     traverse_assembly,
 )
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
-
-
-
 
 
 class CreateBOMTaskPanel:

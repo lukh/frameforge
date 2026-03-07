@@ -4,13 +4,14 @@ from collections import defaultdict
 import FreeCAD as App
 import FreeCADGui as Gui
 
-from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge._utils import (
-    is_extrudedcutout,
-    is_trimmedbody,
     get_profile_from_extrudedcutout,
     get_profile_from_trimmedbody,
+    is_extrudedcutout,
+    is_trimmedbody,
 )
+from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
+
 
 def letters_to_int(s: str) -> int:
     """
