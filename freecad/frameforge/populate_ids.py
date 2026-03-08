@@ -226,6 +226,8 @@ def populate_ids(
 
         for _, group in links_grouped.items():
             pid = gen_links.next()
+            if include_part_count_in_pid:
+                pid += f" x{len(group)}"
             for l in group:
                 l.PID = pid
 
