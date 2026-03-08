@@ -6,6 +6,7 @@ __license__ = "LGPL 2.1"
 __doc__ = "Curves workbench utilities common to all tools."
 
 import math
+from numbers import Number
 
 import FreeCAD
 import Part
@@ -271,7 +272,7 @@ def get_trimmed_profile_all_cutting_angles(trimmed_profile):
         parent_profile = trimmed_profile.TrimmedBody
         angles.extend(get_trimmed_profile_all_cutting_angles(parent_profile))
 
-    return angles
+    return sorted(angles, key=lambda x: (x is not None, '' if isinstance(x, Number) else type(x).__name__, x))
 
 
 def normalize_anchor(val):
