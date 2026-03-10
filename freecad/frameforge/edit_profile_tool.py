@@ -22,6 +22,25 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
 
         self.form_proxy.groupBox_5.setEnabled(False)
 
+        # Block signals during initialization to prevent unintended side effects
+        self.form_proxy.sb_width.blockSignals(True)
+        self.form_proxy.sb_height.blockSignals(True)
+        self.form_proxy.sb_main_thickness.blockSignals(True)
+        self.form_proxy.sb_flange_thickness.blockSignals(True)
+        self.form_proxy.sb_radius1.blockSignals(True)
+        self.form_proxy.sb_radius2.blockSignals(True)
+        self.form_proxy.sb_length.blockSignals(True)
+        self.form_proxy.cb_mirror_h.blockSignals(True)
+        self.form_proxy.cb_mirror_v.blockSignals(True)
+        self.form_proxy.combo_rotation.blockSignals(True)
+        for ax in range(3):
+            for ay in range(3):
+                getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").blockSignals(True)
+
+        self.form_proxy.combo_material.setCurrentText(self.profile.Material)
+        self.form_proxy.combo_family.setCurrentText(self.profile.Family)
+        self.form_proxy.combo_size.setCurrentText(self.profile.SizeName)
+
         self.form_proxy.sb_width.setValue(self.profile.ProfileWidth)
         self.form_proxy.sb_height.setValue(self.profile.ProfileHeight)
         self.form_proxy.sb_main_thickness.setValue(self.profile.Thickness)
@@ -46,11 +65,22 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         self.form_proxy.cb_mirror_h.setChecked(getattr(self.profile, "MirrorH", False))
         self.form_proxy.cb_mirror_v.setChecked(getattr(self.profile, "MirrorV", False))
 
-        self.form_proxy.combo_material.setCurrentText(self.profile.Material)
-        self.form_proxy.combo_family.setCurrentText(self.profile.Family)
-        self.form_proxy.combo_size.setCurrentText(self.profile.SizeName)
-
         # self.form_proxy.cb_combined_bevel.setChecked()
+
+        # Unblock signals after initialization
+        self.form_proxy.sb_width.blockSignals(False)
+        self.form_proxy.sb_height.blockSignals(False)
+        self.form_proxy.sb_main_thickness.blockSignals(False)
+        self.form_proxy.sb_flange_thickness.blockSignals(False)
+        self.form_proxy.sb_radius1.blockSignals(False)
+        self.form_proxy.sb_radius2.blockSignals(False)
+        self.form_proxy.sb_length.blockSignals(False)
+        self.form_proxy.cb_mirror_h.blockSignals(False)
+        self.form_proxy.cb_mirror_v.blockSignals(False)
+        self.form_proxy.combo_rotation.blockSignals(False)
+        for ax in range(3):
+            for ay in range(3):
+                getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").blockSignals(False)
 
     def open(self):
         App.ActiveDocument.openTransaction("Edit Profile")

@@ -117,6 +117,19 @@ class BaseProfileTaskPanel(ABC):
             for ay in range(3):
                 getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").clicked.connect(self.proceed)
 
+        self.form_proxy.sb_width.textChanged.connect(self.proceed)
+        self.form_proxy.sb_height.textChanged.connect(self.proceed)
+        self.form_proxy.sb_main_thickness.textChanged.connect(self.proceed)
+        self.form_proxy.sb_flange_thickness.textChanged.connect(self.proceed)
+        self.form_proxy.sb_radius1.textChanged.connect(self.proceed)
+        self.form_proxy.sb_radius2.textChanged.connect(self.proceed)
+        self.form_proxy.sb_length.textChanged.connect(self.proceed)
+
+        self.form_proxy.cb_sketch_in_name.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_family_in_name.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_size_in_name.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_prefix_profile_in_name.stateChanged.connect(self.proceed)
+
     def get_anchor(self):
         """Return (anchor_x, anchor_y) 0=left/bottom, 1=center, 2=right/top."""
         for ax in range(3):
