@@ -85,7 +85,6 @@ class BaseProfileTaskPanel(ABC):
             execute_if_has_bool("Default Family in Name", self.form_proxy.cb_family_in_name.setChecked)
             execute_if_has_bool("Default Size in Name", self.form_proxy.cb_size_in_name.setChecked)
             execute_if_has_bool("Default Prefix Profile in Name", self.form_proxy.cb_prefix_profile_in_name.setChecked)
-            execute_if_has_bool("Default Reverse Attachement", self.form_proxy.cb_reverse_attachment.setChecked)
             execute_if_has_bool("Default Make Fillet", self.form_proxy.cb_make_fillet.setChecked)
             execute_if_has_bool("Default Mirror Horizontally", self.form_proxy.cb_mirror_h.setChecked)
             execute_if_has_bool("Default Mirror Vertically", self.form_proxy.cb_mirror_v.setChecked)
@@ -112,7 +111,6 @@ class BaseProfileTaskPanel(ABC):
         self.form_proxy.combo_size.currentIndexChanged.connect(self.proceed)
 
         self.form_proxy.cb_make_fillet.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_reverse_attachment.stateChanged.connect(self.proceed)
         self.form_proxy.cb_combined_bevel.stateChanged.connect(self.proceed)
 
         self.form_proxy.cb_mirror_h.stateChanged.connect(self.proceed)
@@ -315,8 +313,6 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
             param.SetBool("Default Size in Name", self.form_proxy.cb_size_in_name.isChecked())
             param.SetBool("Default Prefix Profile in Name", self.form_proxy.cb_prefix_profile_in_name.isChecked())
 
-            param.SetBool("Default Reverse Attachement", self.form_proxy.cb_reverse_attachment.isChecked())
-
             param.SetBool("Default Make Fillet", self.form_proxy.cb_make_fillet.isChecked())
             param.SetBool("Default Mirror Horizontally", self.form_proxy.cb_mirror_h.isChecked())
             param.SetBool("Default Mirror Vertically", self.form_proxy.cb_mirror_v.isChecked())
@@ -325,6 +321,8 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
             param.SetInt("Default AnchorY", ay)
             param.SetString("Default RotationAngle", self.form_proxy.combo_rotation.currentText())
             param.SetBool("Default Centered Bevel", self.form_proxy.cb_combined_bevel.isChecked())
+
+            param.RemBool("Default Reverse Attachement")
 
             self.proceed()
             self.clean()
@@ -465,13 +463,7 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
         else:
             link_sub = None
 
-        if not self.form_proxy.cb_reverse_attachment.isChecked():
-            # print("Not reverse attachment")
-            obj.MapPathParameter = 1
-        else:
-            # print("Reverse attachment")
-            obj.MapPathParameter = 0
-            obj.MapReversed = True
+        obj.MapPathParameter = 1
 
         Profile(
             obj,
