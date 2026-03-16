@@ -4,6 +4,12 @@ from collections import defaultdict
 import FreeCAD as App
 import FreeCADGui as Gui
 
+from freecad.frameforge._utils import (
+    get_profile_from_extrudedcutout,
+    get_profile_from_trimmedbody,
+    is_extrudedcutout,
+    is_trimmedbody,
+)
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 
 
@@ -118,6 +124,8 @@ def populate_ids(
     doc_links,
     numbering_type,
     allow_duplicated,
+    group_ids_for_identical,
+    include_part_count_in_pid,
     reset_existing,
     numbering_scheme,
     start_number="1",
@@ -177,7 +185,54 @@ def populate_ids(
     else:
         raise ValueError("Wrong numbering_type")
 
-    for sp in sel_profiles:
-        sp.PID = gen_profiles.next()
-    for sl in sel_links:
-        sl.PID = gen_links.next()
+    # group profiles / links if needed
+    if group_ids_for_identical:
+        group_profiles_key_func = lambda obj: (
+            # obj.Parent, # ???
+            obj.Family,
+            round(float(obj.Length.Value), 1),
+            obj.Material,
+            obj.SizeName,
+            # round(float(x["price"]), 1), # TODO: Workaround for Lenght problem
+            obj.CuttingAngleA,
+            obj.CuttingAngleB,
+            obj.Cutout,
+        )
+        group_links_key_func = lambda obj: (
+            # obj.Parent, # ???
+            obj.LinkedObject.Label,
+            getattr(obj.LinkedObject, "Price", "N/A"),
+        )
+
+        profiles_grouped = defaultdict(list)
+        links_grouped = defaultdict(list)
+
+        for sp in sel_profiles:
+            profiles_grouped[group_profiles_key_func(sp)].append(sp)
+
+        for _, group in profiles_grouped.items():
+            pid = gen_profiles.next()
+            if include_part_count_in_pid:
+                pid += f" x{len(group)}"
+            for p in group:
+                if is_trimmedbody(p):
+                    p = get_profile_from_trimmedbody(p)
+                elif is_extrudedcutout(p):
+                    p = get_profile_from_extrudedcutout(p)
+                p.PID = pid
+
+        for sl in sel_links:
+            links_grouped[group_links_key_func(sl)].append(sl)
+
+        for _, group in links_grouped.items():
+            pid = gen_links.next()
+            if include_part_count_in_pid:
+                pid += f" x{len(group)}"
+            for l in group:
+                l.PID = pid
+
+    else:
+        for sp in sel_profiles:
+            sp.PID = gen_profiles.next()
+        for sl in sel_links:
+            sl.PID = gen_links.next()

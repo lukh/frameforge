@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>354</width>
-    <height>509</height>
+    <height>516</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -49,6 +49,23 @@
     <widget class="QCheckBox" name="cb_allow_duplicated">
      <property name="text">
       <string>Allow duplicated</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="cb_group_ids_for_identical">
+     <property name="toolTip">
+      <string>All identical profiles will share the same ID</string>
+     </property>
+     <property name="text">
+      <string>Group profiles ID if identical</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="cb_include_part_count_in_pid">
+     <property name="text">
+      <string>Include Part count in PID</string>
      </property>
     </widget>
    </item>
@@ -174,5 +191,22 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>cb_group_ids_for_identical</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>cb_include_part_count_in_pid</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>176</x>
+     <y>105</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>134</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
