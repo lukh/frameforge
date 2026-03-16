@@ -68,6 +68,7 @@ set(Namespace_SRCS
         freecad/frameforge/init_gui.py
         freecad/frameforge/create_profiles_tool.py
         freecad/frameforge/create_custom_profiles_tool.py
+        freecad/frameforge/utilities.py
 )
 
 SOURCE_GROUP("" FILES ${Namespace_SRCS})
