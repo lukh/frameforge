@@ -272,7 +272,7 @@ def get_trimmed_profile_all_cutting_angles(trimmed_profile):
         parent_profile = trimmed_profile.TrimmedBody
         angles.extend(get_trimmed_profile_all_cutting_angles(parent_profile))
 
-    return sorted(angles, key=lambda x: (x is not None, '' if isinstance(x, Number) else type(x).__name__, x))
+    return sorted(angles, key=lambda x: (x is not None, "" if isinstance(x, Number) else type(x).__name__, x))
 
 
 def normalize_anchor(val):
