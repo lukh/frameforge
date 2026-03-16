@@ -18,79 +18,11 @@ from freecad.frameforge.create_bom import (
     group_links,
     group_profiles,
     make_bom,
+    make_cut_list,
     traverse_assembly,
 )
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
-
-
-def make_cut_list(sorted_stocks, cutlist_name="CutList"):
-    doc = App.ActiveDocument
-    spreadsheet = doc.addObject("Spreadsheet::Sheet", cutlist_name)
-
-    spreadsheet.set("A1", "Material")
-    spreadsheet.set("B1", "Stock")
-    spreadsheet.set("C1", "CutPart ID")
-    spreadsheet.set("D1", "Length")
-    spreadsheet.set("E1", "CutAngle1")
-    spreadsheet.set("F1", "CutAngle2")
-    spreadsheet.set("G1", "Quantity")
-
-    row = 2
-
-    for stocks in sorted_stocks:
-        stock_idx = 0
-        for stock in sorted_stocks[stocks]:
-            cut_part_idx = 0
-            for cut_part in stock.parts:
-                prof = cut_part.obj
-                if cut_part_idx == 0:
-                    spreadsheet.set("A" + str(row), stocks + f" / used = {stock.used:.1f}, left = {stock.left:.1f}")
-
-                spreadsheet.set("B" + str(row), str(stock_idx))
-                spreadsheet.set("C" + str(row), prof["ID"])
-                spreadsheet.set("D" + str(row), str(prof["length"]))
-                spreadsheet.set("E" + str(row), "'" + str(prof["cut_angle_1"]))
-                spreadsheet.set("F" + str(row), "'" + str(prof["cut_angle_2"]))
-                spreadsheet.set("G" + str(row), str(prof["quantity"]))
-
-                row += 1
-                cut_part_idx += 1
-
-            stock_idx += 1
-
-        row += 1
-
-    row += 1
-    spreadsheet.set("A" + str(row), "Stock statistics")
-    spreadsheet.set("B" + str(row), "Length Used")
-    spreadsheet.set("C" + str(row), "Stock Used")
-    spreadsheet.set("D" + str(row), "Stock Count")
-    row += 1
-    for stocks in sorted_stocks:
-        spreadsheet.set("A" + str(row), stocks)
-        spreadsheet.set("B" + str(row), f"{sum([s.used for s in sorted_stocks[stocks]])}")
-        spreadsheet.set("C" + str(row), f"{sum([s.length for s in sorted_stocks[stocks]])}")
-        spreadsheet.set("D" + str(row), f"{len(sorted_stocks[stocks])}")
-
-        row += 1
-
-    row += 1
-    spreadsheet.set("A" + str(row), "Legend")
-    spreadsheet.set("A" + str(row + 1), "*")
-    spreadsheet.set("B" + str(row + 1), "Angles 1 and 2 are rotated 90° along the edge")
-    spreadsheet.set("A" + str(row + 2), "-")
-    spreadsheet.set(
-        "B" + str(row + 2),
-        "Angles 1 and 2 are cut in the same direction (no need to rotate the stock 180° when cutting)",
-    )
-    spreadsheet.set("A" + str(row + 3), "~")
-    spreadsheet.set(
-        "B" + str(row + 3),
-        "Angle is calculated from a TrimmedProfile -> be careful to check length, angles and cut direction",
-    )
-    spreadsheet.set("A" + str(row + 4), "?")
-    spreadsheet.set("B" + str(row + 4), "Can't compute the angle, do it yourself !")
 
 
 class CreateBOMTaskPanel:
@@ -122,6 +54,20 @@ class CreateBOMTaskPanel:
 
     def accept(self):
         sel = Gui.Selection.getSelection()
+
+        bom_spreadsheet = None
+        cutlist_spreadsheet = None
+
+        if len(sel) >= 2:
+            if sel[0].TypeId == "Spreadsheet::Sheet":
+                # TODO : WarningBox
+                bom_spreadsheet = sel[0]
+
+            if sel[1].TypeId == "Spreadsheet::Sheet":
+                # TODO : WarningBox
+                cutlist_spreadsheet = sel[1]
+
+            sel = [s for s in sel if s.TypeId != "Spreadsheet::Sheet"]
 
         if all(
             [
@@ -169,7 +115,7 @@ class CreateBOMTaskPanel:
                 links_data = []
 
             # BOM
-            make_bom(bom_data, links_data, bom_name=bom_name)
+            make_bom(bom_data, links_data, bom_name=bom_name, spreadsheet=bom_spreadsheet)
 
             # Cut List
             if self.form.cut_list_cb.isChecked():
@@ -186,7 +132,7 @@ class CreateBOMTaskPanel:
                         self.form.stock_length_sb.value(), parts
                     )
 
-                make_cut_list(sorted_stocks, bom_name + "_CutList")
+                make_cut_list(sorted_stocks, cutlist_name=bom_name + "_CutList", spreadsheet=cutlist_spreadsheet)
 
             App.ActiveDocument.commitTransaction()
             App.ActiveDocument.recompute()
@@ -211,7 +157,7 @@ class CreateBOMCommand:
                 "MetalWB",
                 "<html><head/><body><p><b>Create Spreadsheet with profiles</b> \
                     <br><br> \
-                    select fusions or profiles \
+                    select fusions or profiles. First select existing BOM and cutlist to update existing spreadsheet \
                     </p></body></html>",
             ),
         }
@@ -228,6 +174,7 @@ class CreateBOMCommand:
                         or is_trimmedbody(sel)
                         or is_extrudedcutout(sel)
                         or is_link(sel)
+                        or sel.TypeId == "Spreadsheet::Sheet"
                         for sel in Gui.Selection.getSelection()
                     ]
                 )
