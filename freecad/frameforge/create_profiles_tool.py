@@ -87,6 +87,8 @@ class BaseProfileTaskPanel(ABC):
             execute_if_has_bool("Default Prefix Profile in Name", self.form_proxy.cb_prefix_profile_in_name.setChecked)
             execute_if_has_bool("Default Reverse Attachement", self.form_proxy.cb_reverse_attachment.setChecked)
             execute_if_has_bool("Default Make Fillet", self.form_proxy.cb_make_fillet.setChecked)
+            execute_if_has_bool("Default Mirror Horizontally", self.form_proxy.cb_mirror_h.setChecked)
+            execute_if_has_bool("Default Mirror Vertically", self.form_proxy.cb_mirror_v.setChecked)
             keys = [k for t, k, v in param.GetContents()]
             if "Default AnchorX" in keys:
                 ax = max(0, min(2, param.GetInt("Default AnchorX", 1)))
@@ -316,6 +318,8 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
             param.SetBool("Default Reverse Attachement", self.form_proxy.cb_reverse_attachment.isChecked())
 
             param.SetBool("Default Make Fillet", self.form_proxy.cb_make_fillet.isChecked())
+            param.SetBool("Default Mirror Horizontally", self.form_proxy.cb_mirror_h.isChecked())
+            param.SetBool("Default Mirror Vertically", self.form_proxy.cb_mirror_v.isChecked())
             ax, ay = self.get_anchor()
             param.SetInt("Default AnchorX", ax)
             param.SetInt("Default AnchorY", ay)
