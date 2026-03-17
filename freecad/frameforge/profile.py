@@ -1300,13 +1300,14 @@ class Profile:
 
 
 class ViewProviderProfile:
-    def __init__(self, obj):
+    def __init__(self, vobj):
         """Set this object to the proxy object of the actual view provider"""
-        obj.Proxy = self
+        vobj.Proxy = self
 
     def _ensureHelpers(self):
         if hasattr(self, "helpersSwitch") and self.helpersSwitch:
-            return
+            self.ViewObject.RootNode.removeChild(self.helpersSwitch)
+            self.helpersSwitch = None
 
         self.helpersSwitch = coin.SoSwitch()
         self.helpersSwitch.whichChild = coin.SO_SWITCH_NONE
@@ -1389,26 +1390,24 @@ class ViewProviderProfile:
 
         self.ViewObject.RootNode.addChild(self.helpersSwitch)
 
-        Gui.Selection.addObserver(self)
 
     def attach(self, vobj):
         self.ViewObject = vobj
         self.Object = vobj.Object
-
-        if hasattr(self, "helpersSwitch"):
-            self.ViewObject.RootNode.removeChild(self.helpersSwitch)
-            self.helpersSwitch = None
+        self.ObjectName = vobj.Object.Name
 
         self._ensureHelpers()
+
+        Gui.Selection.addObserver(self)
 
         self._updatePoints()
 
     def addSelection(self, doc, obj, sub, pnt):
         try:
-            if obj == self.Object.Name:
+            if obj == self.ObjectName:
                 self.helpersSwitch.whichChild = coin.SO_SWITCH_ALL
         except Exception as e:
-            App.Console.PrintMessage(f"{e}\n")
+            App.Console.PrintMessage(f"ERROR addSelection {e} / {obj}\n")
 
     def clearSelection(self, other):
         self.helpersSwitch.whichChild = coin.SO_SWITCH_NONE
@@ -1558,7 +1557,7 @@ class ViewProviderProfile:
         # App.Console.PrintMessage("Change {} property: {}\n".format(str(vp), str(prop)))
         pass
 
-    def onDelete(self, fp, sub):
+    def onDelete(self, vobj, subelements):
         Gui.Selection.removeObserver(self)
         self.ViewObject.RootNode.removeChild(self.helpersSwitch)
 
