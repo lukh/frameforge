@@ -1390,7 +1390,6 @@ class ViewProviderProfile:
 
         self.ViewObject.RootNode.addChild(self.helpersSwitch)
 
-
     def attach(self, vobj):
         self.ViewObject = vobj
         self.Object = vobj.Object

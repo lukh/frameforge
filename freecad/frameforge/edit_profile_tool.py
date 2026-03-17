@@ -55,7 +55,6 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         # self.form_proxy.cb_combined_bevel.setChecked()
 
         self.enable_signals(True)
-        
 
     def open(self):
         App.ActiveDocument.openTransaction("Edit Profile")

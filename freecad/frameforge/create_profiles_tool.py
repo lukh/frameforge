@@ -53,8 +53,6 @@ class BaseProfileTaskPanel(ABC):
             for ay in range(3):
                 getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").blockSignals(not enable)
 
-
-
     def initialize_ui(self):
         def execute_if_has_bool(key, func):
             if key in [k for t, k, v in param.GetContents()]:
@@ -70,12 +68,10 @@ class BaseProfileTaskPanel(ABC):
 
         self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, "Warehouse.png")))
 
-
         # sig/slot
         self.form_proxy.combo_material.currentIndexChanged.connect(self.on_material_changed)
         self.form_proxy.combo_family.currentIndexChanged.connect(self.on_family_changed)
         self.form_proxy.combo_size.currentIndexChanged.connect(self.on_size_changed)
-
 
         self.form_proxy.combo_material.addItems([k for k in self.profiles])
 
@@ -123,8 +119,6 @@ class BaseProfileTaskPanel(ABC):
                     self.form_proxy.combo_rotation.setCurrentText("0")
             execute_if_has_bool("Default Centered Bevel", self.form_proxy.cb_combined_bevel.setChecked)
 
-        
-        
         self.form_proxy.cb_make_fillet.stateChanged.connect(self.on_cb_make_fillet_changed)
 
         self.form_proxy.cb_mirror_h.stateChanged.connect(self.proceed)
@@ -184,7 +178,6 @@ class BaseProfileTaskPanel(ABC):
         self.form_proxy.combo_family.addItems([f for f in self.profiles[material]])
 
         self.enable_signals(True)
-
 
     def on_family_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
@@ -250,12 +243,10 @@ class BaseProfileTaskPanel(ABC):
 
             self.enable_signals(True)
             self.proceed()
-            
 
     def on_cb_make_fillet_changed(self, state):
         self.update_image()
         self.proceed()
-
 
     def update_image(self):
         material = str(self.form_proxy.combo_material.currentText())
@@ -315,7 +306,6 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
         App.ActiveDocument.openTransaction("Add Profile")
 
         self.initialize_ui()
-
 
         self.update_selection()
         self.proceed()
