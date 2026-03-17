@@ -437,7 +437,7 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
 
             else:
                 App.ActiveDocument.removeObject(o.Name)
-                del self._objects[k]
+                del o
 
     def has_name_prefix(self, internal_name, target_str):
         pattern = r"\d+$"
