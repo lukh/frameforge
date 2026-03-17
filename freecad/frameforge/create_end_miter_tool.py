@@ -28,12 +28,17 @@ class CreateEndMiterCommand:
 
     def IsActive(self):
         if App.ActiveDocument:
-            if len(Gui.Selection.getSelection()) == 2:
+            sel = Gui.Selection.getSelectionEx()
+            if len(sel) == 2:
                 active = False
-                for sel in Gui.Selection.getSelection():
-                    if hasattr(sel, "Target"):
+                for s in sel:
+                    o = s.Object
+                    if len(s.SubElementNames) != 1:
+                        return False
+
+                    if hasattr(o, "Target"):
                         active = True
-                    elif hasattr(sel, "TrimmedBody"):
+                    elif hasattr(o, "TrimmedBody"):
                         active = True
                     else:
                         return False
