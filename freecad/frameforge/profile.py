@@ -27,6 +27,16 @@ from freecad.frameforge.version import __version__ as ff_version
 ANCHOR_X = ("Left", "Center", "Right")
 ANCHOR_Y = ("Bottom", "Center", "Top")
 
+FLANGE_ANGLES = {
+    'UPE': 4.57,
+    "UPN": 4.57,
+    'IPE': 8,
+    'HEA': 8,
+    'HEB': 8,
+    'HEM': 8,
+    'IPN': 8,
+}
+
 # Global variable for a 3D float vector (used in Profile class)
 vec = App.Base.Vector
 
@@ -201,20 +211,6 @@ class Profile:
         # Apply rotation via AttachmentOffset (Angle in degrees)
         obj.setExpression(".AttachmentOffset.Rotation.Angle", "RotationAngle")
 
-        if fam == "UPE":
-            obj.addProperty("App::PropertyBool", "UPN", "Profile", "UPE style or UPN style").UPN = False
-            obj.addProperty("App::PropertyFloat", "FlangeAngle", "Profile").FlangeAngle = 4.57
-        if fam == "UPN":
-            obj.addProperty("App::PropertyBool", "UPN", "Profile", "UPE style or UPN style").UPN = True
-            obj.addProperty("App::PropertyFloat", "FlangeAngle", "Profile").FlangeAngle = 4.57
-
-        if fam == "IPE" or fam == "HEA" or fam == "HEB" or fam == "HEM":
-            obj.addProperty("App::PropertyBool", "IPN", "Profile", "IPE/HEA style or IPN style").IPN = False
-            obj.addProperty("App::PropertyFloat", "FlangeAngle", "Profile").FlangeAngle = 8
-        if fam == "IPN":
-            obj.addProperty("App::PropertyBool", "IPN", "Profile", "IPE/HEA style or IPN style").IPN = True
-            obj.addProperty("App::PropertyFloat", "FlangeAngle", "Profile").FlangeAngle = 8
-
         if link_sub:
             obj.addProperty("App::PropertyLinkSub", "Target", "Base", "Target face").Target = link_sub
 
@@ -328,19 +324,6 @@ class Profile:
         obj.MirrorV = bool(init_mirror_v)
         obj.RotationAngle = float(init_rotation)
 
-        if obj.Family == "UPE":
-            obj.UPN = False
-            obj.FlangeAngle = 4.57
-        if obj.Family == "UPN":
-            obj.UPN = True
-            obj.FlangeAngle = 4.57
-
-        if obj.Family == "IPE" or obj.Family == "HEA" or obj.Family == "HEB" or obj.Family == "HEM":
-            obj.IPN = False
-            obj.FlangeAngle = 8
-        if obj.Family == "IPN":
-            obj.IPN = True
-            obj.FlangeAngle = 8
 
         # obj.OffsetA = .0  # Property for structure
         # obj.OffsetB = .0  # Property for structure
@@ -603,8 +586,8 @@ class Profile:
             if obj.MakeFillet == False:  # UPE ou UPN sans arrondis
 
                 Yd = 0
-                if obj.UPN == True:
-                    Yd = (W / 4) * math.tan(math.pi * obj.FlangeAngle / 180)
+                if obj.Family == "UPN":
+                    Yd = (W / 4) * math.tan(math.pi * FLANGE_ANGLES["UPN"] / 180)
 
                 p1 = vec(w, h, 0)
                 p2 = vec(w, H + h, 0)
@@ -626,7 +609,7 @@ class Profile:
 
                 wire1 = Part.Wire([L1, L2, L3, L4, L5, L6, L7, L8])
 
-            if obj.MakeFillet == True and obj.UPN == False:  # UPE avec arrondis
+            if obj.MakeFillet == True and obj.Family == "UPE":  # UPE avec arrondis
 
                 p1 = vec(w, h, 0)
                 p2 = vec(w, H + h, 0)
@@ -662,8 +645,8 @@ class Profile:
 
                 wire1 = Part.Wire([L1, L2, L3, L4, A4, L5, A3, L6, A2, L7, A1, L8])
 
-            if obj.MakeFillet == True and obj.UPN == True:  # UPN avec arrondis
-                angarc = obj.FlangeAngle
+            if obj.MakeFillet == True and obj.Family == "UPN":  # UPN avec arrondis
+                angarc = FLANGE_ANGLES["UPN"]
                 angrad = math.pi * angarc / 180
                 sina = math.sin(angrad)
                 cosa = math.cos(angrad)
@@ -753,8 +736,8 @@ class Profile:
             XA2 = W / 2 + TW / 2  # face droite du web
             if obj.MakeFillet == False:  # IPE ou IPN sans arrondis
                 Yd = 0
-                if obj.IPN == True:
-                    Yd = (W / 4) * math.tan(math.pi * obj.FlangeAngle / 180)
+                if obj.Family == "IPN":
+                    Yd = (W / 4) * math.tan(math.pi * FLANGE_ANGLES[obj.Family] / 180)
 
                 p1 = vec(0 + w, 0 + h, 0)
                 p2 = vec(0 + w, TF + h - Yd, 0)
@@ -784,7 +767,7 @@ class Profile:
 
                 wire1 = Part.Wire([L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12])
 
-            if obj.MakeFillet == True and obj.IPN == False:  # IPE avec arrondis
+            if obj.MakeFillet == True and obj.Family == "IPE":  # IPE avec arrondis
                 p1 = vec(0 + w, 0 + h, 0)
                 p2 = vec(0 + w, TF + h, 0)
                 p3 = vec(XA1 - R + w, TF + h, 0)
@@ -827,8 +810,8 @@ class Profile:
 
                 wire1 = Part.Wire([L1, L2, A1, L3, A2, L4, L5, L6, L7, L8, A3, L9, A4, L10, L11, L12])
 
-            if obj.MakeFillet == True and obj.IPN == True:  # IPN avec arrondis
-                angarc = obj.FlangeAngle
+            if obj.MakeFillet == True and obj.Family == "IPN":  # IPN avec arrondis
+                angarc = FLANGE_ANGLES["IPN"]
                 angrad = math.pi * angarc / 180
                 sina = math.sin(angrad)
                 cosa = math.cos(angrad)
@@ -1275,6 +1258,14 @@ class Profile:
                 obj.addProperty(
                     "App::PropertyBool", "MirrorV", "Profile", "Mirror cross-section vertically (flip Y)"
                 ).MirrorV = False
+
+            # cleaning UPN/IPN related properties
+            if hasattr(obj, "UPN"):
+                obj.removeProperty("UPN")
+            if hasattr(obj, "IPN"):
+                obj.removeProperty("IPN")
+            if hasattr(obj, "FlangeAngle"):
+                obj.removeProperty("FlangeAngle")
 
             # add version
             obj.addProperty(
