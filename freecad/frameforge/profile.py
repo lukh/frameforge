@@ -28,13 +28,13 @@ ANCHOR_X = ("Left", "Center", "Right")
 ANCHOR_Y = ("Bottom", "Center", "Top")
 
 FLANGE_ANGLES = {
-    'UPE': 4.57,
+    "UPE": 4.57,
     "UPN": 4.57,
-    'IPE': 8,
-    'HEA': 8,
-    'HEB': 8,
-    'HEM': 8,
-    'IPN': 8,
+    "IPE": 8,
+    "HEA": 8,
+    "HEB": 8,
+    "HEM": 8,
+    "IPN": 8,
 }
 
 # Global variable for a 3D float vector (used in Profile class)
@@ -323,7 +323,6 @@ class Profile:
         obj.MirrorH = bool(init_mirror_h)
         obj.MirrorV = bool(init_mirror_v)
         obj.RotationAngle = float(init_rotation)
-
 
         # obj.OffsetA = .0  # Property for structure
         # obj.OffsetB = .0  # Property for structure
