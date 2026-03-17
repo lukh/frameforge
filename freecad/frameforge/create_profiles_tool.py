@@ -37,6 +37,24 @@ class BaseProfileTaskPanel(ABC):
             with open(os.path.join(PROFILESPATH, f)) as fd:
                 self.profiles[material_name] = json.load(fd)
 
+    def enable_signals(self, enable):
+        # Block signals during initialization to prevent unintended side effects
+        self.form_proxy.sb_width.blockSignals(not enable)
+        self.form_proxy.sb_height.blockSignals(not enable)
+        self.form_proxy.sb_main_thickness.blockSignals(not enable)
+        self.form_proxy.sb_flange_thickness.blockSignals(not enable)
+        self.form_proxy.sb_radius1.blockSignals(not enable)
+        self.form_proxy.sb_radius2.blockSignals(not enable)
+        self.form_proxy.sb_length.blockSignals(not enable)
+        self.form_proxy.cb_mirror_h.blockSignals(not enable)
+        self.form_proxy.cb_mirror_v.blockSignals(not enable)
+        self.form_proxy.combo_rotation.blockSignals(not enable)
+        for ax in range(3):
+            for ay in range(3):
+                getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").blockSignals(not enable)
+
+
+
     def initialize_ui(self):
         def execute_if_has_bool(key, func):
             if key in [k for t, k, v in param.GetContents()]:
