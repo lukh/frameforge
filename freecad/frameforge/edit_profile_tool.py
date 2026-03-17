@@ -60,6 +60,8 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
     def open(self):
         App.ActiveDocument.openTransaction("Edit Profile")
 
+        self.initialize_ui()
+
         self.proceed()
 
         self.profile.ViewObject.Transparency = 50
