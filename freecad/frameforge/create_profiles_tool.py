@@ -312,8 +312,6 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
         super().__init__()
 
     def open(self):
-        App.Console.PrintMessage(translate("frameforge", "Opening CreateProfile\n"))
-
         App.ActiveDocument.openTransaction("Add Profile")
 
         self.initialize_ui()
@@ -323,7 +321,6 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
         self.proceed()
 
     def reject(self):
-        App.Console.PrintMessage(translate("frameforge", "Rejecting CreateProfile\n"))
         self.clean()
 
         App.ActiveDocument.abortTransaction()
