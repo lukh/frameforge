@@ -182,6 +182,8 @@ class BaseProfileTaskPanel(ABC):
     def on_family_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
+        if not family or not material:
+            return
 
         self.form_proxy.cb_make_fillet.setChecked(self.profiles[material][family]["fillet"])
         self.form_proxy.cb_make_fillet.setEnabled(self.profiles[material][family]["fillet"])
