@@ -196,6 +196,8 @@ class TrimmedProfile:
 
                 normal = Part.Plane(p1, p2, p3).toShape().normalAt(0, 0)
                 intersection = shape1.common(shape2)
+                if not intersection.Length:
+                    raise RuntimeError("End Miter: profiles don't intersect. You can add offsets.")
                 cutplane = Part.makePlane(10, 10, intersection.BoundBox.Center, vec1, normal)
                 cutplane.rotate(intersection.BoundBox.Center, normal, -90 + bisect)
                 cut_shapes.append(self.getOutsideCV(cutplane, fp.TrimmedBody.Shape))
