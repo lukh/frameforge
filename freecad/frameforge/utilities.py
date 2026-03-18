@@ -41,9 +41,8 @@ class ExportTechDrawCommand:
 
         for obj in doc.Objects:
             if obj.TypeId == "TechDraw::DrawPage":
-                pdf_path = os.path.join(
-                    out_dir, f"{"".join(c for c in obj.Label if c.isalnum() or c in (' ', '.', '_')).rstrip()}.pdf"
-                )
+                pdf_name = "".join(c for c in obj.Label if c.isalnum() or c in (" ", ".", "_")).rstrip()
+                pdf_path = os.path.join(out_dir, f"{pdf_name}.pdf")
 
                 TechDrawGui.exportPageAsPdf(obj, pdf_path)
 
