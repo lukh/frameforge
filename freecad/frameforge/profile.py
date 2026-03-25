@@ -1288,6 +1288,46 @@ class Profile:
                 #       obj.FrameforgeVersion = ff_version # don't forget to update the version !
                 pass
 
+            # should help migrate projects create with the dev version between 0.1.7 and 0.2.0, 
+            if obj.FrameforgeVersion == "0.1.8":
+                # Anchor: CenteredOn* -> AnchorX/AnchorY (enum)
+                if not hasattr(obj, "AnchorX") or not hasattr(obj, "AnchorY"):
+                    obj.addProperty(
+                        "App::PropertyEnumeration", "AnchorX", "Profile", "Path alignment (horizontal)"
+                    ).AnchorX = ANCHOR_X
+                    obj.AnchorX = "Center" if getattr(obj, "CenteredOnWidth", False) else "Left"
+                    obj.addProperty(
+                        "App::PropertyEnumeration", "AnchorY", "Profile", "Path alignment (vertical)"
+                    ).AnchorY = ANCHOR_Y
+                    obj.AnchorY = "Center" if getattr(obj, "CenteredOnHeight", False) else "Bottom"
+                    if hasattr(obj, "CenteredOnWidth"):
+                        obj.removeProperty("CenteredOnWidth")
+                    if hasattr(obj, "CenteredOnHeight"):
+                        obj.removeProperty("CenteredOnHeight")
+
+                # RotationAngle: add if missing (driven by AttachmentOffset expression)
+                if not hasattr(obj, "RotationAngle"):
+                    obj.addProperty(
+                        "App::PropertyFloat",
+                        "RotationAngle",
+                        "Profile",
+                        "Rotation of cross-section around path axis (degrees)",
+                    ).RotationAngle = math.degrees(obj.AttachmentOffset.Rotation.Angle)
+                    obj.setExpression(".AttachmentOffset.Rotation.Angle", "RotationAngle")
+
+                # MirrorH / MirrorV: add if missing
+                if not hasattr(obj, "MirrorH"):
+                    obj.addProperty(
+                        "App::PropertyBool", "MirrorH", "Profile", "Mirror cross-section horizontally (flip X)"
+                    ).MirrorH = False
+                if not hasattr(obj, "MirrorV"):
+                    obj.addProperty(
+                        "App::PropertyBool", "MirrorV", "Profile", "Mirror cross-section vertically (flip Y)"
+                    ).MirrorV = False
+
+                # update version
+                obj.FrameforgeVersion = ff_version
+
 
 class ViewProviderProfile:
     def __init__(self, vobj):
