@@ -12,6 +12,7 @@
   - Add "mirror" property (X and Y axes) #82
   - fix Can't open Trim dialog on trimmed part #74
   - Fix Pipe profiles have wrong inner diameter #64
+  - Fix Proper place of cutplane on miter ends #112
 
 * v0.1.7
   - Fix BOM Generation
