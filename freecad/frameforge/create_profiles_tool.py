@@ -1,6 +1,8 @@
 import glob
 import json
 import os
+import re
+from abc import ABC, abstractmethod
 
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -10,8 +12,10 @@ from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPA
 from freecad.frameforge.profile import Profile, ViewProviderProfile
 
 
-class CreateProfileTaskPanel:
+class BaseProfileTaskPanel(ABC):
     def __init__(self):
+        self._objects = {}
+
         self.form = [
             Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles1.ui")),
             Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles2.ui")),
@@ -20,7 +24,7 @@ class CreateProfileTaskPanel:
         self.form_proxy = FormProxy(self.form)
 
         self.load_data()
-        self.initialize_ui()
+        # self.initialize_ui() # Must be call in Child class, AFTER openTransaction
 
     def load_data(self):
         self.profiles = {}
@@ -33,20 +37,47 @@ class CreateProfileTaskPanel:
             with open(os.path.join(PROFILESPATH, f)) as fd:
                 self.profiles[material_name] = json.load(fd)
 
+    def enable_signals(self, enable):
+        # Block signals during initialization to prevent unintended side effects
+        self.form_proxy.sb_width.blockSignals(not enable)
+        self.form_proxy.sb_height.blockSignals(not enable)
+        self.form_proxy.sb_main_thickness.blockSignals(not enable)
+        self.form_proxy.sb_flange_thickness.blockSignals(not enable)
+        self.form_proxy.sb_radius1.blockSignals(not enable)
+        self.form_proxy.sb_radius2.blockSignals(not enable)
+        self.form_proxy.sb_length.blockSignals(not enable)
+        self.form_proxy.cb_mirror_h.blockSignals(not enable)
+        self.form_proxy.cb_mirror_v.blockSignals(not enable)
+        self.form_proxy.combo_rotation.blockSignals(not enable)
+        for ax in range(3):
+            for ay in range(3):
+                getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").blockSignals(not enable)
+
     def initialize_ui(self):
         def execute_if_has_bool(key, func):
             if key in [k for t, k, v in param.GetContents()]:
                 func(param.GetBool(key))
 
+        # Center anchor radio buttons in grid cells (create_profiles2.ui)
+        form2 = self.form[1]
+        grid_anchor = form2.group_anchor.layout()
+        for ax in range(3):
+            for ay in range(3):
+                btn = getattr(form2, f"rb_anchor_{ax}_{ay}")
+                grid_anchor.setAlignment(btn, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+
         self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, "Warehouse.png")))
 
+        # sig/slot
         self.form_proxy.combo_material.currentIndexChanged.connect(self.on_material_changed)
         self.form_proxy.combo_family.currentIndexChanged.connect(self.on_family_changed)
         self.form_proxy.combo_size.currentIndexChanged.connect(self.on_size_changed)
 
-        self.form_proxy.cb_make_fillet.stateChanged.connect(self.on_cb_make_fillet_changed)
-
         self.form_proxy.combo_material.addItems([k for k in self.profiles])
+
+        for deg in ("0", "90", "180", "270"):
+            self.form_proxy.combo_rotation.addItem(deg)
+        self.form_proxy.combo_rotation.setCurrentIndex(0)
 
         param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
         if not param.IsEmpty():
@@ -68,20 +99,85 @@ class CreateProfileTaskPanel:
             execute_if_has_bool("Default Family in Name", self.form_proxy.cb_family_in_name.setChecked)
             execute_if_has_bool("Default Size in Name", self.form_proxy.cb_size_in_name.setChecked)
             execute_if_has_bool("Default Prefix Profile in Name", self.form_proxy.cb_prefix_profile_in_name.setChecked)
-            execute_if_has_bool("Default Reverse Attachement", self.form_proxy.cb_reverse_attachment.setChecked)
             execute_if_has_bool("Default Make Fillet", self.form_proxy.cb_make_fillet.setChecked)
-            execute_if_has_bool("Default Height Centered", self.form_proxy.cb_height_centered.setChecked)
-            execute_if_has_bool("Default Width Centered", self.form_proxy.cb_width_centered.setChecked)
+            execute_if_has_bool("Default Mirror Horizontally", self.form_proxy.cb_mirror_h.setChecked)
+            execute_if_has_bool("Default Mirror Vertically", self.form_proxy.cb_mirror_v.setChecked)
+            keys = [k for t, k, v in param.GetContents()]
+            if "Default AnchorX" in keys:
+                ax = max(0, min(2, param.GetInt("Default AnchorX", 1)))
+                ay = max(0, min(2, param.GetInt("Default AnchorY", 1)))
+                self.set_anchor(ax, ay)
+            elif "Default Width Centered" in keys or "Default Height Centered" in keys:
+                ax = 1 if param.GetBool("Default Width Centered", False) else 0
+                ay = 1 if param.GetBool("Default Height Centered", False) else 0
+                self.set_anchor(ax, ay)
+            if "Default RotationAngle" in keys:
+                try:
+                    val = float(param.GetString("Default RotationAngle", "0"))
+                    self.form_proxy.combo_rotation.setCurrentText(str(int(val) if val == int(val) else val))
+                except (TypeError, ValueError):
+                    self.form_proxy.combo_rotation.setCurrentText("0")
             execute_if_has_bool("Default Centered Bevel", self.form_proxy.cb_combined_bevel.setChecked)
+
+        self.form_proxy.cb_make_fillet.stateChanged.connect(self.on_cb_make_fillet_changed)
+
+        self.form_proxy.cb_mirror_h.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_mirror_v.stateChanged.connect(self.proceed)
+        self.form_proxy.combo_rotation.currentIndexChanged.connect(self.proceed)
+        for ax in range(3):
+            for ay in range(3):
+                getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").clicked.connect(self.proceed)
+
+        self.form_proxy.sb_width.valueChanged.connect(self.proceed)
+        self.form_proxy.sb_height.valueChanged.connect(self.proceed)
+        self.form_proxy.sb_main_thickness.valueChanged.connect(self.proceed)
+        self.form_proxy.sb_flange_thickness.valueChanged.connect(self.proceed)
+        self.form_proxy.sb_radius1.valueChanged.connect(self.proceed)
+        self.form_proxy.sb_radius2.valueChanged.connect(self.proceed)
+        self.form_proxy.sb_length.valueChanged.connect(self.proceed)
+
+        self.form_proxy.cb_sketch_in_name.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_family_in_name.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_size_in_name.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_prefix_profile_in_name.stateChanged.connect(self.proceed)
+
+    def get_anchor(self):
+        """Return (anchor_x, anchor_y) 0=left/bottom, 1=center, 2=right/top."""
+        for ax in range(3):
+            for ay in range(3):
+                if getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").isChecked():
+                    return (ax, ay)
+        return (1, 1)
+
+    def set_anchor(self, anchor_x, anchor_y):
+        ax = max(0, min(2, anchor_x))
+        ay = max(0, min(2, anchor_y))
+        getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").setChecked(True)
+
+    def get_rotation(self):
+        """Return rotation angle in degrees (float)."""
+        try:
+            return float(self.form_proxy.combo_rotation.currentText())
+        except (TypeError, ValueError):
+            return 0.0
+
+    def set_rotation(self, degrees):
+        t = str(int(degrees) if degrees == int(degrees) else degrees)
+        i = self.form_proxy.combo_rotation.findText(t)
+        if i >= 0:
+            self.form_proxy.combo_rotation.setCurrentIndex(i)
+        else:
+            self.form_proxy.combo_rotation.setCurrentText(t)
 
     def on_material_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
 
-        self.form_proxy.combo_family.blockSignals(True)
-        self.form_proxy.combo_family.clear()
-        self.form_proxy.combo_family.blockSignals(False)
+        self.enable_signals(False)
 
+        self.form_proxy.combo_family.clear()
         self.form_proxy.combo_family.addItems([f for f in self.profiles[material]])
+
+        self.enable_signals(True)
 
     def on_family_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
@@ -116,6 +212,8 @@ class CreateProfileTaskPanel:
                 "Weight": self.form_proxy.sb_weight,
             }
 
+            self.enable_signals(False)
+
             self.form_proxy.sb_height.setEnabled(False)
             self.form_proxy.sb_height.setValue(0.0)
             self.form_proxy.sb_width.setEnabled(False)
@@ -143,8 +241,12 @@ class CreateProfileTaskPanel:
 
                 sb.setValue(float(profile[s]))
 
+            self.enable_signals(True)
+            self.proceed()
+
     def on_cb_make_fillet_changed(self, state):
         self.update_image()
+        self.proceed()
 
     def update_image(self):
         material = str(self.form_proxy.combo_material.currentText())
@@ -157,16 +259,60 @@ class CreateProfileTaskPanel:
 
         self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, material, img_name)))
 
-    def open(self):
-        App.Console.PrintMessage(translate("frameforge", "Opening CreateProfile\n"))
-        self.update_selection()
+    def update_profile(self, profile):
+        profile.Proxy.set_properties(
+            profile,
+            self.form_proxy.sb_width.value(),
+            self.form_proxy.sb_height.value(),
+            self.form_proxy.sb_main_thickness.value(),
+            self.form_proxy.sb_flange_thickness.value(),
+            self.form_proxy.sb_radius1.value(),
+            self.form_proxy.sb_radius2.value(),
+            self.form_proxy.sb_length.value(),
+            self.form_proxy.sb_weight.value(),
+            self.form_proxy.sb_unitprice.value(),
+            self.form_proxy.cb_make_fillet.isChecked(),  # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
+            *self.get_anchor(),
+            self.form_proxy.combo_material.currentText(),
+            self.form_proxy.combo_family.currentText(),
+            self.form_proxy.combo_size.currentText(),
+            init_mirror_h=self.form_proxy.cb_mirror_h.isChecked(),
+            init_mirror_v=self.form_proxy.cb_mirror_v.isChecked(),
+            init_rotation=self.get_rotation(),
+        )
 
+    @abstractmethod
+    def proceed(self):
+        pass
+
+    @abstractmethod
+    def open(self):
+        pass
+
+    @abstractmethod
+    def reject(self):
+        return True
+
+    @abstractmethod
+    def accept(self):
+        return True
+
+
+class CreateProfileTaskPanel(BaseProfileTaskPanel):
+    def __init__(self):
+        super().__init__()
+
+    def open(self):
         App.ActiveDocument.openTransaction("Add Profile")
 
-    def reject(self):
-        App.Console.PrintMessage(translate("frameforge", "Rejecting CreateProfile\n"))
+        self.initialize_ui()
 
+        self.update_selection()
+        self.proceed()
+
+    def reject(self):
         self.clean()
+
         App.ActiveDocument.abortTransaction()
 
         return True
@@ -185,15 +331,23 @@ class CreateProfileTaskPanel:
             param.SetBool("Default Size in Name", self.form_proxy.cb_size_in_name.isChecked())
             param.SetBool("Default Prefix Profile in Name", self.form_proxy.cb_prefix_profile_in_name.isChecked())
 
-            param.SetBool("Default Reverse Attachement", self.form_proxy.cb_reverse_attachment.isChecked())
-
             param.SetBool("Default Make Fillet", self.form_proxy.cb_make_fillet.isChecked())
-            param.SetBool("Default Height Centered", self.form_proxy.cb_height_centered.isChecked())
-            param.SetBool("Default Width Centered", self.form_proxy.cb_width_centered.isChecked())
+            param.SetBool("Default Mirror Horizontally", self.form_proxy.cb_mirror_h.isChecked())
+            param.SetBool("Default Mirror Vertically", self.form_proxy.cb_mirror_v.isChecked())
+            ax, ay = self.get_anchor()
+            param.SetInt("Default AnchorX", ax)
+            param.SetInt("Default AnchorY", ay)
+            param.SetString("Default RotationAngle", self.form_proxy.combo_rotation.currentText())
             param.SetBool("Default Centered Bevel", self.form_proxy.cb_combined_bevel.isChecked())
+
+            param.RemBool("Default Reverse Attachement")
 
             self.proceed()
             self.clean()
+
+            for o in self._objects.values():
+                o.ViewObject.Transparency = 0
+                o.ViewObject.ShapeColor = (0.44, 0.47, 0.5)
 
             App.ActiveDocument.commitTransaction()
             App.ActiveDocument.recompute()
@@ -216,6 +370,8 @@ class CreateProfileTaskPanel:
         Gui.Selection.removeSelectionGate()
 
     def proceed(self):
+        seen_profiles = []
+
         selection_list = Gui.Selection.getSelectionEx()
 
         p_name = "Profile_" if self.form_proxy.cb_prefix_profile_in_name.isChecked() else ""
@@ -253,23 +409,63 @@ class CreateProfileTaskPanel:
                     edges = [f"Edge{idx + 1}" for idx, e in enumerate(sketch_sel.Object.Shape.Edges)]
 
                 for i, edge in enumerate(edges):
-                    self.make_profile(sketch_sel.Object, edge, p_name)
+                    k = self.create_or_update_profile(sketch_sel.Object, edge, p_name)
+                    seen_profiles.append(k)
 
         else:
-            self.make_profile(None, None, p_name)
+            k = self.create_or_update_profile(None, None, p_name)
+            seen_profiles.append(k)
+
+        for k in list(self._objects.keys()):
+            o = self._objects[k]
+
+            if k in seen_profiles:
+                o.recompute()
+
+            else:
+                App.ActiveDocument.removeObject(o.Name)
+                del o
+
+    def has_name_prefix(self, internal_name, target_str):
+        pattern = r"\d+$"
+
+        prefix_obj = re.sub(pattern, "", internal_name)
+        prefix_target = re.sub(pattern, "", target_str)
+
+        return prefix_obj == prefix_target
+
+    def create_or_update_profile(self, sketch, edge, name):
+        key = (sketch, edge)
+
+        if key in self._objects:
+            o = self._objects[key]
+            if self.has_name_prefix(o.Name, name):
+                self.update_profile(o)
+
+            else:
+                # handle renames
+                App.ActiveDocument.removeObject(o.Name)
+                o = self.make_profile(sketch, edge, name)
+                self._objects[key] = o
+
+        else:
+            o = self.make_profile(sketch, edge, name)
+            self._objects[key] = o
+
+        return key
 
     def make_profile(self, sketch, edge, name):
         # Create an object in current document
         obj = App.ActiveDocument.addObject("Part::FeaturePython", name)
         obj.addExtension("Part::AttachExtensionPython")
 
+        obj.ViewObject.Transparency = 80
+        obj.ViewObject.ShapeColor = (0.0, 0.8, 0.0)
+
         # move it to the sketch's parent if possible
         if sketch is not None and len(sketch.Parents) > 0:
             sk_parent = sketch.Parents[-1][0]
             sk_parent.addObject(obj)
-
-        # Create a ViewObject in current GUI
-        ViewProviderProfile(obj.ViewObject)
 
         if sketch is not None and edge is not None:
             # Tuple assignment for edge
@@ -285,13 +481,7 @@ class CreateProfileTaskPanel:
         else:
             link_sub = None
 
-        if not self.form_proxy.cb_reverse_attachment.isChecked():
-            # print("Not reverse attachment")
-            obj.MapPathParameter = 1
-        else:
-            # print("Reverse attachment")
-            obj.MapPathParameter = 0
-            obj.MapReversed = True
+        obj.MapPathParameter = 1
 
         Profile(
             obj,
@@ -305,14 +495,21 @@ class CreateProfileTaskPanel:
             self.form_proxy.sb_weight.value(),
             self.form_proxy.sb_unitprice.value(),
             self.form_proxy.cb_make_fillet.isChecked(),  # and self.form_proxy.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
-            self.form_proxy.cb_height_centered.isChecked(),
-            self.form_proxy.cb_width_centered.isChecked(),
+            *self.get_anchor(),
             self.form_proxy.combo_material.currentText(),
             self.form_proxy.combo_family.currentText(),
             self.form_proxy.combo_size.currentText(),
             self.form_proxy.cb_combined_bevel.isChecked(),
             link_sub,
+            init_mirror_h=self.form_proxy.cb_mirror_h.isChecked(),
+            init_mirror_v=self.form_proxy.cb_mirror_v.isChecked(),
+            init_rotation=self.get_rotation(),
         )
+
+        # Create a ViewObject in current GUI
+        ViewProviderProfile(obj.ViewObject)
+
+        return obj
 
     def addSelection(self, doc, obj, sub, other):
         self.update_selection()

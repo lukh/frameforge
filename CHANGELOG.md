@@ -1,5 +1,19 @@
 ## Changelog
 
+* v0.2.0
+  - Rework internal data, handles angles and length as method
+  - Add preview for Profiles
+  - Add markers A/B to profile when selecting
+  - Add Anchor Mode
+  - Add PID (Profile IDs) and UI to generate them
+  - Add an automatic way to add/replace Balloons to TechDraw pages (from PID)
+  - Improve BOM tool (internal mainly, and add PID as main identifier instead of long names)
+  - Fix misleading behaviour with length #71
+  - Add "mirror" property (X and Y axes) #82
+  - fix Can't open Trim dialog on trimmed part #74
+  - Fix Pipe profiles have wrong inner diameter #64
+  - Fix Proper place of cutplane on miter ends #112
+
 * v0.1.7
   - Fix BOM Generation
   - Implement CutList

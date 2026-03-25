@@ -9,11 +9,34 @@ import FreeCADGui as Gui
 import Part
 from PySide import QtCore, QtGui
 
+from freecad.frameforge._utils import (
+    get_childrens_from_trimmedbody,
+    get_profile_from_trimmedbody,
+    get_readable_cutting_angles,
+    get_trimmed_profile_all_cutting_angles,
+    length_along_normal,
+)
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
+from freecad.frameforge.version import __version__ as ff_version
 
 
 class TrimmedProfile:
     def __init__(self, obj):
+        obj.addProperty(
+            "App::PropertyString",
+            "FrameforgeVersion",
+            "Profile",
+            "Frameforge Version used to create the profile",
+        ).FrameforgeVersion = ff_version
+
+        obj.addProperty(
+            "App::PropertyString",
+            "PID",
+            "Profile",
+            "Profile ID",
+        ).PID = ""
+        obj.setEditorMode("PID", 1)
+
         obj.addProperty(
             "App::PropertyLink", "TrimmedBody", "TrimmedProfile", translate("App::Property", "Body to be trimmed")
         ).TrimmedBody = None
@@ -37,6 +60,50 @@ class TrimmedProfile:
             "Simple fit",
         ]
 
+        # related to Profile
+        obj.addProperty("App::PropertyString", "Family", "Profile", "")
+        obj.setEditorMode("Family", 1)
+
+        obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
+        obj.setEditorMode("CustomProfile", 1)
+
+        obj.addProperty("App::PropertyString", "SizeName", "Profile", "")
+        obj.setEditorMode("SizeName", 1)
+
+        obj.addProperty("App::PropertyString", "Material", "Profile", "")
+        obj.setEditorMode("Material", 1)
+
+        obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram")
+        obj.setEditorMode("ApproxWeight", 1)
+
+        obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
+        obj.setEditorMode("Price", 1)
+
+        # structure
+        obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
+        obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
+        obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
+        obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = False
+        obj.setEditorMode("Width", 1)  # user doesn't change !
+        obj.setEditorMode("Height", 1)
+        obj.setEditorMode("Length", 1)
+        obj.setEditorMode("Cutout", 1)
+
+        obj.addProperty(
+            "App::PropertyString",
+            "CuttingAngleA",
+            "Structure",
+            "Cutting Angle A",
+        )
+        obj.setEditorMode("CuttingAngleA", 1)
+        obj.addProperty(
+            "App::PropertyString",
+            "CuttingAngleB",
+            "Structure",
+            "Cutting Angle B",
+        )
+        obj.setEditorMode("CuttingAngleB", 1)
+
         obj.Proxy = self
 
     def onChanged(self, fp, prop):
@@ -44,12 +111,17 @@ class TrimmedProfile:
 
     def execute(self, fp):
         """Print a short message when doing a recomputation, this method is mandatory"""
-        App.Console.PrintMessage("Recompute {}\n".format(fp.Name))
+        self.run_compatibility_migrations(fp)
+
         # TODO: Put these methods in proper functions
         if fp.TrimmedBody is None:
             return
         if len(fp.TrimmingBoundary) == 0:
             return
+
+        # hide trimmed body
+        for tb in get_childrens_from_trimmedbody(fp.TrimmedBody):
+            tb.ViewObject.Visibility = False
 
         cut_shapes = []
 
@@ -79,13 +151,18 @@ class TrimmedProfile:
             precision = 0.001
             target1 = self.getTarget(fp.TrimmedBody)
             edge1 = doc.getObject(target1[0].Name).getSubObject(target1[1][0])
+            shape1 = fp.TrimmedBody.Shape.SubShapes[0]
+            bound_shapes = []
             bounds_target = []
             for bound in fp.TrimmingBoundary:
+                bound_shapes.append(bound[0].Shape.SubShapes[0])
                 bounds_target.append(self.getTarget(bound[0]))
             trimming_boundary_edges = []
             for target in bounds_target:
                 trimming_boundary_edges.append(doc.getObject(target[0].Name).getSubObject(target[1][0]))
-            for edge2 in trimming_boundary_edges:
+            for i in range(0, len(trimming_boundary_edges)):
+                edge2 = trimming_boundary_edges[i]
+                shape2 = bound_shapes[i]
                 end1 = edge1.Vertexes[-1].Point
                 start1 = edge1.Vertexes[0].Point
                 end2 = edge2.Vertexes[-1].Point
@@ -120,8 +197,11 @@ class TrimmedProfile:
                     raise RuntimeError("End Miter: edges not aligned. Ensure they meet at a common endpoint.")
 
                 normal = Part.Plane(p1, p2, p3).toShape().normalAt(0, 0)
-                cutplane = Part.makePlane(10, 10, p1, vec1, normal)
-                cutplane.rotate(p1, normal, -90 + bisect)
+                intersection = shape1.common(shape2)
+                if not intersection.Length:
+                    raise RuntimeError("End Miter: profiles don't intersect. You can add offsets.")
+                cutplane = Part.makePlane(10, 10, intersection.BoundBox.Center, vec1, normal)
+                cutplane.rotate(intersection.BoundBox.Center, normal, -90 + bisect)
                 cut_shapes.append(self.getOutsideCV(cutplane, fp.TrimmedBody.Shape))
 
         if len(cut_shapes) > 0:
@@ -130,6 +210,103 @@ class TrimmedProfile:
                 cut_shape = cut_shape.fuse(sh)
 
         self.makeShape(fp, cut_shape)
+        self._update_structure_data(fp)
+
+    def _update_structure_data(self, obj):
+        prof = get_profile_from_trimmedbody(obj)
+        angles = get_trimmed_profile_all_cutting_angles(obj)
+
+        obj.PID = prof.PID
+        obj.Width = prof.ProfileWidth
+        obj.Height = prof.ProfileHeight
+        obj.Family = prof.Family
+        obj.CustomProfile = prof.CustomProfile
+        obj.SizeName = prof.SizeName
+        obj.Material = prof.Material
+        obj.ApproxWeight = prof.ApproxWeight
+        obj.Price = prof.Price
+
+        obj.Length = length_along_normal(obj)
+
+        cut_angles = get_readable_cutting_angles(
+            getattr(prof, "BevelACutY", "N/A"),
+            getattr(prof, "BevelACutX", "N/A"),
+            getattr(prof, "BevelBCutY", "N/A"),
+            getattr(prof, "BevelBCutX", "N/A"),
+            *angles,
+        )
+
+        obj.CuttingAngleA = cut_angles[0]
+        obj.CuttingAngleB = cut_angles[1]
+
+    def run_compatibility_migrations(self, obj):
+        if not hasattr(obj, "FrameforgeVersion"):
+            # migrate parents
+            for link in obj.TrimmingBoundary:
+                link[0].Proxy.execute(link[0])
+            obj.TrimmedBody.Proxy.execute(obj.TrimmedBody)
+
+            App.Console.PrintMessage(f"Frameforge::object migration : Migrate {obj.Label} to 0.1.8\n")
+
+            # related to Profile
+            obj.addProperty(
+                "App::PropertyString",
+                "PID",
+                "Profile",
+                "Profile ID",
+            ).PID = ""
+            obj.setEditorMode("PID", 1)
+
+            obj.addProperty("App::PropertyString", "Family", "Profile", "")
+            obj.setEditorMode("Family", 1)
+
+            obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
+            obj.setEditorMode("CustomProfile", 1)
+
+            obj.addProperty("App::PropertyString", "SizeName", "Profile", "")
+            obj.setEditorMode("SizeName", 1)
+
+            obj.addProperty("App::PropertyString", "Material", "Profile", "")
+            obj.setEditorMode("Material", 1)
+
+            obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram")
+            obj.setEditorMode("ApproxWeight", 1)
+
+            obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
+            obj.setEditorMode("Price", 1)
+
+            # structure
+            obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
+            obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
+            obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
+            obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = False
+            obj.setEditorMode("Width", 1)  # user doesn't change !
+            obj.setEditorMode("Height", 1)
+            obj.setEditorMode("Length", 1)
+            obj.setEditorMode("Cutout", 1)
+
+            obj.addProperty(
+                "App::PropertyString",
+                "CuttingAngleA",
+                "Structure",
+                "Cutting Angle A",
+            )
+            obj.setEditorMode("CuttingAngleA", 1)
+            obj.addProperty(
+                "App::PropertyString",
+                "CuttingAngleB",
+                "Structure",
+                "Cutting Angle B",
+            )
+            obj.setEditorMode("CuttingAngleB", 1)
+
+            # add version
+            obj.addProperty(
+                "App::PropertyString",
+                "FrameforgeVersion",
+                "Profile",
+                "Frameforge Version used to create the profile",
+            ).FrameforgeVersion = ff_version
 
     def getOutsideCV(self, cutplane, shape):
         cv = ArchCommands.getCutVolume(cutplane, shape, clip=False, depth=0.0)
@@ -189,13 +366,7 @@ class ViewProviderTrimmedProfile:
         return mode
 
     def claimChildren(self):
-        childrens = [self.Object.TrimmedBody]
-        if len(childrens) > 0:
-            for child in childrens:
-                if child:
-                    # if hasattr("ViewObject", child)
-                    child.ViewObject.Visibility = False
-        return childrens
+        return [self.Object.TrimmedBody]
 
     def onChanged(self, vp, prop):
         """Print the name of the property that has changed"""

@@ -7,8 +7,17 @@ import FreeCADGui as Gui
 import Part
 from PySide import QtCore, QtGui
 
+from freecad.frameforge._utils import (
+    get_childrens_from_extrudedcutout,
+    get_profile_from_extrudedcutout,
+    get_readable_cutting_angles,
+    get_trimmed_profile_all_cutting_angles,
+    get_trimmedprofile_from_extrudedcutout,
+    length_along_normal,
+)
 from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
 from freecad.frameforge.frameforge_exceptions import FrameForgeException
+from freecad.frameforge.version import __version__ as ff_version
 
 
 class ExtrudedCutout:
@@ -16,6 +25,21 @@ class ExtrudedCutout:
         """Initialize the parametric Sheet Metal Cut object and add
         properties.
         """
+
+        obj.addProperty(
+            "App::PropertyString",
+            "FrameforgeVersion",
+            "Profile",
+            "Frameforge Version used to create the profile",
+        ).FrameforgeVersion = ff_version
+
+        obj.addProperty(
+            "App::PropertyString",
+            "PID",
+            "Profile",
+            "Profile ID",
+        ).PID = ""
+        obj.setEditorMode("PID", 1)
 
         obj.addProperty("App::PropertyLinkSub", "baseObject", "ExtrudedCutout", "SelectedFace").baseObject = (
             selected_face
@@ -45,6 +69,50 @@ class ExtrudedCutout:
         ]
         obj.CutType = "Through All"
 
+        # related to Profile
+        obj.addProperty("App::PropertyString", "Family", "Profile", "")
+        obj.setEditorMode("Family", 1)
+
+        obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
+        obj.setEditorMode("CustomProfile", 1)
+
+        obj.addProperty("App::PropertyString", "SizeName", "Profile", "")
+        obj.setEditorMode("SizeName", 1)
+
+        obj.addProperty("App::PropertyString", "Material", "Profile", "")
+        obj.setEditorMode("Material", 1)
+
+        obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram")
+        obj.setEditorMode("ApproxWeight", 1)
+
+        obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
+        obj.setEditorMode("Price", 1)
+
+        # structure
+        obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
+        obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
+        obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
+        obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = True
+        obj.setEditorMode("Width", 1)  # user doesn't change !
+        obj.setEditorMode("Height", 1)
+        obj.setEditorMode("Length", 1)
+        obj.setEditorMode("Cutout", 1)
+
+        obj.addProperty(
+            "App::PropertyString",
+            "CuttingAngleA",
+            "Structure",
+            "Cutting Angle A",
+        )
+        obj.setEditorMode("CuttingAngleA", 1)
+        obj.addProperty(
+            "App::PropertyString",
+            "CuttingAngleB",
+            "Structure",
+            "Cutting Angle B",
+        )
+        obj.setEditorMode("CuttingAngleB", 1)
+
         obj.Proxy = self
 
     def onChanged(self, fp, prop):
@@ -58,9 +126,15 @@ class ExtrudedCutout:
     def execute(self, fp):
         """Perform the cut when the object is recomputed."""
         try:
+            self.run_compatibility_migrations(fp)
+
             # Ensure the Sketch and baseObject properties are valid.
             if fp.Sketch is None or fp.baseObject is None:
                 raise FrameForgeException("Both the Sketch and baseObject properties must be set.")
+
+            # hide trimmed body
+            for tb in get_childrens_from_extrudedcutout(fp.baseObject[0]):
+                tb.ViewObject.Visibility = False
 
             cutSketch = fp.Sketch
             selected_object, face_name = fp.baseObject
@@ -97,8 +171,107 @@ class ExtrudedCutout:
             # Assigne la forme au FeaturePython
             fp.Shape = cut_shape
 
+            self._update_structure_data(fp)
+
         except FrameForgeException as e:
             App.Console.PrintError(f"Error: {e}\n")
+
+    def _update_structure_data(self, obj):
+        prof = get_profile_from_extrudedcutout(obj)
+        trim_prof = get_trimmedprofile_from_extrudedcutout(obj)
+        if trim_prof:
+            angles = get_trimmed_profile_all_cutting_angles(trim_prof)
+        else:
+            angles = ()
+
+        obj.PID = prof.PID
+        obj.Width = prof.ProfileWidth
+        obj.Height = prof.ProfileHeight
+        obj.Family = prof.Family
+        obj.CustomProfile = prof.CustomProfile
+        obj.SizeName = prof.SizeName
+        obj.Material = prof.Material
+        obj.ApproxWeight = prof.ApproxWeight
+        obj.Price = prof.Price
+
+        obj.Length = length_along_normal(trim_prof if trim_prof else prof)
+
+        cut_angles = get_readable_cutting_angles(
+            getattr(prof, "BevelACutY", "N/A"),
+            getattr(prof, "BevelACutX", "N/A"),
+            getattr(prof, "BevelBCutY", "N/A"),
+            getattr(prof, "BevelBCutX", "N/A"),
+            *angles,
+        )
+
+        obj.CuttingAngleA = cut_angles[0]
+        obj.CuttingAngleB = cut_angles[1]
+
+    def run_compatibility_migrations(self, obj):
+        if not hasattr(obj, "FrameforgeVersion"):
+            obj.baseObject[0].Proxy.execute(obj.baseObject[0])
+
+            App.Console.PrintMessage(f"Frameforge::object migration : Migrate {obj.Label} to 0.1.8\n")
+
+            # related to Profile
+            obj.addProperty(
+                "App::PropertyString",
+                "PID",
+                "Profile",
+                "Profile ID",
+            ).PID = ""
+            obj.setEditorMode("PID", 1)
+
+            obj.addProperty("App::PropertyString", "Family", "Profile", "")
+            obj.setEditorMode("Family", 1)
+
+            obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
+            obj.setEditorMode("CustomProfile", 1)
+
+            obj.addProperty("App::PropertyString", "SizeName", "Profile", "")
+            obj.setEditorMode("SizeName", 1)
+
+            obj.addProperty("App::PropertyString", "Material", "Profile", "")
+            obj.setEditorMode("Material", 1)
+
+            obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram")
+            obj.setEditorMode("ApproxWeight", 1)
+
+            obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
+            obj.setEditorMode("Price", 1)
+
+            # structure
+            obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
+            obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
+            obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
+            obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = True
+            obj.setEditorMode("Width", 1)  # user doesn't change !
+            obj.setEditorMode("Height", 1)
+            obj.setEditorMode("Length", 1)
+            obj.setEditorMode("Cutout", 1)
+
+            obj.addProperty(
+                "App::PropertyString",
+                "CuttingAngleA",
+                "Structure",
+                "Cutting Angle A",
+            )
+            obj.setEditorMode("CuttingAngleA", 1)
+            obj.addProperty(
+                "App::PropertyString",
+                "CuttingAngleB",
+                "Structure",
+                "Cutting Angle B",
+            )
+            obj.setEditorMode("CuttingAngleB", 1)
+
+            # add version
+            obj.addProperty(
+                "App::PropertyString",
+                "FrameforgeVersion",
+                "Profile",
+                "Frameforge Version used to create the profile",
+            ).FrameforgeVersion = ff_version
 
 
 class ViewProviderExtrudedCutout:

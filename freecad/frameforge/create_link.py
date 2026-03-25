@@ -6,6 +6,7 @@ import FreeCADGui as Gui
 
 from freecad.frameforge._utils import getRootObject
 from freecad.frameforge.ff_tools import ICONPATH
+from freecad.frameforge.version import __version__ as ff_version
 
 
 def makeLink(source):
@@ -16,6 +17,20 @@ def makeLink(source):
 
     link.addExtension("Part::AttachExtensionPython")
     link.MapMode = "Deactivated"
+
+    link.addProperty(
+        "App::PropertyString",
+        "FrameforgeVersion",
+        "Frameforge",
+        "Frameforge Version used to create the profile",
+    ).FrameforgeVersion = ff_version
+
+    link.addProperty(
+        "App::PropertyString",
+        "PID",
+        "Frameforge",
+        "Profile ID",
+    ).PID = ""
 
     doc.recompute()
     return link

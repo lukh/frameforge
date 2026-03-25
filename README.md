@@ -19,6 +19,9 @@ Features:
 
 Frameforge workbench can be installed via the [Addon Manager](https://wiki.freecad.org/Std_AddonMgr)
 
+WARNING: When migrating from 0.1.x to 0.2.x, be careful to back-up your projects ! 
+Internal data structures were modified, should be able to migrate, but in case...
+
 ## Quick Start
 
 ### Create the skeleton
