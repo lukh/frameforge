@@ -296,7 +296,7 @@ def length_along_normal(obj):
             target = obj.Target
             edge = doc.getObject(target[0].Name).getSubObject(target[1][0])
         else:
-            return 0.0  # TODO handle this case !!!
+            return obj.ProfileLength
 
     elif is_trimmedbody(obj):
 
