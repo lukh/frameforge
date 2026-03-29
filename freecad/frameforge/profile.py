@@ -1288,7 +1288,7 @@ class Profile:
                 #       obj.FrameforgeVersion = ff_version # don't forget to update the version !
                 pass
 
-            # should help migrate projects create with the dev version between 0.1.7 and 0.2.0, 
+            # should help migrate projects create with the dev version between 0.1.7 and 0.2.0,
             if obj.FrameforgeVersion == "0.1.8":
                 # Anchor: CenteredOn* -> AnchorX/AnchorY (enum)
                 if not hasattr(obj, "AnchorX") or not hasattr(obj, "AnchorY"):
