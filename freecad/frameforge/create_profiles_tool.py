@@ -39,6 +39,10 @@ class BaseProfileTaskPanel(ABC):
 
     def enable_signals(self, enable):
         # Block signals during initialization to prevent unintended side effects
+        self.form_proxy.combo_material.blockSignals(not enable)
+        self.form_proxy.combo_family.blockSignals(not enable)
+        self.form_proxy.combo_size.blockSignals(not enable)
+
         self.form_proxy.sb_width.blockSignals(not enable)
         self.form_proxy.sb_height.blockSignals(not enable)
         self.form_proxy.sb_main_thickness.blockSignals(not enable)
@@ -179,6 +183,10 @@ class BaseProfileTaskPanel(ABC):
 
         self.enable_signals(True)
 
+        self.form_proxy.combo_family.setCurrentIndex(0)
+        self.on_family_changed(None)
+
+
     def on_family_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
@@ -193,6 +201,9 @@ class BaseProfileTaskPanel(ABC):
 
         self.form_proxy.combo_size.clear()
         self.form_proxy.combo_size.addItems([s for s in self.profiles[material][family]["sizes"]])
+
+        self.form_proxy.combo_size.setCurrentIndex(0)
+        self.on_size_changed(None)
 
     def on_size_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
