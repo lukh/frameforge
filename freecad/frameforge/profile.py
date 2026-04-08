@@ -1001,26 +1001,38 @@ class Profile:
                 p = vslot20x60()
             elif H == 20.0 and W == 80.0:
                 p = vslot20x80()
+            else:
+                raise ValueError("Unknown V-Slot H/W")
 
         if obj.Family == "T-Slot":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20()
+            else:
+                raise ValueError("Unknown T-Slot H/W")
 
         if obj.Family == "T-Slot 3-Slots":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_three_slot()
+            else:
+                raise ValueError("Unknown T-Slot 3-Slots H/W")
 
         if obj.Family == "T-Slot 2-Slots":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_two_slot()
+            else:
+                raise ValueError("Unknown T-Slot 2-Slots H/W")
 
         if obj.Family == "T-Slot 2-Slots Opp":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_two_slot_opp()
+            else:
+                raise ValueError("Unknown T-Slot 2-Slots Opp H/W")
 
         if obj.Family == "T-Slot 1-Slot":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_one_slot()
+            else:
+                raise ValueError("T-Slot 1-Slot H/W")
 
         mirror_h = getattr(obj, "MirrorH", False)
         mirror_v = getattr(obj, "MirrorV", False)
