@@ -186,7 +186,6 @@ class BaseProfileTaskPanel(ABC):
         self.form_proxy.combo_family.setCurrentIndex(0)
         self.on_family_changed(None)
 
-
     def on_family_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
