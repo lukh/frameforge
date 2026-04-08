@@ -189,7 +189,7 @@ def populate_ids(
     if group_ids_for_identical:
         group_profiles_key_func = lambda obj: (
             # obj.Parent, # ???
-            obj.Family,
+            getattr(getattr(obj.CustomProfile, "LinkedObject", obj), "Label", "CustomProfile") if obj.CustomProfile else getattr(obj, "Family", "N/A"),
             round(float(obj.Length.Value), 1),
             obj.Material,
             obj.SizeName,
