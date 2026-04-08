@@ -332,12 +332,12 @@ def get_readable_cutting_angles(ba_y, ba_x, bb_y, bb_x, *trim_cuts):
 
         elif ba_y == bb_y == 0.0:
             angles = (ba_x, bb_x)
-            angles = angles if (angles[0] * angles[1] <= 0) else (abs(angles[0]), abs(angles[1]))
+            angles = angles if (angles[0] * angles[1] < 0) else (abs(angles[0]), abs(angles[1]))
             return (f"{angles[0]:.1f}", f"{angles[1]:.1f}")
 
         elif ba_x == bb_x == 0.0:
             angles = (ba_y, bb_y)
-            angles = angles if (angles[0] * angles[1] <= 0) else (abs(angles[0]), abs(angles[1]))
+            angles = angles if (angles[0] * angles[1] < 0) else (abs(angles[0]), abs(angles[1]))
             return (f"{angles[0]:.1f}", f"{angles[1]:.1f}")
 
         elif (ba_y == 0.0 and bb_x == 0.0) ^ (ba_x == 0.0 and bb_y == 0.0):
