@@ -522,7 +522,8 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
             init_mirror_h=self.form_proxy.cb_mirror_h.isChecked(),
             init_mirror_v=self.form_proxy.cb_mirror_v.isChecked(),
             init_rotation=self.get_rotation(),
-            init_offset_a=init_offset, init_offset_b=init_offset
+            init_offset_a=init_offset,
+            init_offset_b=init_offset,
         )
 
         # Create a ViewObject in current GUI

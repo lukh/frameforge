@@ -66,8 +66,8 @@ class Profile:
         init_mirror_h=False,
         init_mirror_v=False,
         init_rotation=0.0,
-        init_offset_a = 0.0,
-        init_offset_b = 0.0,
+        init_offset_a=0.0,
+        init_offset_b=0.0,
     ):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
