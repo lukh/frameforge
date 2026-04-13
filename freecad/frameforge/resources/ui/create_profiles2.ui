@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>553</width>
-    <height>464</height>
+    <height>508</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -184,6 +184,16 @@
           </property>
           <property name="checked">
            <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cb_pre_extend">
+          <property name="toolTip">
+           <string>Extend the profile by max(W, H)</string>
+          </property>
+          <property name="text">
+           <string>Pre-extend</string>
           </property>
          </widget>
         </item>
