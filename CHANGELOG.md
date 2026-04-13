@@ -1,5 +1,13 @@
 ## Changelog
 
+* v0.2.1
+  - Adding pre-extend profile to create profile
+  - revert PR #112, causing problems with standards mitter cut.
+  - use linkedobject label for custom profile in bom
+  - avoid creating negative angles if other is zero
+  - remove debug prints
+  - fix #115
+
 * v0.2.0
   - Rework internal data, handles angles and length as method
   - Add preview for Profiles

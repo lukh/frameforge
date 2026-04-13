@@ -11,7 +11,7 @@
   <tag>Miter cut</tag>
   <tag>Miter-joint</tag>
   <tag>Trim Cut</tag>
-  <version>0.2.0</version>
+  <version>0.2.1</version>
   <date>2026-03-02</date>
   <maintainer email="vivien.henry@inductivebrain.fr">Vivien Henry</maintainer>
   <license file="LICENSE">LGPL-3.0-only</license>
