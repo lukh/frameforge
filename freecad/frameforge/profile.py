@@ -66,6 +66,8 @@ class Profile:
         init_mirror_h=False,
         init_mirror_v=False,
         init_rotation=0.0,
+        init_offset_a=0.0,
+        init_offset_b=0.0,
     ):
         """
         Constructor. Add properties to FreeCAD Profile object. Profile object have 11 nominal properties associated
@@ -168,9 +170,9 @@ class Profile:
                 "App::PropertyFloat", "BevelEndRotate", "Profile", "Rotate the second cut on Profile axle"
             ).BevelEndRotate = 0
 
-        obj.addProperty("App::PropertyFloat", "OffsetA", "Profile", "Parameter for structure").OffsetA = 0.0
+        obj.addProperty("App::PropertyFloat", "OffsetA", "Profile", "Parameter for structure").OffsetA = init_offset_a
 
-        obj.addProperty("App::PropertyFloat", "OffsetB", "Profile", "Parameter for structure").OffsetB = 0.0
+        obj.addProperty("App::PropertyFloat", "OffsetB", "Profile", "Parameter for structure").OffsetB = init_offset_b
 
         obj.addProperty("App::PropertyFloat", "LinearWeight", "Base", "Linear weight in kg/m").LinearWeight = init_wg
         obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram").ApproxWeight = (
@@ -1001,26 +1003,38 @@ class Profile:
                 p = vslot20x60()
             elif H == 20.0 and W == 80.0:
                 p = vslot20x80()
+            else:
+                raise ValueError("Unknown V-Slot H/W")
 
         if obj.Family == "T-Slot":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20()
+            else:
+                raise ValueError("Unknown T-Slot H/W")
 
         if obj.Family == "T-Slot 3-Slots":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_three_slot()
+            else:
+                raise ValueError("Unknown T-Slot 3-Slots H/W")
 
         if obj.Family == "T-Slot 2-Slots":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_two_slot()
+            else:
+                raise ValueError("Unknown T-Slot 2-Slots H/W")
 
         if obj.Family == "T-Slot 2-Slots Opp":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_two_slot_opp()
+            else:
+                raise ValueError("Unknown T-Slot 2-Slots Opp H/W")
 
         if obj.Family == "T-Slot 1-Slot":
             if H == 20.0 and W == 20.0:
                 p = tslot20x20_one_slot()
+            else:
+                raise ValueError("T-Slot 1-Slot H/W")
 
         mirror_h = getattr(obj, "MirrorH", False)
         mirror_v = getattr(obj, "MirrorV", False)

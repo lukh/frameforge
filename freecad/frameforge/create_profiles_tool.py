@@ -39,6 +39,10 @@ class BaseProfileTaskPanel(ABC):
 
     def enable_signals(self, enable):
         # Block signals during initialization to prevent unintended side effects
+        self.form_proxy.combo_material.blockSignals(not enable)
+        self.form_proxy.combo_family.blockSignals(not enable)
+        self.form_proxy.combo_size.blockSignals(not enable)
+
         self.form_proxy.sb_width.blockSignals(not enable)
         self.form_proxy.sb_height.blockSignals(not enable)
         self.form_proxy.sb_main_thickness.blockSignals(not enable)
@@ -102,6 +106,7 @@ class BaseProfileTaskPanel(ABC):
             execute_if_has_bool("Default Make Fillet", self.form_proxy.cb_make_fillet.setChecked)
             execute_if_has_bool("Default Mirror Horizontally", self.form_proxy.cb_mirror_h.setChecked)
             execute_if_has_bool("Default Mirror Vertically", self.form_proxy.cb_mirror_v.setChecked)
+            execute_if_has_bool("Default Pre Extend", self.form_proxy.cb_pre_extend.setChecked)
             keys = [k for t, k, v in param.GetContents()]
             if "Default AnchorX" in keys:
                 ax = max(0, min(2, param.GetInt("Default AnchorX", 1)))
@@ -123,6 +128,7 @@ class BaseProfileTaskPanel(ABC):
 
         self.form_proxy.cb_mirror_h.stateChanged.connect(self.proceed)
         self.form_proxy.cb_mirror_v.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_pre_extend.stateChanged.connect(self.proceed)
         self.form_proxy.combo_rotation.currentIndexChanged.connect(self.proceed)
         for ax in range(3):
             for ay in range(3):
@@ -179,6 +185,9 @@ class BaseProfileTaskPanel(ABC):
 
         self.enable_signals(True)
 
+        self.form_proxy.combo_family.setCurrentIndex(0)
+        self.on_family_changed(None)
+
     def on_family_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
@@ -193,6 +202,9 @@ class BaseProfileTaskPanel(ABC):
 
         self.form_proxy.combo_size.clear()
         self.form_proxy.combo_size.addItems([s for s in self.profiles[material][family]["sizes"]])
+
+        self.form_proxy.combo_size.setCurrentIndex(0)
+        self.on_size_changed(None)
 
     def on_size_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
@@ -334,6 +346,8 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
             param.SetBool("Default Make Fillet", self.form_proxy.cb_make_fillet.isChecked())
             param.SetBool("Default Mirror Horizontally", self.form_proxy.cb_mirror_h.isChecked())
             param.SetBool("Default Mirror Vertically", self.form_proxy.cb_mirror_v.isChecked())
+            param.SetBool("Default Pre Extend", self.form_proxy.cb_pre_extend.isChecked())
+
             ax, ay = self.get_anchor()
             param.SetInt("Default AnchorX", ax)
             param.SetInt("Default AnchorY", ay)
@@ -481,6 +495,10 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
         else:
             link_sub = None
 
+        init_offset = 0.0
+        if self.form_proxy.cb_pre_extend.isChecked():
+            init_offset = max(self.form_proxy.sb_width.value(), self.form_proxy.sb_height.value())
+
         obj.MapPathParameter = 1
 
         Profile(
@@ -504,6 +522,8 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
             init_mirror_h=self.form_proxy.cb_mirror_h.isChecked(),
             init_mirror_v=self.form_proxy.cb_mirror_v.isChecked(),
             init_rotation=self.get_rotation(),
+            init_offset_a=init_offset,
+            init_offset_b=init_offset,
         )
 
         # Create a ViewObject in current GUI
