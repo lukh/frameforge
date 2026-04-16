@@ -20,6 +20,16 @@ from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPA
 from freecad.frameforge.version import __version__ as ff_version
 
 
+def _execute_proxy_if_available(obj):
+    proxy = getattr(obj, "Proxy", None)
+    if proxy is not None and hasattr(proxy, "execute"):
+        proxy.execute(obj)
+        return
+    App.Console.PrintMessage(
+        f"Frameforge: skipping proxy execution for {getattr(obj, 'Label', obj)} because no executable Proxy is available\n"
+    )
+
+
 class TrimmedProfile:
     def __init__(self, obj):
         obj.addProperty(
@@ -208,7 +218,7 @@ class TrimmedProfile:
         prof = get_profile_from_trimmedbody(obj)
         angles = get_trimmed_profile_all_cutting_angles(obj)
 
-        obj.PID = prof.PID
+        obj.PID = str(getattr(prof, "PID", ""))
         obj.Width = prof.ProfileWidth
         obj.Height = prof.ProfileHeight
         obj.Family = prof.Family
@@ -235,62 +245,76 @@ class TrimmedProfile:
         if not hasattr(obj, "FrameforgeVersion"):
             # migrate parents
             for link in obj.TrimmingBoundary:
-                link[0].Proxy.execute(link[0])
-            obj.TrimmedBody.Proxy.execute(obj.TrimmedBody)
+                _execute_proxy_if_available(link[0])
+            if obj.TrimmedBody is not None:
+                _execute_proxy_if_available(obj.TrimmedBody)
 
             App.Console.PrintMessage(f"Frameforge::object migration : Migrate {obj.Label} to 0.1.8\n")
 
             # related to Profile
-            obj.addProperty(
-                "App::PropertyString",
-                "PID",
-                "Profile",
-                "Profile ID",
-            ).PID = ""
-            obj.setEditorMode("PID", 1)
+            if not hasattr(obj, "PID"):
+                obj.addProperty(
+                    "App::PropertyString",
+                    "PID",
+                    "Profile",
+                    "Profile ID",
+                ).PID = ""
+                obj.setEditorMode("PID", 1)
 
-            obj.addProperty("App::PropertyString", "Family", "Profile", "")
-            obj.setEditorMode("Family", 1)
+            if not hasattr(obj, "Family"):
+                obj.addProperty("App::PropertyString", "Family", "Profile", "")
+                obj.setEditorMode("Family", 1)
 
-            obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
-            obj.setEditorMode("CustomProfile", 1)
+            if not hasattr(obj, "CustomProfile"):
+                obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
+                obj.setEditorMode("CustomProfile", 1)
 
-            obj.addProperty("App::PropertyString", "SizeName", "Profile", "")
-            obj.setEditorMode("SizeName", 1)
+            if not hasattr(obj, "SizeName"):
+                obj.addProperty("App::PropertyString", "SizeName", "Profile", "")
+                obj.setEditorMode("SizeName", 1)
 
-            obj.addProperty("App::PropertyString", "Material", "Profile", "")
-            obj.setEditorMode("Material", 1)
+            if not hasattr(obj, "Material"):
+                obj.addProperty("App::PropertyString", "Material", "Profile", "")
+                obj.setEditorMode("Material", 1)
 
-            obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram")
-            obj.setEditorMode("ApproxWeight", 1)
+            if not hasattr(obj, "ApproxWeight"):
+                obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram")
+                obj.setEditorMode("ApproxWeight", 1)
 
-            obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
-            obj.setEditorMode("Price", 1)
+            if not hasattr(obj, "Price"):
+                obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
+                obj.setEditorMode("Price", 1)
 
             # structure
-            obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
-            obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
-            obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
-            obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = False
-            obj.setEditorMode("Width", 1)  # user doesn't change !
-            obj.setEditorMode("Height", 1)
-            obj.setEditorMode("Length", 1)
-            obj.setEditorMode("Cutout", 1)
+            if not hasattr(obj, "Width"):
+                obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
+                obj.setEditorMode("Width", 1)
+            if not hasattr(obj, "Height"):
+                obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
+                obj.setEditorMode("Height", 1)
+            if not hasattr(obj, "Length"):
+                obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
+                obj.setEditorMode("Length", 1)
+            if not hasattr(obj, "Cutout"):
+                obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = False
+                obj.setEditorMode("Cutout", 1)
 
-            obj.addProperty(
-                "App::PropertyString",
-                "CuttingAngleA",
-                "Structure",
-                "Cutting Angle A",
-            )
-            obj.setEditorMode("CuttingAngleA", 1)
-            obj.addProperty(
-                "App::PropertyString",
-                "CuttingAngleB",
-                "Structure",
-                "Cutting Angle B",
-            )
-            obj.setEditorMode("CuttingAngleB", 1)
+            if not hasattr(obj, "CuttingAngleA"):
+                obj.addProperty(
+                    "App::PropertyString",
+                    "CuttingAngleA",
+                    "Structure",
+                    "Cutting Angle A",
+                )
+                obj.setEditorMode("CuttingAngleA", 1)
+            if not hasattr(obj, "CuttingAngleB"):
+                obj.addProperty(
+                    "App::PropertyString",
+                    "CuttingAngleB",
+                    "Structure",
+                    "Cutting Angle B",
+                )
+                obj.setEditorMode("CuttingAngleB", 1)
 
             # add version
             obj.addProperty(

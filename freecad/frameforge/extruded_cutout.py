@@ -184,7 +184,7 @@ class ExtrudedCutout:
         else:
             angles = ()
 
-        obj.PID = prof.PID
+        obj.PID = str(getattr(prof, "PID", ""))
         obj.Width = prof.ProfileWidth
         obj.Height = prof.ProfileHeight
         obj.Family = prof.Family
@@ -209,7 +209,14 @@ class ExtrudedCutout:
 
     def run_compatibility_migrations(self, obj):
         if not hasattr(obj, "FrameforgeVersion"):
-            obj.baseObject[0].Proxy.execute(obj.baseObject[0])
+            base_obj = obj.baseObject[0]
+            proxy = getattr(base_obj, "Proxy", None)
+            if proxy is not None and hasattr(proxy, "execute"):
+                proxy.execute(base_obj)
+            else:
+                App.Console.PrintMessage(
+                    f"Frameforge: skipping proxy execution for {getattr(base_obj, 'Label', base_obj)} because no executable Proxy is available\n"
+                )
 
             App.Console.PrintMessage(f"Frameforge::object migration : Migrate {obj.Label} to 0.1.8\n")
 
