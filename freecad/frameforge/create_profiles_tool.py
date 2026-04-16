@@ -130,18 +130,24 @@ class BaseProfileTaskPanel(ABC):
                 if default_material_index > -1:
                     self.form_proxy.combo_material.setCurrentIndex(default_material_index)
 
-                    default_family_index = self.form_proxy.combo_family.findText(param.GetString("Default Profile Family"))
+                    default_family_index = self.form_proxy.combo_family.findText(
+                        param.GetString("Default Profile Family")
+                    )
                     if default_family_index > -1:
                         self.form_proxy.combo_family.setCurrentIndex(default_family_index)
 
-                        default_size_index = self.form_proxy.combo_size.findText(param.GetString("Default Profile Size"))
+                        default_size_index = self.form_proxy.combo_size.findText(
+                            param.GetString("Default Profile Size")
+                        )
                         if default_size_index > -1:
                             self.form_proxy.combo_size.setCurrentIndex(default_size_index)
 
                 execute_if_has_bool("Default Sketch in Name", self.form_proxy.cb_sketch_in_name.setChecked)
                 execute_if_has_bool("Default Family in Name", self.form_proxy.cb_family_in_name.setChecked)
                 execute_if_has_bool("Default Size in Name", self.form_proxy.cb_size_in_name.setChecked)
-                execute_if_has_bool("Default Prefix Profile in Name", self.form_proxy.cb_prefix_profile_in_name.setChecked)
+                execute_if_has_bool(
+                    "Default Prefix Profile in Name", self.form_proxy.cb_prefix_profile_in_name.setChecked
+                )
                 execute_if_has_bool("Default Make Fillet", self.form_proxy.cb_make_fillet.setChecked)
                 execute_if_has_bool("Default Mirror Horizontally", self.form_proxy.cb_mirror_h.setChecked)
                 execute_if_has_bool("Default Mirror Vertically", self.form_proxy.cb_mirror_v.setChecked)
