@@ -69,13 +69,19 @@ class BaseProfileTaskPanel(ABC):
             return
         self.proceed()
 
-    def resolve_material_for_family(self, material, family):
+    def resolve_material_for_family(self, material, family, size_name=""):
         if material in self.profiles:
             return material
+        matches = []
         for candidate, families in self.profiles.items():
-            if family in families:
-                return candidate
-        return material
+            if family not in families:
+                continue
+            if size_name and size_name not in families[family]["sizes"]:
+                continue
+            matches.append(candidate)
+        if len(matches) == 1:
+            return matches[0]
+        return None
 
     def populate_family_combo(self, material):
         self.form_proxy.combo_family.clear()

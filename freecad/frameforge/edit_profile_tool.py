@@ -58,14 +58,17 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         self._suspend_proceed = False
 
     def _set_profile_combo_state(self):
-        material = self.resolve_material_for_family(self.profile.Material, self.profile.Family)
+        material = self.resolve_material_for_family(self.profile.Material, self.profile.Family, self.profile.SizeName)
         family = self.profile.Family
         size_name = self.profile.SizeName
+
+        if material is None:
+            material = str(self.form_proxy.combo_material.currentText())
 
         material_index = self.form_proxy.combo_material.findText(material)
         if material_index >= 0:
             self.form_proxy.combo_material.setCurrentIndex(material_index)
-        else:
+        elif material:
             self.form_proxy.combo_material.setCurrentText(material)
 
         self.populate_family_combo(material)
@@ -94,8 +97,6 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         App.ActiveDocument.openTransaction("Edit Profile")
 
         self.initialize_ui()
-
-        self.proceed()
 
         self.profile.ViewObject.Transparency = 50
         self.profile.ViewObject.ShapeColor = (0.8, 0.2, 0.1)
