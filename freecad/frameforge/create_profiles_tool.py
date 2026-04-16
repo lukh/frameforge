@@ -12,6 +12,15 @@ from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPA
 from freecad.frameforge.profile import Profile, ViewProviderProfile
 
 
+def _move_to_parent_if_supported(obj, parent):
+    try:
+        parent.addObject(obj)
+    except ValueError:
+        App.Console.PrintMessage(
+            f"Frameforge: parent {parent.Label} ({parent.TypeId}) does not accept {obj.TypeId}, keeping at document root\n"
+        )
+
+
 class BaseProfileTaskPanel(ABC):
     def __init__(self):
         self._objects = {}
@@ -479,7 +488,7 @@ class CreateProfileTaskPanel(BaseProfileTaskPanel):
         # move it to the sketch's parent if possible
         if sketch is not None and len(sketch.Parents) > 0:
             sk_parent = sketch.Parents[-1][0]
-            sk_parent.addObject(obj)
+            _move_to_parent_if_supported(obj, sk_parent)
 
         if sketch is not None and edge is not None:
             # Tuple assignment for edge

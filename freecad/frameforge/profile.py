@@ -39,6 +39,17 @@ FLANGE_ANGLES = {
 
 # Global variable for a 3D float vector (used in Profile class)
 vec = App.Base.Vector
+EDGE_EPSILON = 1e-7
+
+
+def _line_if_distinct(start, end):
+    if start.distanceToPoint(end) <= EDGE_EPSILON:
+        return None
+    return Part.makeLine(start, end)
+
+
+def _compact_edges(*edges):
+    return [edge for edge in edges if edge is not None]
 
 
 class Profile:
@@ -470,17 +481,17 @@ class Profile:
                 c2 = vec(TW + R + w, TW + R + h, 0)
                 c3 = vec(W - r + w, TW - r + h, 0)
 
-                L1 = Part.makeLine(p1, p2)
-                L2 = Part.makeLine(p2, p3)
-                L3 = Part.makeLine(p4, p5)
-                L4 = Part.makeLine(p6, p7)
-                L5 = Part.makeLine(p8, p9)
-                L6 = Part.makeLine(p9, p1)
+                L1 = _line_if_distinct(p1, p2)
+                L2 = _line_if_distinct(p2, p3)
+                L3 = _line_if_distinct(p4, p5)
+                L4 = _line_if_distinct(p6, p7)
+                L5 = _line_if_distinct(p8, p9)
+                L6 = _line_if_distinct(p9, p1)
                 A1 = Part.makeCircle(r, c1, d, 0, 90)
                 A2 = Part.makeCircle(R, c2, d, 180, 270)
                 A3 = Part.makeCircle(r, c3, d, 0, 90)
 
-                wire1 = Part.Wire([L1, L2, A1, L3, A2, L4, A3, L5, L6])
+                wire1 = Part.Wire(_compact_edges(L1, L2, A1, L3, A2, L4, A3, L5, L6))
 
             p = Part.Face(wire1)
 
@@ -540,16 +551,16 @@ class Profile:
                 c3 = vec(W - R + w, H - R + h, 0)
                 c4 = vec(W - R + w, R + h, 0)
 
-                L1 = Part.makeLine(p1, p2)
-                L2 = Part.makeLine(p3, p4)
-                L3 = Part.makeLine(p5, p6)
-                L4 = Part.makeLine(p7, p8)
+                L1 = _line_if_distinct(p1, p2)
+                L2 = _line_if_distinct(p3, p4)
+                L3 = _line_if_distinct(p5, p6)
+                L4 = _line_if_distinct(p7, p8)
                 A1 = Part.makeCircle(R, c1, d, 180, 270)
                 A2 = Part.makeCircle(R, c2, d, 90, 180)
                 A3 = Part.makeCircle(R, c3, d, 0, 90)
                 A4 = Part.makeCircle(R, c4, d, 270, 0)
 
-                wire1 = Part.Wire([L1, A2, L2, A3, L3, A4, L4, A1])
+                wire1 = Part.Wire(_compact_edges(L1, A2, L2, A3, L3, A4, L4, A1))
 
                 p1 = vec(TW + w, TW + r + h, 0)
                 p2 = vec(TW + w, H - TW - r + h, 0)
@@ -565,16 +576,16 @@ class Profile:
                 c3 = vec(W - TW - r + w, H - TW - r + h, 0)
                 c4 = vec(W - TW - r + w, TW + r + h, 0)
 
-                L1 = Part.makeLine(p1, p2)
-                L2 = Part.makeLine(p3, p4)
-                L3 = Part.makeLine(p5, p6)
-                L4 = Part.makeLine(p7, p8)
+                L1 = _line_if_distinct(p1, p2)
+                L2 = _line_if_distinct(p3, p4)
+                L3 = _line_if_distinct(p5, p6)
+                L4 = _line_if_distinct(p7, p8)
                 A1 = Part.makeCircle(r, c1, d, 180, 270)
                 A2 = Part.makeCircle(r, c2, d, 90, 180)
                 A3 = Part.makeCircle(r, c3, d, 0, 90)
                 A4 = Part.makeCircle(r, c4, d, 270, 0)
 
-                wire2 = Part.Wire([L1, A2, L2, A3, L3, A4, L4, A1])
+                wire2 = Part.Wire(_compact_edges(L1, A2, L2, A3, L3, A4, L4, A1))
 
             if wire2:
                 p1 = Part.Face(wire1)
@@ -1660,6 +1671,9 @@ class ViewProviderProfile:
             return None
 
         import freecad.frameforge.edit_profile_tool
+
+        if Gui.Control.activeDialog():
+            Gui.Control.closeDialog()
 
         taskd = freecad.frameforge.edit_profile_tool.EditProfileTaskPanel(self.Object)
         Gui.Control.showDialog(taskd)
