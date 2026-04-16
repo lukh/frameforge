@@ -19,7 +19,7 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
 
     def initialize_ui(self):
         self._suspend_proceed = True
-        super().initialize_ui()
+        super().initialize_ui(apply_defaults=False)
 
         self.form_proxy.groupBox_5.setEnabled(False)
 
@@ -40,6 +40,7 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         except:
             App.Console.PrintMessage(f"Frameforge : can't find Unit Price for {self.profile.Label}\n")
         self.form_proxy.cb_make_fillet.setChecked(self.profile.MakeFillet)
+        self.form_proxy.cb_pre_extend.setChecked(self._profile_has_pre_extend())
         if hasattr(self.profile, "AnchorX"):
             ax = ANCHOR_X.index(self.profile.AnchorX) if self.profile.AnchorX in ANCHOR_X else 1
             ay = ANCHOR_Y.index(self.profile.AnchorY) if self.profile.AnchorY in ANCHOR_Y else 1
@@ -57,22 +58,31 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         self._suspend_proceed = False
 
     def _set_profile_combo_state(self):
-        material = self.profile.Material
+        material = self.resolve_material_for_family(self.profile.Material, self.profile.Family)
         family = self.profile.Family
         size_name = self.profile.SizeName
 
-        self.form_proxy.combo_material.setCurrentText(material)
+        material_index = self.form_proxy.combo_material.findText(material)
+        if material_index >= 0:
+            self.form_proxy.combo_material.setCurrentIndex(material_index)
+        else:
+            self.form_proxy.combo_material.setCurrentText(material)
 
-        self.form_proxy.combo_family.clear()
-        self.form_proxy.combo_family.addItems([f for f in self.profiles.get(material, {})])
-        self.form_proxy.combo_family.setCurrentText(family)
+        self.populate_family_combo(material)
+        family_index = self.form_proxy.combo_family.findText(family)
+        if family_index >= 0:
+            self.form_proxy.combo_family.setCurrentIndex(family_index)
+        else:
+            self.form_proxy.combo_family.setCurrentText(family)
 
-        family_profiles = self.profiles.get(material, {}).get(family, {})
-        self.form_proxy.combo_size.clear()
-        self.form_proxy.combo_size.addItems([s for s in family_profiles.get("sizes", {})])
-        self.form_proxy.combo_size.setCurrentText(size_name)
+        self.populate_size_combo(material, family)
+        size_index = self.form_proxy.combo_size.findText(size_name)
+        if size_index >= 0:
+            self.form_proxy.combo_size.setCurrentIndex(size_index)
+        else:
+            self.form_proxy.combo_size.setCurrentText(size_name)
 
-        if family in self.profiles.get(material, {}):
+        if material in self.profiles and family in self.profiles[material]:
             family_data = self.profiles[material][family]
             self.form_proxy.cb_make_fillet.setChecked(self.profile.MakeFillet)
             self.form_proxy.cb_make_fillet.setEnabled(family_data["fillet"])
@@ -84,6 +94,8 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         App.ActiveDocument.openTransaction("Edit Profile")
 
         self.initialize_ui()
+
+        self.proceed()
 
         self.profile.ViewObject.Transparency = 50
         self.profile.ViewObject.ShapeColor = (0.8, 0.2, 0.1)
@@ -115,3 +127,7 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         self.update_profile(self.profile)
 
         self.profile.recompute()
+
+    def _profile_has_pre_extend(self):
+        expected = max(self.profile.ProfileWidth, self.profile.ProfileHeight)
+        return abs(self.profile.OffsetA - expected) < 1e-7 and abs(self.profile.OffsetB - expected) < 1e-7
