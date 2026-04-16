@@ -24,9 +24,7 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
 
         self.enable_signals(False)
 
-        self.form_proxy.combo_material.setCurrentText(self.profile.Material)
-        self.form_proxy.combo_family.setCurrentText(self.profile.Family)
-        self.form_proxy.combo_size.setCurrentText(self.profile.SizeName)
+        self._set_profile_combo_state()
 
         self.form_proxy.sb_width.setValue(self.profile.ProfileWidth)
         self.form_proxy.sb_height.setValue(self.profile.ProfileHeight)
@@ -56,12 +54,34 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
 
         self.enable_signals(True)
 
+    def _set_profile_combo_state(self):
+        material = self.profile.Material
+        family = self.profile.Family
+        size_name = self.profile.SizeName
+
+        self.form_proxy.combo_material.setCurrentText(material)
+
+        self.form_proxy.combo_family.clear()
+        self.form_proxy.combo_family.addItems([f for f in self.profiles.get(material, {})])
+        self.form_proxy.combo_family.setCurrentText(family)
+
+        family_profiles = self.profiles.get(material, {}).get(family, {})
+        self.form_proxy.combo_size.clear()
+        self.form_proxy.combo_size.addItems([s for s in family_profiles.get("sizes", {})])
+        self.form_proxy.combo_size.setCurrentText(size_name)
+
+        if family in self.profiles.get(material, {}):
+            family_data = self.profiles[material][family]
+            self.form_proxy.cb_make_fillet.setChecked(self.profile.MakeFillet)
+            self.form_proxy.cb_make_fillet.setEnabled(family_data["fillet"])
+            self.form_proxy.label_norm.setText(family_data["norm"])
+            self.form_proxy.label_unit.setText(family_data["unit"])
+            self.update_image()
+
     def open(self):
         App.ActiveDocument.openTransaction("Edit Profile")
 
         self.initialize_ui()
-
-        self.proceed()
 
         self.profile.ViewObject.Transparency = 50
         self.profile.ViewObject.ShapeColor = (0.8, 0.2, 0.1)
