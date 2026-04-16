@@ -151,13 +151,21 @@ class TrimmedProfile:
             precision = 0.001
             target1 = self.getTarget(fp.TrimmedBody)
             edge1 = doc.getObject(target1[0].Name).getSubObject(target1[1][0])
+            profile1 = get_profile_from_trimmedbody(fp.TrimmedBody)
+            shape1 = fp.TrimmedBody.Shape
+            bound_shapes = []
+            bound_profiles = []
             bounds_target = []
             for bound in fp.TrimmingBoundary:
+                bound_shapes.append(bound[0].Shape)
+                bound_profiles.append(get_profile_from_trimmedbody(bound[0]))
                 bounds_target.append(self.getTarget(bound[0]))
             trimming_boundary_edges = []
             for target in bounds_target:
                 trimming_boundary_edges.append(doc.getObject(target[0].Name).getSubObject(target[1][0]))
-            for edge2 in trimming_boundary_edges:
+            for i, edge2 in enumerate(trimming_boundary_edges):
+                shape2 = bound_shapes[i]
+                profile2 = bound_profiles[i]
                 end1 = edge1.Vertexes[-1].Point
                 start1 = edge1.Vertexes[0].Point
                 end2 = edge2.Vertexes[-1].Point
@@ -192,8 +200,22 @@ class TrimmedProfile:
                     raise RuntimeError("End Miter: edges not aligned. Ensure they meet at a common endpoint.")
 
                 normal = Part.Plane(p1, p2, p3).toShape().normalAt(0, 0)
-                cutplane = Part.makePlane(10, 10, p1, vec1, normal)
-                cutplane.rotate(p1, normal, -90 + bisect)
+                use_intersection_center = (
+                    getattr(profile1, "AnchorX", None),
+                    getattr(profile1, "AnchorY", None),
+                ) != (
+                    getattr(profile2, "AnchorX", None),
+                    getattr(profile2, "AnchorY", None),
+                )
+                cut_origin = p1
+                if use_intersection_center:
+                    intersection = shape1.common(shape2)
+                    if intersection.isNull():
+                        raise RuntimeError("End Miter: profiles don't intersect. You can add offsets.")
+                    cut_origin = intersection.BoundBox.Center
+
+                cutplane = Part.makePlane(10, 10, cut_origin, vec1, normal)
+                cutplane.rotate(cut_origin, normal, -90 + bisect)
                 cut_shapes.append(self.getOutsideCV(cutplane, fp.TrimmedBody.Shape))
 
         if len(cut_shapes) > 0:
