@@ -18,6 +18,7 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         super().__init__()
 
     def initialize_ui(self):
+        self._suspend_proceed = True
         super().initialize_ui()
 
         self.form_proxy.groupBox_5.setEnabled(False)
@@ -53,6 +54,7 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         # self.form_proxy.cb_combined_bevel.setChecked()
 
         self.enable_signals(True)
+        self._suspend_proceed = False
 
     def _set_profile_combo_state(self):
         material = self.profile.Material
@@ -87,7 +89,12 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         self.profile.ViewObject.ShapeColor = (0.8, 0.2, 0.1)
 
     def reject(self):
-        App.ActiveDocument.abortTransaction()
+        self.profile.restoreContent(self.dump)
+        self.profile.recompute()
+        self.profile.ViewObject.Transparency = 0
+        self.profile.ViewObject.ShapeColor = (0.44, 0.47, 0.5)
+        App.ActiveDocument.commitTransaction()
+        App.ActiveDocument.recompute()
         Gui.ActiveDocument.resetEdit()
 
         return True

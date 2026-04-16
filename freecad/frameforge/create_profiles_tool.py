@@ -15,6 +15,7 @@ from freecad.frameforge.profile import Profile, ViewProviderProfile
 class BaseProfileTaskPanel(ABC):
     def __init__(self):
         self._objects = {}
+        self._suspend_proceed = False
 
         self.form = [
             Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles1.ui")),
@@ -56,6 +57,11 @@ class BaseProfileTaskPanel(ABC):
         for ax in range(3):
             for ay in range(3):
                 getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").blockSignals(not enable)
+
+    def request_proceed(self):
+        if self._suspend_proceed:
+            return
+        self.proceed()
 
     def initialize_ui(self):
         def execute_if_has_bool(key, func):
@@ -126,26 +132,26 @@ class BaseProfileTaskPanel(ABC):
 
         self.form_proxy.cb_make_fillet.stateChanged.connect(self.on_cb_make_fillet_changed)
 
-        self.form_proxy.cb_mirror_h.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_mirror_v.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_pre_extend.stateChanged.connect(self.proceed)
-        self.form_proxy.combo_rotation.currentIndexChanged.connect(self.proceed)
+        self.form_proxy.cb_mirror_h.stateChanged.connect(self.request_proceed)
+        self.form_proxy.cb_mirror_v.stateChanged.connect(self.request_proceed)
+        self.form_proxy.cb_pre_extend.stateChanged.connect(self.request_proceed)
+        self.form_proxy.combo_rotation.currentIndexChanged.connect(self.request_proceed)
         for ax in range(3):
             for ay in range(3):
-                getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").clicked.connect(self.proceed)
+                getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").clicked.connect(self.request_proceed)
 
-        self.form_proxy.sb_width.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_height.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_main_thickness.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_flange_thickness.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_radius1.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_radius2.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_length.valueChanged.connect(self.proceed)
+        self.form_proxy.sb_width.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_height.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_main_thickness.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_flange_thickness.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_radius1.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_radius2.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_length.valueChanged.connect(self.request_proceed)
 
-        self.form_proxy.cb_sketch_in_name.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_family_in_name.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_size_in_name.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_prefix_profile_in_name.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_sketch_in_name.stateChanged.connect(self.request_proceed)
+        self.form_proxy.cb_family_in_name.stateChanged.connect(self.request_proceed)
+        self.form_proxy.cb_size_in_name.stateChanged.connect(self.request_proceed)
+        self.form_proxy.cb_prefix_profile_in_name.stateChanged.connect(self.request_proceed)
 
     def get_anchor(self):
         """Return (anchor_x, anchor_y) 0=left/bottom, 1=center, 2=right/top."""
@@ -254,11 +260,11 @@ class BaseProfileTaskPanel(ABC):
                 sb.setValue(float(profile[s]))
 
             self.enable_signals(True)
-            self.proceed()
+            self.request_proceed()
 
     def on_cb_make_fillet_changed(self, state):
         self.update_image()
-        self.proceed()
+        self.request_proceed()
 
     def update_image(self):
         material = str(self.form_proxy.combo_material.currentText())
