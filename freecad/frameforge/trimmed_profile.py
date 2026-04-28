@@ -1,13 +1,10 @@
-import glob
 import math
-import os
 
 import ArchCommands
 import BOPTools.SplitAPI
 import FreeCAD as App
 import FreeCADGui as Gui
 import Part
-from PySide import QtCore, QtGui
 
 from freecad.frameforge._utils import (
     copy_profile_structure_data,
@@ -19,7 +16,7 @@ from freecad.frameforge._utils import (
     get_trimmed_profile_all_cutting_angles,
     length_along_normal,
 )
-from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
+from freecad.frameforge.ff_tools import translate
 from freecad.frameforge.version import __version__ as ff_version
 
 
@@ -395,4 +392,4 @@ class ViewProviderTrimmedProfile:
         return True
 
     def edit(self):
-        FreeCADGui.ActiveDocument.setEdit(self.Object, 0)
+        Gui.ActiveDocument.setEdit(self.Object, 0)

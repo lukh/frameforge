@@ -1,11 +1,6 @@
-import glob
-import math
-import os
-
 import FreeCAD as App
 import FreeCADGui as Gui
 import Part
-from PySide import QtCore, QtGui
 
 from freecad.frameforge._utils import (
     copy_profile_structure_data,
@@ -18,7 +13,7 @@ from freecad.frameforge._utils import (
     get_trimmedprofile_from_extrudedcutout,
     length_along_normal,
 )
-from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
+from freecad.frameforge.ff_tools import translate
 from freecad.frameforge.frameforge_exceptions import FrameForgeException
 from freecad.frameforge.version import __version__ as ff_version
 
@@ -314,7 +309,7 @@ class ViewProviderExtrudedCutout:
         return True
 
     def edit(self):
-        FreeCADGui.ActiveDocument.setEdit(self.Object, 0)
+        Gui.ActiveDocument.setEdit(self.Object, 0)
 
     def getIcon(self):
         return """

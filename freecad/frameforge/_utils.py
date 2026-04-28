@@ -385,8 +385,6 @@ def length_along_normal(obj):
 
 def get_readable_cutting_angles(ba_y, ba_x, bb_y, bb_x, *trim_cuts):
     all_bevels = [ba_y, ba_x, bb_y, bb_x]
-    start_bevels = [ba_y, ba_x]
-    end_bevels = [bb_y, bb_x]
 
     if len(trim_cuts) == 0:
         # a real profile
