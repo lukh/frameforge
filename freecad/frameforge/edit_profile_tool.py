@@ -1,13 +1,8 @@
-import glob
-import json
-import os
-
 import FreeCAD as App
 import FreeCADGui as Gui
-from PySide import QtCore, QtGui
 
 from freecad.frameforge.create_profiles_tool import BaseProfileTaskPanel
-from freecad.frameforge.profile import ANCHOR_X, ANCHOR_Y, Profile, ViewProviderProfile
+from freecad.frameforge.profile import ANCHOR_X, ANCHOR_Y
 
 
 class EditProfileTaskPanel(BaseProfileTaskPanel):
@@ -18,15 +13,14 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         super().__init__()
 
     def initialize_ui(self):
-        super().initialize_ui()
+        self._suspend_proceed = True
+        super().initialize_ui(apply_defaults=False)
 
         self.form_proxy.groupBox_5.setEnabled(False)
 
         self.enable_signals(False)
 
-        self.form_proxy.combo_material.setCurrentText(self.profile.Material)
-        self.form_proxy.combo_family.setCurrentText(self.profile.Family)
-        self.form_proxy.combo_size.setCurrentText(self.profile.SizeName)
+        self._set_profile_combo_state()
 
         self.form_proxy.sb_width.setValue(self.profile.ProfileWidth)
         self.form_proxy.sb_height.setValue(self.profile.ProfileHeight)
@@ -38,9 +32,10 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         self.form_proxy.sb_weight.setValue(self.profile.ApproxWeight)
         try:
             self.form_proxy.sb_unitprice.setValue(self.profile.UnitPrice)
-        except:
+        except AttributeError:
             App.Console.PrintMessage(f"Frameforge : can't find Unit Price for {self.profile.Label}\n")
         self.form_proxy.cb_make_fillet.setChecked(self.profile.MakeFillet)
+        self.form_proxy.cb_pre_extend.setChecked(self._profile_has_pre_extend())
         if hasattr(self.profile, "AnchorX"):
             ax = ANCHOR_X.index(self.profile.AnchorX) if self.profile.AnchorX in ANCHOR_X else 1
             ay = ANCHOR_Y.index(self.profile.AnchorY) if self.profile.AnchorY in ANCHOR_Y else 1
@@ -55,19 +50,57 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         # self.form_proxy.cb_combined_bevel.setChecked()
 
         self.enable_signals(True)
+        self._suspend_proceed = False
+
+    def _set_profile_combo_state(self):
+        material = self.resolve_material_for_family(self.profile.Material, self.profile.Family, self.profile.SizeName)
+        family = self.profile.Family
+        size_name = self.profile.SizeName
+
+        if material is None:
+            material = self.profile.Material
+
+        self._select_or_add_combo_text(self.form_proxy.combo_material, material)
+
+        self.populate_family_combo(material)
+        self._select_or_add_combo_text(self.form_proxy.combo_family, family)
+
+        self.populate_size_combo(material, family)
+        self._select_or_add_combo_text(self.form_proxy.combo_size, size_name)
+
+        if material in self.profiles and family in self.profiles[material]:
+            family_data = self.profiles[material][family]
+            self.form_proxy.cb_make_fillet.setChecked(self.profile.MakeFillet)
+            self.form_proxy.cb_make_fillet.setEnabled(family_data["fillet"])
+            self.form_proxy.label_norm.setText(family_data["norm"])
+            self.form_proxy.label_unit.setText(family_data["unit"])
+            self.update_image()
+
+    def _select_or_add_combo_text(self, combo, text):
+        if not text:
+            return
+
+        index = combo.findText(text)
+        if index < 0:
+            combo.addItem(text)
+            index = combo.findText(text)
+        combo.setCurrentIndex(index)
 
     def open(self):
         App.ActiveDocument.openTransaction("Edit Profile")
 
         self.initialize_ui()
 
-        self.proceed()
-
         self.profile.ViewObject.Transparency = 50
         self.profile.ViewObject.ShapeColor = (0.8, 0.2, 0.1)
 
     def reject(self):
-        App.ActiveDocument.abortTransaction()
+        self.profile.restoreContent(self.dump)
+        self.profile.recompute()
+        self.profile.ViewObject.Transparency = 0
+        self.profile.ViewObject.ShapeColor = (0.44, 0.47, 0.5)
+        App.ActiveDocument.commitTransaction()
+        App.ActiveDocument.recompute()
         Gui.ActiveDocument.resetEdit()
 
         return True
@@ -88,3 +121,7 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         self.update_profile(self.profile)
 
         self.profile.recompute()
+
+    def _profile_has_pre_extend(self):
+        expected = max(self.profile.ProfileWidth, self.profile.ProfileHeight)
+        return abs(self.profile.OffsetA - expected) < 1e-7 and abs(self.profile.OffsetB - expected) < 1e-7
