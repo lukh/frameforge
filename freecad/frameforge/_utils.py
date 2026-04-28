@@ -120,6 +120,69 @@ def is_part_or_part_design(obj):
     return obj.TypeId.startswith(("Part::", "PartDesign::"))
 
 
+def ensure_property(obj, prop_type, name, group, description="", default=None, editor_mode=None):
+    if not hasattr(obj, name):
+        obj.addProperty(prop_type, name, group, description)
+        if default is not None:
+            setattr(obj, name, default)
+    if editor_mode is not None:
+        obj.setEditorMode(name, editor_mode)
+
+
+def ensure_profile_structure_properties(obj, cutout):
+    ensure_property(obj, "App::PropertyString", "PID", "Profile", "Profile ID", "", 1)
+    ensure_property(obj, "App::PropertyString", "Family", "Profile", "", editor_mode=1)
+    ensure_property(obj, "App::PropertyLink", "CustomProfile", "Profile", "Target profile", None, 1)
+    ensure_property(obj, "App::PropertyString", "SizeName", "Profile", "", editor_mode=1)
+    ensure_property(obj, "App::PropertyString", "Material", "Profile", "", editor_mode=1)
+    ensure_property(
+        obj,
+        "App::PropertyFloat",
+        "ApproxWeight",
+        "Base",
+        "Approximate weight in Kilogram",
+        editor_mode=1,
+    )
+    ensure_property(obj, "App::PropertyFloat", "Price", "Base", "Profile Price", editor_mode=1)
+    ensure_property(obj, "App::PropertyLength", "Width", "Structure", "Parameter for structure", editor_mode=1)
+    ensure_property(obj, "App::PropertyLength", "Height", "Structure", "Parameter for structure", editor_mode=1)
+    ensure_property(obj, "App::PropertyLength", "Length", "Structure", "Parameter for structure", editor_mode=1)
+    ensure_property(obj, "App::PropertyBool", "Cutout", "Structure", "Has Cutout", cutout, 1)
+    obj.Cutout = cutout
+    ensure_property(obj, "App::PropertyString", "CuttingAngleA", "Structure", "Cutting Angle A", editor_mode=1)
+    ensure_property(obj, "App::PropertyString", "CuttingAngleB", "Structure", "Cutting Angle B", editor_mode=1)
+
+
+def copy_profile_structure_data(obj, profile):
+    required = (
+        "ProfileWidth",
+        "ProfileHeight",
+        "Family",
+        "SizeName",
+        "Material",
+        "ApproxWeight",
+        "Price",
+    )
+    missing = [name for name in required if not hasattr(profile, name)]
+    if missing:
+        FreeCAD.Console.PrintError(
+            "Frameforge: cannot update structure data from "
+            f"{getattr(profile, 'Label', profile)}; missing {', '.join(missing)}\n"
+        )
+        return False
+
+    obj.PID = str(getattr(profile, "PID", ""))
+    obj.Width = profile.ProfileWidth
+    obj.Height = profile.ProfileHeight
+    obj.Family = profile.Family
+    obj.CustomProfile = getattr(profile, "CustomProfile", None)
+    obj.SizeName = profile.SizeName
+    obj.Material = profile.Material
+    obj.ApproxWeight = profile.ApproxWeight
+    obj.Price = profile.Price
+    return True
+
+
 def get_profiles_and_links_from_object(profiles, links, obj):
     if is_fusion(obj):
         for child in obj.Shapes:
