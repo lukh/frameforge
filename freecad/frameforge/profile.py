@@ -1673,7 +1673,10 @@ class ViewProviderProfile:
         import freecad.frameforge.edit_profile_tool
 
         if Gui.Control.activeDialog():
-            Gui.Control.closeDialog()
+            App.Console.PrintMessage(
+                "Frameforge: another task dialog is already open; close it before editing this profile.\n"
+            )
+            return False
 
         taskd = freecad.frameforge.edit_profile_tool.EditProfileTaskPanel(self.Object)
         Gui.Control.showDialog(taskd)
