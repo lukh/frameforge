@@ -1,13 +1,8 @@
-import glob
-import json
-import os
-
 import FreeCAD as App
 import FreeCADGui as Gui
-from PySide import QtCore, QtGui
 
 from freecad.frameforge.create_profiles_tool import BaseProfileTaskPanel
-from freecad.frameforge.profile import ANCHOR_X, ANCHOR_Y, Profile, ViewProviderProfile
+from freecad.frameforge.profile import ANCHOR_X, ANCHOR_Y
 
 
 class EditProfileTaskPanel(BaseProfileTaskPanel):
@@ -37,7 +32,7 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         self.form_proxy.sb_weight.setValue(self.profile.ApproxWeight)
         try:
             self.form_proxy.sb_unitprice.setValue(self.profile.UnitPrice)
-        except:
+        except AttributeError:
             App.Console.PrintMessage(f"Frameforge : can't find Unit Price for {self.profile.Label}\n")
         self.form_proxy.cb_make_fillet.setChecked(self.profile.MakeFillet)
         self.form_proxy.cb_pre_extend.setChecked(self._profile_has_pre_extend())
