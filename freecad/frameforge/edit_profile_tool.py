@@ -63,27 +63,15 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
         size_name = self.profile.SizeName
 
         if material is None:
-            material = str(self.form_proxy.combo_material.currentText())
+            material = self.profile.Material
 
-        material_index = self.form_proxy.combo_material.findText(material)
-        if material_index >= 0:
-            self.form_proxy.combo_material.setCurrentIndex(material_index)
-        elif material:
-            self.form_proxy.combo_material.setCurrentText(material)
+        self._select_or_add_combo_text(self.form_proxy.combo_material, material)
 
         self.populate_family_combo(material)
-        family_index = self.form_proxy.combo_family.findText(family)
-        if family_index >= 0:
-            self.form_proxy.combo_family.setCurrentIndex(family_index)
-        else:
-            self.form_proxy.combo_family.setCurrentText(family)
+        self._select_or_add_combo_text(self.form_proxy.combo_family, family)
 
         self.populate_size_combo(material, family)
-        size_index = self.form_proxy.combo_size.findText(size_name)
-        if size_index >= 0:
-            self.form_proxy.combo_size.setCurrentIndex(size_index)
-        else:
-            self.form_proxy.combo_size.setCurrentText(size_name)
+        self._select_or_add_combo_text(self.form_proxy.combo_size, size_name)
 
         if material in self.profiles and family in self.profiles[material]:
             family_data = self.profiles[material][family]
@@ -92,6 +80,16 @@ class EditProfileTaskPanel(BaseProfileTaskPanel):
             self.form_proxy.label_norm.setText(family_data["norm"])
             self.form_proxy.label_unit.setText(family_data["unit"])
             self.update_image()
+
+    def _select_or_add_combo_text(self, combo, text):
+        if not text:
+            return
+
+        index = combo.findText(text)
+        if index < 0:
+            combo.addItem(text)
+            index = combo.findText(text)
+        combo.setCurrentIndex(index)
 
     def open(self):
         App.ActiveDocument.openTransaction("Edit Profile")
