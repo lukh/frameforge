@@ -59,7 +59,18 @@ class LinkCommand:
 
         for root in roots:
             link = makeLink(root)
-            Gui.Control.showDialog(TaskAttachmentEditor.AttachmentEditorTaskPanel(link))
+
+            def task_callback_ok():
+                # trying to move into the top level (ie, Part)
+                att_sups = link.AttachmentSupport
+                if len(att_sups) == 1:
+                    att_sup = att_sups[0]
+                    att_sup_obj = att_sup[0]
+                    if hasattr(att_sup_obj, "Group") and hasattr(att_sup_obj, "addObject"): # is Part or Group
+                        att_sup_obj.addObject(link)
+
+            Gui.Control.showDialog(TaskAttachmentEditor.AttachmentEditorTaskPanel(link, callback_OK=task_callback_ok))
+
         App.ActiveDocument.commitTransaction()
 
 
