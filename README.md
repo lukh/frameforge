@@ -9,6 +9,12 @@ Features:
 - Cutout (make holes) from a sketch
 - Export a BOM with cut angles, lenght, material
 
+
+**Even if this project is used in production, mainly for [Microforge](https://www.microforge.fr/en) (bike trailers), please note that:**
+- I am spending as much time as I can, but it is not enough
+- **You can help me improving it by contributing via Ko-Fi**
+- Also, I provide help, training, courses via my company [Inductive Brain](https://www.inductivebrain.fr/en)
+
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/L3L41KKMJR)
 
 ## Prerequisite
