@@ -1506,8 +1506,17 @@ class ViewProviderProfile:
         if not obj or not hasattr(obj, "Target") or not obj.Target:
             return
 
-        edge = obj.Target[0].getSubObject(obj.Target[1][0])
-        p1 = edge.Vertexes[1].Point
+        try:
+            edge = obj.Target[0].getSubObject(obj.Target[1][0])
+        except Exception as exc:
+            App.Console.PrintMessage(f"Frameforge: unable to resolve target edge for {obj.Label}: {exc}\n")
+            return
+
+        if not hasattr(edge, "Vertexes") or len(edge.Vertexes) < 2:
+            App.Console.PrintMessage(f"Frameforge: target edge for {obj.Label} has insufficient vertices\n")
+            return
+
+        p1 = edge.Vertexes[-1].Point
         p2 = edge.Vertexes[0].Point
 
         # Local coordinates

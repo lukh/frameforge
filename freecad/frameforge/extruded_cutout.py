@@ -1,13 +1,11 @@
-import glob
-import math
-import os
-
 import FreeCAD as App
 import FreeCADGui as Gui
 import Part
-from PySide import QtCore, QtGui
 
 from freecad.frameforge._utils import (
+    copy_profile_structure_data,
+    ensure_property,
+    ensure_profile_structure_properties,
     get_childrens_from_extrudedcutout,
     get_profile_from_extrudedcutout,
     get_readable_cutting_angles,
@@ -15,7 +13,7 @@ from freecad.frameforge._utils import (
     get_trimmedprofile_from_extrudedcutout,
     length_along_normal,
 )
-from freecad.frameforge.ff_tools import ICONPATH, PROFILEIMAGES_PATH, PROFILESPATH, UIPATH, translate
+from freecad.frameforge.ff_tools import translate
 from freecad.frameforge.frameforge_exceptions import FrameForgeException
 from freecad.frameforge.version import __version__ as ff_version
 
@@ -184,15 +182,8 @@ class ExtrudedCutout:
         else:
             angles = ()
 
-        obj.PID = prof.PID
-        obj.Width = prof.ProfileWidth
-        obj.Height = prof.ProfileHeight
-        obj.Family = prof.Family
-        obj.CustomProfile = prof.CustomProfile
-        obj.SizeName = prof.SizeName
-        obj.Material = prof.Material
-        obj.ApproxWeight = prof.ApproxWeight
-        obj.Price = prof.Price
+        if not copy_profile_structure_data(obj, prof):
+            return
 
         obj.Length = length_along_normal(trim_prof if trim_prof else prof)
 
@@ -209,69 +200,31 @@ class ExtrudedCutout:
 
     def run_compatibility_migrations(self, obj):
         if not hasattr(obj, "FrameforgeVersion"):
-            obj.baseObject[0].Proxy.execute(obj.baseObject[0])
+            base_obj = obj.baseObject[0]
+            proxy = getattr(base_obj, "Proxy", None)
+            if proxy is not None and hasattr(proxy, "execute"):
+                proxy.execute(base_obj)
+            else:
+                label = getattr(base_obj, "Label", base_obj)
+                App.Console.PrintMessage(
+                    f"Frameforge: skipping proxy execution for {label} because no executable Proxy is available\n"
+                )
 
             App.Console.PrintMessage(f"Frameforge::object migration : Migrate {obj.Label} to 0.1.8\n")
 
             # related to Profile
-            obj.addProperty(
-                "App::PropertyString",
-                "PID",
-                "Profile",
-                "Profile ID",
-            ).PID = ""
-            obj.setEditorMode("PID", 1)
-
-            obj.addProperty("App::PropertyString", "Family", "Profile", "")
-            obj.setEditorMode("Family", 1)
-
-            obj.addProperty("App::PropertyLink", "CustomProfile", "Profile", "Target profile").CustomProfile = None
-            obj.setEditorMode("CustomProfile", 1)
-
-            obj.addProperty("App::PropertyString", "SizeName", "Profile", "")
-            obj.setEditorMode("SizeName", 1)
-
-            obj.addProperty("App::PropertyString", "Material", "Profile", "")
-            obj.setEditorMode("Material", 1)
-
-            obj.addProperty("App::PropertyFloat", "ApproxWeight", "Base", "Approximate weight in Kilogram")
-            obj.setEditorMode("ApproxWeight", 1)
-
-            obj.addProperty("App::PropertyFloat", "Price", "Base", "Profile Price")
-            obj.setEditorMode("Price", 1)
-
-            # structure
-            obj.addProperty("App::PropertyLength", "Width", "Structure", "Parameter for structure")
-            obj.addProperty("App::PropertyLength", "Height", "Structure", "Parameter for structure")
-            obj.addProperty("App::PropertyLength", "Length", "Structure", "Parameter for structure")
-            obj.addProperty("App::PropertyBool", "Cutout", "Structure", "Has Cutout").Cutout = True
-            obj.setEditorMode("Width", 1)  # user doesn't change !
-            obj.setEditorMode("Height", 1)
-            obj.setEditorMode("Length", 1)
-            obj.setEditorMode("Cutout", 1)
-
-            obj.addProperty(
-                "App::PropertyString",
-                "CuttingAngleA",
-                "Structure",
-                "Cutting Angle A",
-            )
-            obj.setEditorMode("CuttingAngleA", 1)
-            obj.addProperty(
-                "App::PropertyString",
-                "CuttingAngleB",
-                "Structure",
-                "Cutting Angle B",
-            )
-            obj.setEditorMode("CuttingAngleB", 1)
+            ensure_profile_structure_properties(obj, cutout=True)
 
             # add version
-            obj.addProperty(
+            ensure_property(
+                obj,
                 "App::PropertyString",
                 "FrameforgeVersion",
                 "Profile",
                 "Frameforge Version used to create the profile",
-            ).FrameforgeVersion = ff_version
+                ff_version,
+            )
+            obj.FrameforgeVersion = ff_version
 
 
 class ViewProviderExtrudedCutout:
@@ -356,7 +309,7 @@ class ViewProviderExtrudedCutout:
         return True
 
     def edit(self):
-        FreeCADGui.ActiveDocument.setEdit(self.Object, 0)
+        Gui.ActiveDocument.setEdit(self.Object, 0)
 
     def getIcon(self):
         return """
