@@ -15,6 +15,7 @@ from freecad.frameforge.profile import Profile, ViewProviderProfile
 class BaseProfileTaskPanel(ABC):
     def __init__(self):
         self._objects = {}
+        self._suspend_proceed = False
 
         self.form = [
             Gui.PySideUic.loadUi(os.path.join(UIPATH, "create_profiles1.ui")),
@@ -50,17 +51,60 @@ class BaseProfileTaskPanel(ABC):
         self.form_proxy.sb_radius1.blockSignals(not enable)
         self.form_proxy.sb_radius2.blockSignals(not enable)
         self.form_proxy.sb_length.blockSignals(not enable)
+        self.form_proxy.cb_make_fillet.blockSignals(not enable)
         self.form_proxy.cb_mirror_h.blockSignals(not enable)
         self.form_proxy.cb_mirror_v.blockSignals(not enable)
+        self.form_proxy.cb_pre_extend.blockSignals(not enable)
         self.form_proxy.combo_rotation.blockSignals(not enable)
+        self.form_proxy.cb_sketch_in_name.blockSignals(not enable)
+        self.form_proxy.cb_family_in_name.blockSignals(not enable)
+        self.form_proxy.cb_size_in_name.blockSignals(not enable)
+        self.form_proxy.cb_prefix_profile_in_name.blockSignals(not enable)
         for ax in range(3):
             for ay in range(3):
                 getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").blockSignals(not enable)
 
-    def initialize_ui(self):
+    def request_proceed(self):
+        if self._suspend_proceed:
+            return
+        self.proceed()
+
+    def resolve_material_for_family(self, material, family, size_name=""):
+        if material in self.profiles:
+            return material
+        matches = []
+        for candidate, families in self.profiles.items():
+            if family not in families:
+                continue
+            if size_name and size_name not in families[family]["sizes"]:
+                continue
+            matches.append(candidate)
+        if len(matches) == 1:
+            return matches[0]
+        return None
+
+    def populate_family_combo(self, material):
+        self.form_proxy.combo_family.clear()
+        self.form_proxy.combo_size.clear()
+        if material not in self.profiles:
+            return
+        self.form_proxy.combo_family.addItems([f for f in self.profiles[material]])
+
+    def populate_size_combo(self, material, family):
+        self.form_proxy.combo_size.clear()
+        if material not in self.profiles:
+            return
+        if family not in self.profiles[material]:
+            return
+        self.form_proxy.combo_size.addItems([s for s in self.profiles[material][family]["sizes"]])
+
+    def initialize_ui(self, apply_defaults=True):
         def execute_if_has_bool(key, func):
             if key in [k for t, k, v in param.GetContents()]:
                 func(param.GetBool(key))
+
+        previous_suspend = self._suspend_proceed
+        self._suspend_proceed = True
 
         # Center anchor radio buttons in grid cells (create_profiles2.ui)
         form2 = self.form[1]
@@ -72,80 +116,89 @@ class BaseProfileTaskPanel(ABC):
 
         self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, "Warehouse.png")))
 
-        # sig/slot
-        self.form_proxy.combo_material.currentIndexChanged.connect(self.on_material_changed)
-        self.form_proxy.combo_family.currentIndexChanged.connect(self.on_family_changed)
-        self.form_proxy.combo_size.currentIndexChanged.connect(self.on_size_changed)
-
         self.form_proxy.combo_material.addItems([k for k in self.profiles])
 
         for deg in ("0", "90", "180", "270"):
             self.form_proxy.combo_rotation.addItem(deg)
         self.form_proxy.combo_rotation.setCurrentIndex(0)
 
-        param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
-        if not param.IsEmpty():
-            default_material_index = self.form_proxy.combo_material.findText(
-                param.GetString("Default Profile Material")
-            )
-            if default_material_index > -1:
-                self.form_proxy.combo_material.setCurrentIndex(default_material_index)
+        self.form_proxy.combo_material.currentIndexChanged.connect(self.on_material_changed)
+        self.form_proxy.combo_family.currentIndexChanged.connect(self.on_family_changed)
+        self.form_proxy.combo_size.currentIndexChanged.connect(self.on_size_changed)
+        self.on_material_changed(None)
 
-                default_family_index = self.form_proxy.combo_family.findText(param.GetString("Default Profile Family"))
-                if default_family_index > -1:
-                    self.form_proxy.combo_family.setCurrentIndex(default_family_index)
+        if apply_defaults:
+            param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
+            if not param.IsEmpty():
+                default_material_index = self.form_proxy.combo_material.findText(
+                    param.GetString("Default Profile Material")
+                )
+                if default_material_index > -1:
+                    self.form_proxy.combo_material.setCurrentIndex(default_material_index)
 
-                    default_size_index = self.form_proxy.combo_size.findText(param.GetString("Default Profile Size"))
-                    if default_size_index > -1:
-                        self.form_proxy.combo_size.setCurrentIndex(default_size_index)
+                    default_family_index = self.form_proxy.combo_family.findText(
+                        param.GetString("Default Profile Family")
+                    )
+                    if default_family_index > -1:
+                        self.form_proxy.combo_family.setCurrentIndex(default_family_index)
 
-            execute_if_has_bool("Default Sketch in Name", self.form_proxy.cb_sketch_in_name.setChecked)
-            execute_if_has_bool("Default Family in Name", self.form_proxy.cb_family_in_name.setChecked)
-            execute_if_has_bool("Default Size in Name", self.form_proxy.cb_size_in_name.setChecked)
-            execute_if_has_bool("Default Prefix Profile in Name", self.form_proxy.cb_prefix_profile_in_name.setChecked)
-            execute_if_has_bool("Default Make Fillet", self.form_proxy.cb_make_fillet.setChecked)
-            execute_if_has_bool("Default Mirror Horizontally", self.form_proxy.cb_mirror_h.setChecked)
-            execute_if_has_bool("Default Mirror Vertically", self.form_proxy.cb_mirror_v.setChecked)
-            execute_if_has_bool("Default Pre Extend", self.form_proxy.cb_pre_extend.setChecked)
-            keys = [k for t, k, v in param.GetContents()]
-            if "Default AnchorX" in keys:
-                ax = max(0, min(2, param.GetInt("Default AnchorX", 1)))
-                ay = max(0, min(2, param.GetInt("Default AnchorY", 1)))
-                self.set_anchor(ax, ay)
-            elif "Default Width Centered" in keys or "Default Height Centered" in keys:
-                ax = 1 if param.GetBool("Default Width Centered", False) else 0
-                ay = 1 if param.GetBool("Default Height Centered", False) else 0
-                self.set_anchor(ax, ay)
-            if "Default RotationAngle" in keys:
-                try:
-                    val = float(param.GetString("Default RotationAngle", "0"))
-                    self.form_proxy.combo_rotation.setCurrentText(str(int(val) if val == int(val) else val))
-                except (TypeError, ValueError):
-                    self.form_proxy.combo_rotation.setCurrentText("0")
-            execute_if_has_bool("Default Centered Bevel", self.form_proxy.cb_combined_bevel.setChecked)
+                        default_size_index = self.form_proxy.combo_size.findText(
+                            param.GetString("Default Profile Size")
+                        )
+                        if default_size_index > -1:
+                            self.form_proxy.combo_size.setCurrentIndex(default_size_index)
+
+                execute_if_has_bool("Default Sketch in Name", self.form_proxy.cb_sketch_in_name.setChecked)
+                execute_if_has_bool("Default Family in Name", self.form_proxy.cb_family_in_name.setChecked)
+                execute_if_has_bool("Default Size in Name", self.form_proxy.cb_size_in_name.setChecked)
+                execute_if_has_bool(
+                    "Default Prefix Profile in Name", self.form_proxy.cb_prefix_profile_in_name.setChecked
+                )
+                execute_if_has_bool("Default Make Fillet", self.form_proxy.cb_make_fillet.setChecked)
+                execute_if_has_bool("Default Mirror Horizontally", self.form_proxy.cb_mirror_h.setChecked)
+                execute_if_has_bool("Default Mirror Vertically", self.form_proxy.cb_mirror_v.setChecked)
+                execute_if_has_bool("Default Pre Extend", self.form_proxy.cb_pre_extend.setChecked)
+                keys = [k for t, k, v in param.GetContents()]
+                if "Default AnchorX" in keys:
+                    ax = max(0, min(2, param.GetInt("Default AnchorX", 1)))
+                    ay = max(0, min(2, param.GetInt("Default AnchorY", 1)))
+                    self.set_anchor(ax, ay)
+                elif "Default Width Centered" in keys or "Default Height Centered" in keys:
+                    ax = 1 if param.GetBool("Default Width Centered", False) else 0
+                    ay = 1 if param.GetBool("Default Height Centered", False) else 0
+                    self.set_anchor(ax, ay)
+                if "Default RotationAngle" in keys:
+                    try:
+                        val = float(param.GetString("Default RotationAngle", "0"))
+                        self.form_proxy.combo_rotation.setCurrentText(str(int(val) if val == int(val) else val))
+                    except (TypeError, ValueError):
+                        self.form_proxy.combo_rotation.setCurrentText("0")
+                execute_if_has_bool("Default Centered Bevel", self.form_proxy.cb_combined_bevel.setChecked)
+
+        self._suspend_proceed = previous_suspend
 
         self.form_proxy.cb_make_fillet.stateChanged.connect(self.on_cb_make_fillet_changed)
 
-        self.form_proxy.cb_mirror_h.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_mirror_v.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_pre_extend.stateChanged.connect(self.proceed)
-        self.form_proxy.combo_rotation.currentIndexChanged.connect(self.proceed)
+        self.form_proxy.cb_mirror_h.stateChanged.connect(self.request_proceed)
+        self.form_proxy.cb_mirror_v.stateChanged.connect(self.request_proceed)
+        self.form_proxy.cb_pre_extend.stateChanged.connect(self.request_proceed)
+        self.form_proxy.combo_rotation.currentIndexChanged.connect(self.request_proceed)
         for ax in range(3):
             for ay in range(3):
-                getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").clicked.connect(self.proceed)
+                getattr(self.form_proxy, f"rb_anchor_{ax}_{ay}").clicked.connect(self.request_proceed)
 
-        self.form_proxy.sb_width.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_height.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_main_thickness.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_flange_thickness.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_radius1.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_radius2.valueChanged.connect(self.proceed)
-        self.form_proxy.sb_length.valueChanged.connect(self.proceed)
+        self.form_proxy.sb_width.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_height.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_main_thickness.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_flange_thickness.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_radius1.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_radius2.valueChanged.connect(self.request_proceed)
+        self.form_proxy.sb_length.valueChanged.connect(self.request_proceed)
 
-        self.form_proxy.cb_sketch_in_name.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_family_in_name.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_size_in_name.stateChanged.connect(self.proceed)
-        self.form_proxy.cb_prefix_profile_in_name.stateChanged.connect(self.proceed)
+        self.form_proxy.cb_sketch_in_name.stateChanged.connect(self.request_proceed)
+        self.form_proxy.cb_family_in_name.stateChanged.connect(self.request_proceed)
+        self.form_proxy.cb_size_in_name.stateChanged.connect(self.request_proceed)
+        self.form_proxy.cb_prefix_profile_in_name.stateChanged.connect(self.request_proceed)
 
     def get_anchor(self):
         """Return (anchor_x, anchor_y) 0=left/bottom, 1=center, 2=right/top."""
@@ -177,21 +230,37 @@ class BaseProfileTaskPanel(ABC):
 
     def on_material_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
+        previous_suspend = self._suspend_proceed
+        self._suspend_proceed = True
 
         self.enable_signals(False)
-
-        self.form_proxy.combo_family.clear()
-        self.form_proxy.combo_family.addItems([f for f in self.profiles[material]])
-
+        self.populate_family_combo(material)
+        has_family = self.form_proxy.combo_family.count() > 0
+        if has_family:
+            self.form_proxy.combo_family.setCurrentIndex(0)
         self.enable_signals(True)
+        self._suspend_proceed = previous_suspend
 
-        self.form_proxy.combo_family.setCurrentIndex(0)
+        if not has_family:
+            return
         self.on_family_changed(None)
 
     def on_family_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
+        previous_suspend = self._suspend_proceed
+        self._suspend_proceed = True
 
+        if material not in self.profiles:
+            self.form_proxy.combo_size.clear()
+            self._suspend_proceed = previous_suspend
+            return
+        if family not in self.profiles[material]:
+            self.form_proxy.combo_size.clear()
+            self._suspend_proceed = previous_suspend
+            return
+
+        self.enable_signals(False)
         self.form_proxy.cb_make_fillet.setChecked(self.profiles[material][family]["fillet"])
         self.form_proxy.cb_make_fillet.setEnabled(self.profiles[material][family]["fillet"])
 
@@ -200,16 +269,28 @@ class BaseProfileTaskPanel(ABC):
         self.form_proxy.label_norm.setText(self.profiles[material][family]["norm"])
         self.form_proxy.label_unit.setText(self.profiles[material][family]["unit"])
 
-        self.form_proxy.combo_size.clear()
-        self.form_proxy.combo_size.addItems([s for s in self.profiles[material][family]["sizes"]])
+        self.populate_size_combo(material, family)
+        has_size = self.form_proxy.combo_size.count() > 0
+        if has_size:
+            self.form_proxy.combo_size.setCurrentIndex(0)
+        self.enable_signals(True)
+        self._suspend_proceed = previous_suspend
 
-        self.form_proxy.combo_size.setCurrentIndex(0)
+        if not has_size:
+            return
         self.on_size_changed(None)
 
     def on_size_changed(self, index):
         material = str(self.form_proxy.combo_material.currentText())
         family = str(self.form_proxy.combo_family.currentText())
         size = str(self.form_proxy.combo_size.currentText())
+
+        if material not in self.profiles:
+            return
+        if family not in self.profiles[material]:
+            return
+        if size not in self.profiles[material][family]["sizes"]:
+            return
 
         if size != "":
             profile = self.profiles[material][family]["sizes"][size]
@@ -254,11 +335,11 @@ class BaseProfileTaskPanel(ABC):
                 sb.setValue(float(profile[s]))
 
             self.enable_signals(True)
-            self.proceed()
+            self.request_proceed()
 
     def on_cb_make_fillet_changed(self, state):
         self.update_image()
-        self.proceed()
+        self.request_proceed()
 
     def update_image(self):
         material = str(self.form_proxy.combo_material.currentText())
@@ -272,6 +353,7 @@ class BaseProfileTaskPanel(ABC):
         self.form_proxy.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, material, img_name)))
 
     def update_profile(self, profile):
+        offset = self.get_pre_extend_offset()
         profile.Proxy.set_properties(
             profile,
             self.form_proxy.sb_width.value(),
@@ -291,7 +373,14 @@ class BaseProfileTaskPanel(ABC):
             init_mirror_h=self.form_proxy.cb_mirror_h.isChecked(),
             init_mirror_v=self.form_proxy.cb_mirror_v.isChecked(),
             init_rotation=self.get_rotation(),
+            init_offset_a=offset,
+            init_offset_b=offset,
         )
+
+    def get_pre_extend_offset(self):
+        if not self.form_proxy.cb_pre_extend.isChecked():
+            return 0.0
+        return max(self.form_proxy.sb_width.value(), self.form_proxy.sb_height.value())
 
     @abstractmethod
     def proceed(self):
