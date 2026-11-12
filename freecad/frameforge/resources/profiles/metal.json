@@ -6350,5 +6350,1248 @@
                 "Weight": "9.89"
             }
         }
+    },
+    "UC": {
+    "norm": "BS 4-1 / EN 10365",
+    "unit": "Metric Units",
+    "fillet": true,
+    "sizes": {
+        "152x152x23": {
+            "Width": "152.2",
+            "Height": "152.4",
+            "Thickness": "5.8",
+            "Flange Thickness": "6.8",
+            "Radius1": "7.6",
+            "Weight": "23.0"
+        },
+        "152x152x30": {
+            "Width": "152.9",
+            "Height": "157.6",
+            "Thickness": "6.5",
+            "Flange Thickness": "9.4",
+            "Radius1": "7.6",
+            "Weight": "30.0"
+        },
+        "152x152x37": {
+            "Width": "154.4",
+            "Height": "161.8",
+            "Thickness": "8.0",
+            "Flange Thickness": "11.5",
+            "Radius1": "7.6",
+            "Weight": "37.0"
+        },
+        "152x152x44": {
+            "Width": "155.9",
+            "Height": "166.0",
+            "Thickness": "9.5",
+            "Flange Thickness": "13.6",
+            "Radius1": "7.6",
+            "Weight": "44.0"
+        },
+        "152x152x51": {
+            "Width": "157.4",
+            "Height": "170.2",
+            "Thickness": "11.0",
+            "Flange Thickness": "15.7",
+            "Radius1": "7.6",
+            "Weight": "51.2"
+        },
+
+        "203x203x46": {
+            "Width": "203.6",
+            "Height": "203.2",
+            "Thickness": "7.2",
+            "Flange Thickness": "11.0",
+            "Radius1": "10.2",
+            "Weight": "46.1"
+        },
+        "203x203x52": {
+            "Width": "204.3",
+            "Height": "206.2",
+            "Thickness": "7.9",
+            "Flange Thickness": "12.5",
+            "Radius1": "10.2",
+            "Weight": "52.0"
+        },
+        "203x203x60": {
+            "Width": "205.8",
+            "Height": "209.6",
+            "Thickness": "9.4",
+            "Flange Thickness": "14.2",
+            "Radius1": "10.2",
+            "Weight": "60.0"
+        },
+        "203x203x71": {
+            "Width": "206.4",
+            "Height": "215.8",
+            "Thickness": "10.0",
+            "Flange Thickness": "17.3",
+            "Radius1": "10.2",
+            "Weight": "71.0"
+        },
+        "203x203x86": {
+            "Width": "209.1",
+            "Height": "222.2",
+            "Thickness": "12.7",
+            "Flange Thickness": "20.5",
+            "Radius1": "10.2",
+            "Weight": "86.1"
+        },
+        "203x203x100": {
+            "Width": "210.3",
+            "Height": "228.6",
+            "Thickness": "14.5",
+            "Flange Thickness": "23.7",
+            "Radius1": "10.2",
+            "Weight": "99.6"
+        },
+        "203x203x113": {
+            "Width": "212.1",
+            "Height": "235.0",
+            "Thickness": "16.3",
+            "Flange Thickness": "26.9",
+            "Radius1": "10.2",
+            "Weight": "113.5"
+        },
+        "203x203x127": {
+            "Width": "213.9",
+            "Height": "241.4",
+            "Thickness": "18.1",
+            "Flange Thickness": "30.1",
+            "Radius1": "10.2",
+            "Weight": "127.5"
+        },
+
+        "254x254x73": {
+            "Width": "254.6",
+            "Height": "254.1",
+            "Thickness": "8.6",
+            "Flange Thickness": "14.2",
+            "Radius1": "12.7",
+            "Weight": "73.1"
+        },
+        "254x254x89": {
+            "Width": "256.3",
+            "Height": "260.3",
+            "Thickness": "10.3",
+            "Flange Thickness": "17.3",
+            "Radius1": "12.7",
+            "Weight": "88.9"
+        },
+        "254x254x107": {
+            "Width": "258.8",
+            "Height": "266.7",
+            "Thickness": "12.8",
+            "Flange Thickness": "20.5",
+            "Radius1": "12.7",
+            "Weight": "107.1"
+        },
+        "254x254x132": {
+            "Width": "261.3",
+            "Height": "276.3",
+            "Thickness": "15.3",
+            "Flange Thickness": "25.3",
+            "Radius1": "12.7",
+            "Weight": "132.0"
+        },
+        "254x254x167": {
+            "Width": "265.2",
+            "Height": "289.1",
+            "Thickness": "19.2",
+            "Flange Thickness": "31.7",
+            "Radius1": "12.7",
+            "Weight": "167.1"
+        },
+
+        "305x305x97": {
+            "Width": "305.3",
+            "Height": "307.9",
+            "Thickness": "9.9",
+            "Flange Thickness": "15.4",
+            "Radius1": "15.2",
+            "Weight": "96.9"
+        },
+        "305x305x118": {
+            "Width": "307.4",
+            "Height": "314.5",
+            "Thickness": "12.0",
+            "Flange Thickness": "18.7",
+            "Radius1": "15.2",
+            "Weight": "117.9"
+        },
+        "305x305x137": {
+            "Width": "309.2",
+            "Height": "320.5",
+            "Thickness": "13.8",
+            "Flange Thickness": "21.7",
+            "Radius1": "15.2",
+            "Weight": "136.9"
+        },
+        "305x305x158": {
+            "Width": "311.2",
+            "Height": "327.1",
+            "Thickness": "15.8",
+            "Flange Thickness": "25.0",
+            "Radius1": "15.2",
+            "Weight": "158.1"
+        },
+        "305x305x198": {
+            "Width": "314.5",
+            "Height": "339.9",
+            "Thickness": "19.1",
+            "Flange Thickness": "31.4",
+            "Radius1": "15.2",
+            "Weight": "198.1"
+        },
+        "305x305x240": {
+            "Width": "318.4",
+            "Height": "352.5",
+            "Thickness": "23.0",
+            "Flange Thickness": "37.7",
+            "Radius1": "15.2",
+            "Weight": "240.0"
+        },
+        "305x305x283": {
+            "Width": "322.2",
+            "Height": "365.3",
+            "Thickness": "26.8",
+            "Flange Thickness": "44.1",
+            "Radius1": "15.2",
+            "Weight": "282.9"
+        },
+
+        "356x368x129": {
+            "Width": "368.6",
+            "Height": "355.6",
+            "Thickness": "10.4",
+            "Flange Thickness": "17.5",
+            "Radius1": "15.2",
+            "Weight": "129.0"
+        },
+        "356x368x153": {
+            "Width": "370.5",
+            "Height": "362.0",
+            "Thickness": "12.3",
+            "Flange Thickness": "20.7",
+            "Radius1": "15.2",
+            "Weight": "152.9"
+        },
+        "356x368x177": {
+            "Width": "372.6",
+            "Height": "368.2",
+            "Thickness": "14.4",
+            "Flange Thickness": "23.8",
+            "Radius1": "15.2",
+            "Weight": "177.0"
+        },
+        "356x368x202": {
+            "Width": "374.7",
+            "Height": "374.6",
+            "Thickness": "16.5",
+            "Flange Thickness": "27.0",
+            "Radius1": "15.2",
+            "Weight": "201.9"
+        },
+
+        "356x406x235": {
+            "Width": "394.8",
+            "Height": "381.0",
+            "Thickness": "18.4",
+            "Flange Thickness": "30.2",
+            "Radius1": "15.2",
+            "Weight": "235.1"
+        },
+        "356x406x287": {
+            "Width": "399.0",
+            "Height": "393.6",
+            "Thickness": "22.6",
+            "Flange Thickness": "36.5",
+            "Radius1": "15.2",
+            "Weight": "287.1"
+        },
+        "356x406x340": {
+            "Width": "403.0",
+            "Height": "406.4",
+            "Thickness": "26.6",
+            "Flange Thickness": "42.9",
+            "Radius1": "15.2",
+            "Weight": "339.9"
+        },
+        "356x406x393": {
+            "Width": "407.0",
+            "Height": "419.0",
+            "Thickness": "30.6",
+            "Flange Thickness": "49.2",
+            "Radius1": "15.2",
+            "Weight": "393.0"
+        },
+        "356x406x467": {
+            "Width": "412.2",
+            "Height": "436.6",
+            "Thickness": "35.8",
+            "Flange Thickness": "58.0",
+            "Radius1": "15.2",
+            "Weight": "467.0"
+        },
+        "356x406x509": {
+            "Width": "416.0",
+            "Height": "446.0",
+            "Thickness": "39.1",
+            "Flange Thickness": "62.7",
+            "Radius1": "15.0",
+            "Weight": "509.0"
+        },
+        "356x406x551": {
+            "Width": "418.5",
+            "Height": "455.6",
+            "Thickness": "42.1",
+            "Flange Thickness": "67.5",
+            "Radius1": "15.2",
+            "Weight": "551.0"
+        },
+        "356x406x592": {
+            "Width": "421.0",
+            "Height": "465.0",
+            "Thickness": "45.0",
+            "Flange Thickness": "72.3",
+            "Radius1": "15.0",
+            "Weight": "592.0"
+        },
+        "356x406x634": {
+            "Width": "424.0",
+            "Height": "474.6",
+            "Thickness": "47.6",
+            "Flange Thickness": "77.0",
+            "Radius1": "15.2",
+            "Weight": "633.9"
+        },
+        "356x406x677": {
+            "Width": "428.0",
+            "Height": "483.0",
+            "Thickness": "51.2",
+            "Flange Thickness": "81.5",
+            "Radius1": "15.0",
+            "Weight": "677.0"
+        },
+        "356x406x744": {
+            "Width": "432.0",
+            "Height": "498.0",
+            "Thickness": "55.6",
+            "Flange Thickness": "88.9",
+            "Radius1": "15.0",
+            "Weight": "744.0"
+        },
+        "356x406x818": {
+            "Width": "437.0",
+            "Height": "514.0",
+            "Thickness": "60.5",
+            "Flange Thickness": "97.0",
+            "Radius1": "15.0",
+            "Weight": "818.0"
+        },
+        "356x406x900": {
+            "Width": "442.0",
+            "Height": "531.0",
+            "Thickness": "65.9",
+            "Flange Thickness": "106.0",
+            "Radius1": "15.0",
+            "Weight": "900.0"
+        },
+        "356x406x990": {
+            "Width": "448.0",
+            "Height": "550.0",
+            "Thickness": "71.9",
+            "Flange Thickness": "115.0",
+            "Radius1": "15.0",
+            "Weight": "990.0"
+        },
+        "356x406x1086": {
+            "Width": "454.0",
+            "Height": "569.0",
+            "Thickness": "78.0",
+            "Flange Thickness": "125.0",
+            "Radius1": "15.0",
+            "Weight": "1086.0"
+        },
+        "356x406x1202": {
+            "Width": "471.0",
+            "Height": "580.0",
+            "Thickness": "95.0",
+            "Flange Thickness": "130.0",
+            "Radius1": "15.4",
+            "Weight": "1202.0"
+        },
+        "356x406x1299": {
+            "Width": "476.0",
+            "Height": "600.0",
+            "Thickness": "100.0",
+            "Flange Thickness": "140.0",
+            "Radius1": "15.4",
+            "Weight": "1299.0"
+        }
     }
+},
+"UB": {
+    "norm": "BS 4-1 / EN 10365",
+    "unit": "Metric Units",
+    "fillet": true,
+    "sizes": {
+        "127x76x13": {
+            "Width": "76.0",
+            "Height": "127.0",
+            "Thickness": "4.0",
+            "Flange Thickness": "7.6",
+            "Radius1": "7.6",
+            "Weight": "13.0"
+        },
+        "152x89x16": {
+            "Width": "88.7",
+            "Height": "152.4",
+            "Thickness": "4.5",
+            "Flange Thickness": "7.7",
+            "Radius1": "7.6",
+            "Weight": "16.0"
+        },
+        "178x102x19": {
+            "Width": "101.2",
+            "Height": "177.8",
+            "Thickness": "4.8",
+            "Flange Thickness": "7.9",
+            "Radius1": "7.6",
+            "Weight": "19.0"
+        },
+        "203x102x23": {
+            "Width": "101.8",
+            "Height": "203.2",
+            "Thickness": "5.4",
+            "Flange Thickness": "9.3",
+            "Radius1": "7.6",
+            "Weight": "23.1"
+        },
+        "203x133x25": {
+            "Width": "133.2",
+            "Height": "203.2",
+            "Thickness": "5.7",
+            "Flange Thickness": "7.8",
+            "Radius1": "7.6",
+            "Weight": "25.1"
+        },
+        "203x133x30": {
+            "Width": "133.9",
+            "Height": "206.8",
+            "Thickness": "6.4",
+            "Flange Thickness": "9.6",
+            "Radius1": "7.6",
+            "Weight": "30.0"
+        },
+        "254x102x22": {
+            "Width": "101.6",
+            "Height": "254.0",
+            "Thickness": "5.7",
+            "Flange Thickness": "6.8",
+            "Radius1": "7.6",
+            "Weight": "22.0"
+        },
+        "254x102x25": {
+            "Width": "101.9",
+            "Height": "257.2",
+            "Thickness": "6.0",
+            "Flange Thickness": "8.4",
+            "Radius1": "7.6",
+            "Weight": "25.2"
+        },
+        "254x102x28": {
+            "Width": "102.2",
+            "Height": "260.4",
+            "Thickness": "6.3",
+            "Flange Thickness": "10.0",
+            "Radius1": "7.6",
+            "Weight": "28.3"
+        },
+        "254x146x31": {
+            "Width": "146.1",
+            "Height": "251.4",
+            "Thickness": "6.0",
+            "Flange Thickness": "8.6",
+            "Radius1": "7.6",
+            "Weight": "31.1"
+        },
+        "254x146x37": {
+            "Width": "146.4",
+            "Height": "256.0",
+            "Thickness": "6.3",
+            "Flange Thickness": "10.9",
+            "Radius1": "7.6",
+            "Weight": "37.0"
+        },
+        "254x146x43": {
+            "Width": "147.3",
+            "Height": "259.6",
+            "Thickness": "7.2",
+            "Flange Thickness": "12.7",
+            "Radius1": "7.6",
+            "Weight": "43.0"
+        },
+        "305x102x25": {
+            "Width": "101.6",
+            "Height": "305.1",
+            "Thickness": "5.8",
+            "Flange Thickness": "7.0",
+            "Radius1": "7.6",
+            "Weight": "24.8"
+        },
+        "305x102x28": {
+            "Width": "101.8",
+            "Height": "308.7",
+            "Thickness": "6.0",
+            "Flange Thickness": "8.8",
+            "Radius1": "7.6",
+            "Weight": "28.2"
+        },
+        "305x102x33": {
+            "Width": "102.4",
+            "Height": "312.7",
+            "Thickness": "6.6",
+            "Flange Thickness": "10.8",
+            "Radius1": "7.6",
+            "Weight": "32.8"
+        },
+        "305x127x37": {
+            "Width": "123.4",
+            "Height": "304.4",
+            "Thickness": "7.1",
+            "Flange Thickness": "10.7",
+            "Radius1": "8.9",
+            "Weight": "37.0"
+        },
+        "305x127x42": {
+            "Width": "124.3",
+            "Height": "307.2",
+            "Thickness": "8.0",
+            "Flange Thickness": "12.1",
+            "Radius1": "8.9",
+            "Weight": "41.9"
+        },
+        "305x127x48": {
+            "Width": "125.3",
+            "Height": "311.0",
+            "Thickness": "9.0",
+            "Flange Thickness": "14.0",
+            "Radius1": "8.9",
+            "Weight": "48.1"
+        },
+        "305x165x40": {
+            "Width": "165.0",
+            "Height": "303.4",
+            "Thickness": "6.0",
+            "Flange Thickness": "10.2",
+            "Radius1": "8.9",
+            "Weight": "40.3"
+        },
+        "305x165x46": {
+            "Width": "165.7",
+            "Height": "306.6",
+            "Thickness": "6.7",
+            "Flange Thickness": "11.8",
+            "Radius1": "8.9",
+            "Weight": "46.1"
+        },
+        "305x165x54": {
+            "Width": "166.9",
+            "Height": "310.4",
+            "Thickness": "7.9",
+            "Flange Thickness": "13.7",
+            "Radius1": "8.9",
+            "Weight": "54.0"
+        },
+        "356x127x33": {
+            "Width": "125.4",
+            "Height": "349.0",
+            "Thickness": "6.0",
+            "Flange Thickness": "8.5",
+            "Radius1": "10.2",
+            "Weight": "33.1"
+        },
+        "356x127x39": {
+            "Width": "126.0",
+            "Height": "353.4",
+            "Thickness": "6.6",
+            "Flange Thickness": "10.7",
+            "Radius1": "10.2",
+            "Weight": "39.1"
+        },
+        "356x171x45": {
+            "Width": "171.1",
+            "Height": "351.4",
+            "Thickness": "7.0",
+            "Flange Thickness": "9.7",
+            "Radius1": "10.2",
+            "Weight": "45.0"
+        },
+        "356x171x51": {
+            "Width": "171.5",
+            "Height": "355.0",
+            "Thickness": "7.4",
+            "Flange Thickness": "11.5",
+            "Radius1": "10.2",
+            "Weight": "51.0"
+        },
+        "356x171x57": {
+            "Width": "172.2",
+            "Height": "358.0",
+            "Thickness": "8.1",
+            "Flange Thickness": "13.0",
+            "Radius1": "10.2",
+            "Weight": "57.0"
+        },
+        "356x171x67": {
+            "Width": "173.2",
+            "Height": "363.4",
+            "Thickness": "9.1",
+            "Flange Thickness": "15.7",
+            "Radius1": "10.2",
+            "Weight": "67.1"
+        },
+        "406x140x39": {
+            "Width": "141.8",
+            "Height": "398.0",
+            "Thickness": "6.4",
+            "Flange Thickness": "8.6",
+            "Radius1": "10.2",
+            "Weight": "39.0"
+        },
+        "406x140x46": {
+            "Width": "142.2",
+            "Height": "403.2",
+            "Thickness": "6.8",
+            "Flange Thickness": "11.2",
+            "Radius1": "10.2",
+            "Weight": "46.0"
+        },
+        "406x140x53": {
+            "Width": "143.3",
+            "Height": "406.6",
+            "Thickness": "7.9",
+            "Flange Thickness": "12.9",
+            "Radius1": "10.2",
+            "Weight": "53.3"
+        },
+        "406x178x54": {
+            "Width": "177.7",
+            "Height": "402.6",
+            "Thickness": "7.7",
+            "Flange Thickness": "10.9",
+            "Radius1": "10.2",
+            "Weight": "54.1"
+        },
+        "406x178x60": {
+            "Width": "177.9",
+            "Height": "406.4",
+            "Thickness": "7.9",
+            "Flange Thickness": "12.8",
+            "Radius1": "10.2",
+            "Weight": "60.1"
+        },
+        "406x178x67": {
+            "Width": "178.8",
+            "Height": "409.4",
+            "Thickness": "8.8",
+            "Flange Thickness": "14.3",
+            "Radius1": "10.2",
+            "Weight": "67.1"
+        },
+        "406x178x74": {
+            "Width": "179.5",
+            "Height": "412.8",
+            "Thickness": "9.5",
+            "Flange Thickness": "16.0",
+            "Radius1": "10.2",
+            "Weight": "74.2"
+        },
+        "406x178x85": {
+            "Width": "181.9",
+            "Height": "417.2",
+            "Thickness": "10.9",
+            "Flange Thickness": "18.2",
+            "Radius1": "10.2",
+            "Weight": "85.3"
+        },
+        "457x152x52": {
+            "Width": "152.4",
+            "Height": "449.8",
+            "Thickness": "7.6",
+            "Flange Thickness": "10.9",
+            "Radius1": "10.2",
+            "Weight": "52.3"
+        },
+        "457x152x60": {
+            "Width": "152.9",
+            "Height": "454.6",
+            "Thickness": "8.1",
+            "Flange Thickness": "13.3",
+            "Radius1": "10.2",
+            "Weight": "59.8"
+        },
+        "457x152x67": {
+            "Width": "153.8",
+            "Height": "458.0",
+            "Thickness": "9.0",
+            "Flange Thickness": "15.0",
+            "Radius1": "10.2",
+            "Weight": "67.2"
+        },
+        "457x152x74": {
+            "Width": "154.4",
+            "Height": "462.0",
+            "Thickness": "9.6",
+            "Flange Thickness": "17.0",
+            "Radius1": "10.2",
+            "Weight": "74.2"
+        },
+        "457x152x82": {
+            "Width": "155.3",
+            "Height": "465.8",
+            "Thickness": "10.5",
+            "Flange Thickness": "18.9",
+            "Radius1": "10.2",
+            "Weight": "82.1"
+        },
+        "457x191x67": {
+            "Width": "189.9",
+            "Height": "453.4",
+            "Thickness": "8.5",
+            "Flange Thickness": "12.7",
+            "Radius1": "10.2",
+            "Weight": "67.1"
+        },
+        "457x191x74": {
+            "Width": "190.4",
+            "Height": "457.0",
+            "Thickness": "9.0",
+            "Flange Thickness": "14.5",
+            "Radius1": "10.2",
+            "Weight": "74.3"
+        },
+        "457x191x82": {
+            "Width": "191.3",
+            "Height": "460.0",
+            "Thickness": "9.9",
+            "Flange Thickness": "16.0",
+            "Radius1": "10.2",
+            "Weight": "82.0"
+        },
+        "457x191x89": {
+            "Width": "191.9",
+            "Height": "463.4",
+            "Thickness": "10.5",
+            "Flange Thickness": "17.7",
+            "Radius1": "10.2",
+            "Weight": "89.3"
+        },
+        "457x191x98": {
+            "Width": "192.8",
+            "Height": "467.2",
+            "Thickness": "11.4",
+            "Flange Thickness": "19.6",
+            "Radius1": "10.2",
+            "Weight": "98.3"
+        },
+        "457x191x106": {
+            "Width": "194.0",
+            "Height": "469.2",
+            "Thickness": "12.6",
+            "Flange Thickness": "20.6",
+            "Radius1": "10.2",
+            "Weight": "105.8"
+        },
+        "457x191x133": {
+            "Width": "196.7",
+            "Height": "480.6",
+            "Thickness": "15.3",
+            "Flange Thickness": "26.3",
+            "Radius1": "10.2",
+            "Weight": "133.3"
+        },
+        "457x191x161": {
+            "Width": "199.4",
+            "Height": "492.0",
+            "Thickness": "18.0",
+            "Flange Thickness": "32.0",
+            "Radius1": "10.2",
+            "Weight": "161.4"
+        },
+        "533x165x66": {
+            "Width": "165.1",
+            "Height": "524.7",
+            "Thickness": "8.9",
+            "Flange Thickness": "11.4",
+            "Radius1": "12.7",
+            "Weight": "65.7"
+        },
+        "533x165x75": {
+            "Width": "165.9",
+            "Height": "529.1",
+            "Thickness": "9.7",
+            "Flange Thickness": "13.6",
+            "Radius1": "12.7",
+            "Weight": "74.7"
+        },
+        "533x165x85": {
+            "Width": "166.5",
+            "Height": "534.9",
+            "Thickness": "10.3",
+            "Flange Thickness": "16.5",
+            "Radius1": "12.7",
+            "Weight": "84.8"
+        },
+        "533x210x82": {
+            "Width": "208.8",
+            "Height": "528.3",
+            "Thickness": "9.6",
+            "Flange Thickness": "13.2",
+            "Radius1": "12.7",
+            "Weight": "82.2"
+        },
+        "533x210x92": {
+            "Width": "209.3",
+            "Height": "533.1",
+            "Thickness": "10.1",
+            "Flange Thickness": "15.6",
+            "Radius1": "12.7",
+            "Weight": "92.1"
+        },
+        "533x210x101": {
+            "Width": "210.0",
+            "Height": "536.7",
+            "Thickness": "10.8",
+            "Flange Thickness": "17.4",
+            "Radius1": "12.7",
+            "Weight": "101.0"
+        },
+        "533x210x109": {
+            "Width": "210.8",
+            "Height": "539.5",
+            "Thickness": "11.6",
+            "Flange Thickness": "18.8",
+            "Radius1": "12.7",
+            "Weight": "109.0"
+        },
+        "533x210x122": {
+            "Width": "211.9",
+            "Height": "544.5",
+            "Thickness": "12.7",
+            "Flange Thickness": "21.3",
+            "Radius1": "12.7",
+            "Weight": "122.0"
+        },
+        "533x210x138": {
+            "Width": "213.9",
+            "Height": "549.1",
+            "Thickness": "14.7",
+            "Flange Thickness": "23.6",
+            "Radius1": "12.7",
+            "Weight": "138.3"
+        },
+        "533x312x151": {
+            "Width": "312.0",
+            "Height": "542.5",
+            "Thickness": "12.7",
+            "Flange Thickness": "20.3",
+            "Radius1": "12.7",
+            "Weight": "150.6"
+        },
+        "533x312x182": {
+            "Width": "314.5",
+            "Height": "550.7",
+            "Thickness": "15.2",
+            "Flange Thickness": "24.4",
+            "Radius1": "12.7",
+            "Weight": "181.5"
+        },
+        "533x312x219": {
+            "Width": "317.4",
+            "Height": "560.3",
+            "Thickness": "18.3",
+            "Flange Thickness": "29.2",
+            "Radius1": "12.7",
+            "Weight": "218.8"
+        },
+        "533x312x273": {
+            "Width": "320.2",
+            "Height": "577.1",
+            "Thickness": "21.1",
+            "Flange Thickness": "37.6",
+            "Radius1": "12.7",
+            "Weight": "273.3"
+        },
+        "610x178x82": {
+            "Width": "177.9",
+            "Height": "598.6",
+            "Thickness": "10.0",
+            "Flange Thickness": "12.8",
+            "Radius1": "12.7",
+            "Weight": "81.8"
+        },
+        "610x178x92": {
+            "Width": "178.8",
+            "Height": "603.0",
+            "Thickness": "10.9",
+            "Flange Thickness": "15.0",
+            "Radius1": "12.7",
+            "Weight": "92.2"
+        },
+        "610x178x100": {
+            "Width": "179.2",
+            "Height": "607.4",
+            "Thickness": "11.3",
+            "Flange Thickness": "17.2",
+            "Radius1": "12.7",
+            "Weight": "100.3"
+        },
+        "610x229x101": {
+            "Width": "227.6",
+            "Height": "602.6",
+            "Thickness": "10.5",
+            "Flange Thickness": "14.8",
+            "Radius1": "12.7",
+            "Weight": "101.2"
+        },
+        "610x229x113": {
+            "Width": "228.2",
+            "Height": "607.6",
+            "Thickness": "11.1",
+            "Flange Thickness": "17.3",
+            "Radius1": "12.7",
+            "Weight": "113.0"
+        },
+        "610x229x125": {
+            "Width": "229.0",
+            "Height": "612.2",
+            "Thickness": "11.9",
+            "Flange Thickness": "19.6",
+            "Radius1": "12.7",
+            "Weight": "125.1"
+        },
+        "610x229x140": {
+            "Width": "230.2",
+            "Height": "617.2",
+            "Thickness": "13.1",
+            "Flange Thickness": "22.1",
+            "Radius1": "12.7",
+            "Weight": "139.9"
+        },
+        "610x305x149": {
+            "Width": "304.8",
+            "Height": "612.4",
+            "Thickness": "11.8",
+            "Flange Thickness": "19.7",
+            "Radius1": "16.5",
+            "Weight": "149.2"
+        },
+        "610x305x179": {
+            "Width": "307.1",
+            "Height": "620.2",
+            "Thickness": "14.1",
+            "Flange Thickness": "23.6",
+            "Radius1": "16.5",
+            "Weight": "179.0"
+        },
+        "610x305x238": {
+            "Width": "311.4",
+            "Height": "635.8",
+            "Thickness": "18.4",
+            "Flange Thickness": "31.4",
+            "Radius1": "16.5",
+            "Weight": "238.1"
+        },
+        "686x254x125": {
+            "Width": "253.0",
+            "Height": "677.9",
+            "Thickness": "11.7",
+            "Flange Thickness": "16.2",
+            "Radius1": "15.2",
+            "Weight": "125.2"
+        },
+        "686x254x140": {
+            "Width": "253.7",
+            "Height": "683.5",
+            "Thickness": "12.4",
+            "Flange Thickness": "19.0",
+            "Radius1": "15.2",
+            "Weight": "140.1"
+        },
+        "686x254x152": {
+            "Width": "254.5",
+            "Height": "687.5",
+            "Thickness": "13.2",
+            "Flange Thickness": "21.0",
+            "Radius1": "15.2",
+            "Weight": "152.4"
+        },
+        "686x254x170": {
+            "Width": "255.8",
+            "Height": "692.9",
+            "Thickness": "14.5",
+            "Flange Thickness": "23.7",
+            "Radius1": "15.2",
+            "Weight": "170.2"
+        },
+        "762x267x134": {
+            "Width": "264.4",
+            "Height": "750.0",
+            "Thickness": "12.0",
+            "Flange Thickness": "15.5",
+            "Radius1": "16.5",
+            "Weight": "133.9"
+        },
+        "762x267x147": {
+            "Width": "265.2",
+            "Height": "754.0",
+            "Thickness": "12.8",
+            "Flange Thickness": "17.5",
+            "Radius1": "16.5",
+            "Weight": "146.9"
+        },
+        "762x267x173": {
+            "Width": "266.7",
+            "Height": "762.2",
+            "Thickness": "14.3",
+            "Flange Thickness": "21.6",
+            "Radius1": "16.5",
+            "Weight": "173.0"
+        },
+        "762x267x197": {
+            "Width": "268.0",
+            "Height": "769.8",
+            "Thickness": "15.6",
+            "Flange Thickness": "25.4",
+            "Radius1": "16.5",
+            "Weight": "196.8"
+        },
+        "838x292x176": {
+            "Width": "291.7",
+            "Height": "834.9",
+            "Thickness": "14.0",
+            "Flange Thickness": "18.8",
+            "Radius1": "17.8",
+            "Weight": "175.9"
+        },
+        "838x292x194": {
+            "Width": "292.4",
+            "Height": "840.7",
+            "Thickness": "14.7",
+            "Flange Thickness": "21.7",
+            "Radius1": "17.8",
+            "Weight": "193.8"
+        },
+        "838x292x226": {
+            "Width": "293.8",
+            "Height": "850.9",
+            "Thickness": "16.1",
+            "Flange Thickness": "26.8",
+            "Radius1": "17.8",
+            "Weight": "226.5"
+        },
+        "914x305x201": {
+            "Width": "303.3",
+            "Height": "903.0",
+            "Thickness": "15.1",
+            "Flange Thickness": "20.2",
+            "Radius1": "19.1",
+            "Weight": "200.9"
+        },
+        "914x305x224": {
+            "Width": "304.1",
+            "Height": "910.4",
+            "Thickness": "15.9",
+            "Flange Thickness": "23.9",
+            "Radius1": "19.1",
+            "Weight": "224.2"
+        },
+        "914x305x238": {
+            "Width": "305.0",
+            "Height": "915.0",
+            "Thickness": "16.5",
+            "Flange Thickness": "25.9",
+            "Radius1": "19.0",
+            "Weight": "238.0"
+        },
+        "914x305x253": {
+            "Width": "305.5",
+            "Height": "918.4",
+            "Thickness": "17.3",
+            "Flange Thickness": "27.9",
+            "Radius1": "19.1",
+            "Weight": "253.4"
+        },
+        "914x305x271": {
+            "Width": "307.0",
+            "Height": "923.0",
+            "Thickness": "18.4",
+            "Flange Thickness": "30.0",
+            "Radius1": "19.0",
+            "Weight": "271.0"
+        },
+        "914x305x289": {
+            "Width": "307.7",
+            "Height": "926.6",
+            "Thickness": "19.5",
+            "Flange Thickness": "32.0",
+            "Radius1": "19.1",
+            "Weight": "289.1"
+        },
+        "914x305x313": {
+            "Width": "309.0",
+            "Height": "932.0",
+            "Thickness": "21.1",
+            "Flange Thickness": "34.5",
+            "Radius1": "19.0",
+            "Weight": "313.0"
+        },
+        "914x305x345": {
+            "Width": "308.0",
+            "Height": "943.0",
+            "Thickness": "22.1",
+            "Flange Thickness": "39.9",
+            "Radius1": "19.0",
+            "Weight": "345.0"
+        },
+        "914x305x381": {
+            "Width": "310.0",
+            "Height": "951.0",
+            "Thickness": "24.4",
+            "Flange Thickness": "43.9",
+            "Radius1": "19.0",
+            "Weight": "381.0"
+        },
+        "914x305x425": {
+            "Width": "313.0",
+            "Height": "961.0",
+            "Thickness": "26.9",
+            "Flange Thickness": "49.0",
+            "Radius1": "19.0",
+            "Weight": "425.0"
+        },
+        "914x305x474": {
+            "Width": "316.0",
+            "Height": "971.0",
+            "Thickness": "30.0",
+            "Flange Thickness": "54.1",
+            "Radius1": "19.0",
+            "Weight": "474.0"
+        },
+        "914x305x521": {
+            "Width": "319.0",
+            "Height": "981.0",
+            "Thickness": "33.0",
+            "Flange Thickness": "58.9",
+            "Radius1": "19.0",
+            "Weight": "521.0"
+        },
+        "914x305x576": {
+            "Width": "322.0",
+            "Height": "993.0",
+            "Thickness": "36.1",
+            "Flange Thickness": "65.0",
+            "Radius1": "19.0",
+            "Weight": "576.0"
+        },
+        "914x419x343": {
+            "Width": "418.5",
+            "Height": "911.8",
+            "Thickness": "19.4",
+            "Flange Thickness": "32.0",
+            "Radius1": "24.1",
+            "Weight": "343.3"
+        },
+        "914x419x388": {
+            "Width": "420.5",
+            "Height": "921.0",
+            "Thickness": "21.4",
+            "Flange Thickness": "36.6",
+            "Radius1": "24.1",
+            "Weight": "388.0"
+        },
+        "1016x305x222": {
+            "Width": "300.0",
+            "Height": "970.3",
+            "Thickness": "16.0",
+            "Flange Thickness": "21.1",
+            "Radius1": "30.0",
+            "Weight": "222.0"
+        },
+        "1016x305x249": {
+            "Width": "300.0",
+            "Height": "980.1",
+            "Thickness": "16.5",
+            "Flange Thickness": "26.0",
+            "Radius1": "30.0",
+            "Weight": "248.7"
+        },
+        "1016x305x272": {
+            "Width": "300.0",
+            "Height": "990.1",
+            "Thickness": "16.5",
+            "Flange Thickness": "31.0",
+            "Radius1": "30.0",
+            "Weight": "272.3"
+        },
+        "1016x305x314": {
+            "Width": "300.0",
+            "Height": "999.9",
+            "Thickness": "19.1",
+            "Flange Thickness": "35.9",
+            "Radius1": "30.0",
+            "Weight": "314.3"
+        },
+        "1016x305x350": {
+            "Width": "302.0",
+            "Height": "1008.0",
+            "Thickness": "21.1",
+            "Flange Thickness": "40.0",
+            "Radius1": "30.0",
+            "Weight": "350.0"
+        },
+        "1016x305x393": {
+            "Width": "303.0",
+            "Height": "1015.9",
+            "Thickness": "24.4",
+            "Flange Thickness": "43.9",
+            "Radius1": "30.0",
+            "Weight": "392.7"
+        },
+        "1016x305x415": {
+            "Width": "304.0",
+            "Height": "1020.0",
+            "Thickness": "26.0",
+            "Flange Thickness": "46.0",
+            "Radius1": "30.0",
+            "Weight": "415.0"
+        },
+        "1016x305x438": {
+            "Width": "305.0",
+            "Height": "1026.0",
+            "Thickness": "26.9",
+            "Flange Thickness": "49.0",
+            "Radius1": "30.0",
+            "Weight": "438.0"
+        },
+        "1016x305x494": {
+            "Width": "309.0",
+            "Height": "1036.0",
+            "Thickness": "31.0",
+            "Flange Thickness": "54.0",
+            "Radius1": "30.0",
+            "Weight": "494.0"
+        },
+        "1016x305x584": {
+            "Width": "314.0",
+            "Height": "1056.0",
+            "Thickness": "36.0",
+            "Flange Thickness": "64.0",
+            "Radius1": "30.0",
+            "Weight": "584.0"
+        }
+    }
+}
 }

@@ -584,7 +584,7 @@ class Profile:
                 p = Part.Face(wire1)
 
         if obj.Family == "UPE" or obj.Family == "UPN":
-            if obj.MakeFillet == False:  # UPE ou UPN sans arrondis
+            if obj.MakeFillet == False:  # UPE ou UPN sans arrondis / Channel without rounded
 
                 Yd = 0
                 if obj.Family == "UPN":
@@ -610,7 +610,7 @@ class Profile:
 
                 wire1 = Part.Wire([L1, L2, L3, L4, L5, L6, L7, L8])
 
-            if obj.MakeFillet == True and obj.Family == "UPE":  # UPE avec arrondis
+            if obj.MakeFillet == True and obj.Family == "UPE":  # UPE avec arrondis / Channel with rounded
 
                 p1 = vec(w, h, 0)
                 p2 = vec(w, H + h, 0)
@@ -646,7 +646,7 @@ class Profile:
 
                 wire1 = Part.Wire([L1, L2, L3, L4, A4, L5, A3, L6, A2, L7, A1, L8])
 
-            if obj.MakeFillet == True and obj.Family == "UPN":  # UPN avec arrondis
+            if obj.MakeFillet == True and obj.Family == "UPN":  # UPN avec arrondis / Channel with rounded
                 angarc = FLANGE_ANGLES["UPN"]
                 angrad = math.pi * angarc / 180
                 sina = math.sin(angrad)
@@ -723,7 +723,6 @@ class Profile:
                 L8 = Part.makeLine(p12, p1)
 
                 wire1 = Part.Wire([L1, L2, L3, L4, A4, L5, A3, L6, A2, L7, A1, L8])
-
             p = Part.Face(wire1)
 
         if (
@@ -732,10 +731,13 @@ class Profile:
             or obj.Family == "HEA"
             or obj.Family == "HEB"
             or obj.Family == "HEM"
-        ):
-            XA1 = W / 2 - TW / 2  # face gauche du web
-            XA2 = W / 2 + TW / 2  # face droite du web
-            if obj.MakeFillet == False:  # IPE ou IPN sans arrondis
+            or obj.Family == "UB"
+            or obj.Family == "UC"
+            ):
+            XA1 = W / 2 - TW / 2  # face gauche du web / left
+            XA2 = W / 2 + TW / 2  # face droite du web /right
+            
+            if obj.MakeFillet == False:  # IPE ou IPN sans arrondis /without rounded
                 Yd = 0
                 if obj.Family == "IPN":
                     Yd = (W / 4) * math.tan(math.pi * FLANGE_ANGLES[obj.Family] / 180)
@@ -768,7 +770,7 @@ class Profile:
 
                 wire1 = Part.Wire([L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12])
 
-            if obj.MakeFillet == True and obj.Family == "IPE":  # IPE avec arrondis
+            if obj.MakeFillet and obj.Family in ("IPE", "HEA", "HEB", "HEM", "UB", "UC"):  # IPE avec arrondis /with rounded (non tapered)
                 p1 = vec(0 + w, 0 + h, 0)
                 p2 = vec(0 + w, TF + h, 0)
                 p3 = vec(XA1 - R + w, TF + h, 0)
@@ -811,7 +813,7 @@ class Profile:
 
                 wire1 = Part.Wire([L1, L2, A1, L3, A2, L4, L5, L6, L7, L8, A3, L9, A4, L10, L11, L12])
 
-            if obj.MakeFillet == True and obj.Family == "IPN":  # IPN avec arrondis
+            if obj.MakeFillet == True and obj.Family == "IPN":  # IPN avec arrondis /with rounded (tapered)
                 angarc = FLANGE_ANGLES["IPN"]
                 angrad = math.pi * angarc / 180
                 sina = math.sin(angrad)
@@ -964,9 +966,8 @@ class Profile:
                 L12 = Part.makeLine(p20, p1)
 
                 wire1 = Part.Wire([L1, A1, L2, A2, L3, A3, L4, A4, L5, L6, L7, A5, L8, A6, L9, A7, L10, A8, L11, L12])
-
             p = Part.Face(wire1)
-
+            
         if obj.Family == "Round Bar":
             c = vec(H / 2 + h, H / 2 + h, 0)
             A1 = Part.makeCircle(H / 2, c, d, 0, 360)
@@ -1616,21 +1617,21 @@ class ViewProviderProfile:
                 /* XPM */
                 static char * profile_xpm[] = {
                 "16 16 15 1",
-                " 	c None",
-                ".	c #000000",
-                "+	c #170000",
-                "@	c #2E5DA2",
-                "#	c #E8A200",
-                "$	c #00172E",
-                "%	c #A27400",
-                "&	c #FFB900",
-                "*	c #8B7400",
-                "=	c #001717",
-                "-	c #D1A200",
-                ";	c #B98B00",
-                ">	c #17172E",
-                ",	c #2E1700",
-                "'	c #171700",
+                "   c None",
+                ".  c #000000",
+                "+  c #170000",
+                "@  c #2E5DA2",
+                "#  c #E8A200",
+                "$  c #00172E",
+                "%  c #A27400",
+                "&  c #FFB900",
+                "*  c #8B7400",
+                "=  c #001717",
+                "-  c #D1A200",
+                ";  c #B98B00",
+                ">  c #17172E",
+                ",  c #2E1700",
+                "'  c #171700",
                 "                ",
                 "                ",
                 "                ",
@@ -1647,7 +1648,7 @@ class ViewProviderProfile:
                 "                ",
                 "                ",
                 "                "};
-        	"""
+            """
 
     def dumps(self):
         return {}
@@ -1687,50 +1688,50 @@ class ViewProviderCustomProfile(ViewProviderProfile):
             /* XPM */
             static char * custom_profile_xpm[] = {
             "16 16 44 1",
-            " 	c None",
-            ".	c #3463A1",
-            "+	c #3465A4",
-            "@	c #3464A1",
-            "#	c #836628",
-            "$	c #FBBC00",
-            "%	c #304461",
-            "&	c #335C92",
-            "*	c #BC8D00",
-            "=	c #FFBF00",
-            "-	c #324C72",
-            ";	c #32619D",
-            ">	c #3364A2",
-            ",	c #335888",
-            "'	c #CF9B00",
-            ")	c #B88A00",
-            "!	c #1F6267",
-            "~	c #27557E",
-            "{	c #335889",
-            "]	c #CE9B00",
-            "^	c #3362A0",
-            "/	c #2D578E",
-            "(	c #06AE25",
-            "_	c #0E9739",
-            ":	c #2E5A93",
-            "<	c #32619E",
-            "[	c #3465A3",
-            "}	c #335D93",
-            "|	c #BA8C00",
-            "1	c #274C7B",
-            "2	c #088D24",
-            "3	c #03BB1F",
-            "4	c #00D61E",
-            "5	c #00D41E",
-            "6	c #03BC1F",
-            "7	c #0A7D27",
-            "8	c #3464A2",
-            "9	c #7E632C",
-            "0	c #FABB00",
-            "a	c #03C01F",
-            "b	c #00D81E",
-            "c	c #05AB20",
-            "d	c #01D21E",
-            "e	c #01D31E",
+            "   c None",
+            ".  c #3463A1",
+            "+  c #3465A4",
+            "@  c #3464A1",
+            "#  c #836628",
+            "$  c #FBBC00",
+            "%  c #304461",
+            "&  c #335C92",
+            "*  c #BC8D00",
+            "=  c #FFBF00",
+            "-  c #324C72",
+            ";  c #32619D",
+            ">  c #3364A2",
+            ",  c #335888",
+            "'  c #CF9B00",
+            ")  c #B88A00",
+            "!  c #1F6267",
+            "~  c #27557E",
+            "{  c #335889",
+            "]  c #CE9B00",
+            "^  c #3362A0",
+            "/  c #2D578E",
+            "(  c #06AE25",
+            "_  c #0E9739",
+            ":  c #2E5A93",
+            "<  c #32619E",
+            "[  c #3465A3",
+            "}  c #335D93",
+            "|  c #BA8C00",
+            "1  c #274C7B",
+            "2  c #088D24",
+            "3  c #03BB1F",
+            "4  c #00D61E",
+            "5  c #00D41E",
+            "6  c #03BC1F",
+            "7  c #0A7D27",
+            "8  c #3464A2",
+            "9  c #7E632C",
+            "0  c #FABB00",
+            "a  c #03C01F",
+            "b  c #00D81E",
+            "c  c #05AB20",
+            "d  c #01D21E",
+            "e  c #01D31E",
             "                ",
             "                ",
             "                ",
@@ -1747,7 +1748,7 @@ class ViewProviderCustomProfile(ViewProviderProfile):
             "                ",
             "                ",
             "                "};
-        	"""
+            """
 
     def setEdit(self, vobj, mode):
         return None
